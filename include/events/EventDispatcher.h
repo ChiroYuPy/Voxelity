@@ -12,16 +12,9 @@
 
 class EventDispatcher {
 public:
-    void subscribe(EventListener* listener) {
-        listeners.push_back(listener);
-    }
+    void subscribe(EventListener* listener);
 
-    void dispatch(Event& event) const {
-        for (auto* listener : listeners) {
-            listener->onEvent(event);
-            if (event.handled) break;
-        }
-    }
+    void dispatch(Event& event) const;
 
 private:
     std::vector<EventListener*> listeners;

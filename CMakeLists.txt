@@ -28,6 +28,7 @@ add_executable(Voxelity
         include/events/EventListener.h
         include/events/GLFWEventAdapter.h
         src/events/GLFWEventAdapter.cpp
+        src/events/EventDispatcher.cpp
 )
 
 target_link_libraries(Voxelity glfw)
