@@ -32,7 +32,7 @@ Application::Application() : lastTime(0) {
         {{0, 0, 0}, 5, {0.0, 0.0, 0.8}},
     };
 
-    shader = std::make_unique<Shader>("../shaders/vertex_shader.glsl", "../shaders/fragment_shader.glsl");
+    shader = std::make_unique<Shader>("../resources/shaders/vertex_shader.glsl", "../resources/shaders/fragment_shader.glsl");
     renderer = std::make_unique<Renderer>(instances, *shader);
 }
 
