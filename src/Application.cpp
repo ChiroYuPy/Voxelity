@@ -3,7 +3,10 @@
 //
 
 #include "Application.h"
-#include "InputManager.h"
+
+#include "listeners/CameraController.h"
+#include "events/EventDispatcher.h"
+#include "events/GLFWEventAdapter.h"
 
 #include "rendering/VoxelFace.h"
 
@@ -11,7 +14,14 @@
 #include "rendering/Shader.h"
 #include "voxelWorld/World.h"
 
+Application* Application::instance = nullptr;
+
+Application& Application::get() {
+    return *instance;
+}
+
 Application::Application() : lastTime(0) {
+    instance = this;
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -20,9 +30,6 @@ Application::Application() : lastTime(0) {
     window = glfwCreateWindow(800, 600, "Voxel Renderer", nullptr, nullptr);
     glfwMakeContextCurrent(window);
     gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
-
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwSetCursorPosCallback(window, InputManager::mouse_callback);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -47,6 +54,11 @@ Application::Application() : lastTime(0) {
     std::vector<VoxelFace> faces = world->generateFaceInstances();
     shader = std::make_unique<Shader>("../resources/shaders/vertex_shader.glsl", "../resources/shaders/fragment_shader.glsl");
     renderer = std::make_unique<Renderer>(faces, *shader);
+    eventDispatcher = std::make_unique<EventDispatcher>();
+    cameraController = std::make_unique<CameraController>(camera);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    eventDispatcher->subscribe(cameraController.get());
+    GLFWEventAdapter(window, *eventDispatcher);
 }
 
 Application::~Application() {
@@ -67,7 +79,7 @@ void Application::run() {
         const float deltaTime = currentTime - lastTime;
         lastTime = currentTime;
 
-        InputManager::keyboard_callback(window, camera, deltaTime);
+        cameraController->update(deltaTime);
         view = camera.getViewMatrix();
 
         renderer->render(view, projection);

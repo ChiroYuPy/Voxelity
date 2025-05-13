@@ -20,8 +20,14 @@ add_executable(Voxelity
         include/voxelWorld/World.h
         src/voxelWorld/World.cpp
         include/rendering/VoxelFace.h
-        src/InputManager.cpp
+        src/listeners/CameraController.cpp
         externals/include/GLT.h
+        include/events/EventType.h
+        include/events/Event.h
+        include/events/EventDispatcher.h
+        include/events/EventListener.h
+        include/events/GLFWEventAdapter.h
+        src/events/GLFWEventAdapter.cpp
 )
 
 target_link_libraries(Voxelity glfw)

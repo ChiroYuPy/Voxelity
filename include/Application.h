@@ -11,25 +11,31 @@
 
 #include "rendering/Camera.h"
 
+class CameraController;
+class EventDispatcher;
 class Renderer;
 class Shader;
 class World;
-class GLFWwindow;
 
 class Application {
 public:
+    static Application& get();
+
+    Application();
+    ~Application();
+
+    void run();
+
+private:
+    static Application* instance;
     GLFWwindow* window;
     Camera camera;
     std::unique_ptr<World> world;
     std::unique_ptr<Shader> shader;
     std::unique_ptr<Renderer> renderer;
+    std::unique_ptr<EventDispatcher> eventDispatcher;
+    std::unique_ptr<CameraController> cameraController;
     float lastTime;
-
-    Application();
-
-    ~Application();
-
-    void run();
 };
 
 #endif //APPLICATION_H
