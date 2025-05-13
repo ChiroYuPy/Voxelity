@@ -7,14 +7,17 @@
 #include <memory>
 
 #include "rendering/Camera.h"
-#include "rendering/Renderer.h"
 
+class Renderer;
+class Shader;
+class World;
 class GLFWwindow;
 
 class Application {
 public:
     GLFWwindow* window;
     Camera camera;
+    std::unique_ptr<World> world;
     std::unique_ptr<Shader> shader;
     std::unique_ptr<Renderer> renderer;
     float lastTime;

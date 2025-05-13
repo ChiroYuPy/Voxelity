@@ -2,7 +2,7 @@
 // Created by adrian on 13/05/25.
 //
 
-#include "../../include/rendering/Shader.h"
+#include "rendering/Shader.h"
 
 #include <iostream>
 #include <sstream>

@@ -17,7 +17,10 @@ struct BlockData {
 
 class BlockRegistry {
 public:
-    static const BlockData& get(BlockType type);
+    static const BlockData &get(BlockType type);
+
+    static BlockType fromID(uint8_t id);
+
 private:
     static const std::array<BlockData, static_cast<size_t>(BlockType::COUNT)> data;
 };

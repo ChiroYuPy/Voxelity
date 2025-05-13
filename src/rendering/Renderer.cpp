@@ -2,9 +2,11 @@
 // Created by adrian on 13/05/25.
 //
 
-#include "../../include/rendering/Renderer.h"
+#include "rendering/Renderer.h"
 
-Renderer::Renderer(const std::vector<FaceInstance>& instances_, const Shader& shader_)
+#include "rendering/VoxelFace.h"
+
+Renderer::Renderer(const std::vector<VoxelFace>& instances_, const Shader& shader_)
 : instances(instances_), shader(shader_) {
 
     glGenVertexArrays(1, &vao);
@@ -12,18 +14,18 @@ Renderer::Renderer(const std::vector<FaceInstance>& instances_, const Shader& sh
 
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, instances.size() * sizeof(FaceInstance), instances.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, instances.size() * sizeof(VoxelFace), instances.data(), GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
-    glVertexAttribIPointer(0, 3, GL_INT, sizeof(FaceInstance), static_cast<void *>(nullptr));
+    glVertexAttribIPointer(0, 3, GL_INT, sizeof(VoxelFace), static_cast<void *>(nullptr));
     glVertexAttribDivisor(0, 1);
 
     glEnableVertexAttribArray(1);
-    glVertexAttribIPointer(1, 1, GL_INT, sizeof(FaceInstance), reinterpret_cast<void *>(offsetof(FaceInstance, faceId)));
+    glVertexAttribIPointer(1, 1, GL_INT, sizeof(VoxelFace), reinterpret_cast<void *>(offsetof(VoxelFace, faceId)));
     glVertexAttribDivisor(1, 1);
 
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(FaceInstance), reinterpret_cast<void *>(offsetof(FaceInstance, color)));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(VoxelFace), reinterpret_cast<void *>(offsetof(VoxelFace, color)));
     glVertexAttribDivisor(2, 1);
 }
 

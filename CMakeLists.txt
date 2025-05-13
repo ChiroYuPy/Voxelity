@@ -14,7 +14,14 @@ add_executable(Voxelity
         src/rendering/Camera.cpp
         src/rendering/Shader.cpp
         src/blocks/BlockRegistry.cpp
-        src/Voxel.cpp
+        src/voxelWorld/Voxel.cpp
+        include/voxelWorld/Chunk.h
+        src/voxelWorld/Chunk.cpp
+        include/voxelWorld/World.h
+        src/voxelWorld/World.cpp
+        include/rendering/VoxelFace.h
+        src/InputManager.cpp
+        externals/include/GLT.h
 )
 
 target_link_libraries(Voxelity glfw)

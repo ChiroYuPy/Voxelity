@@ -9,22 +9,15 @@
 
 #include "Shader.h"
 
-class FaceInstance {
-public:
-    glm::ivec3 pos;
-    int faceId;
-    glm::vec3 color;
-
-    FaceInstance(const glm::ivec3 p, const int id, const glm::vec3 c) : pos(p), faceId(id), color(c) {}
-};
+class VoxelFace;
 
 class Renderer {
 public:
-    GLuint vao{}, vbo{};
-    std::vector<FaceInstance> instances;
+    GLuint vao, vbo;
+    std::vector<VoxelFace> instances;
     Shader shader;
 
-    explicit Renderer(const std::vector<FaceInstance>& instances_, const Shader& shader_);
+    explicit Renderer(const std::vector<VoxelFace>& instances_, const Shader& shader_);
 
     ~Renderer();
 

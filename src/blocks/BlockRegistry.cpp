@@ -2,7 +2,7 @@
 // Created by adrian on 13/05/25.
 //
 
-#include "../../include/blocks/BlockRegistry.h"
+#include "blocks/BlockRegistry.h"
 
 const std::array<BlockData, static_cast<size_t>(BlockType::COUNT)> BlockRegistry::data = {{
     { BlockType::Air,   false, {0.0f, 0.0f, 0.0f} },
@@ -13,4 +13,9 @@ const std::array<BlockData, static_cast<size_t>(BlockType::COUNT)> BlockRegistry
 
 const BlockData& BlockRegistry::get(BlockType type) {
     return data[static_cast<size_t>(type)];
+}
+
+BlockType BlockRegistry::fromID(uint8_t id) {
+    if (id >= static_cast<uint8_t>(BlockType::COUNT)) return BlockType::Air;
+    return static_cast<BlockType>(id);
 }
