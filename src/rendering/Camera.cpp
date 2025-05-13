@@ -2,7 +2,7 @@
 // Created by adrian on 13/05/25.
 //
 
-#include "Camera.h"
+#include "../../include/rendering/Camera.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 

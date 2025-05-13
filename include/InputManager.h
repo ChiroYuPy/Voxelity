@@ -6,7 +6,7 @@
 #define INPUTMANAGER_H
 #include <GLFW/glfw3.h>
 
-#include "Camera.h"
+#include "rendering/Camera.h"
 
 class InputManager {
 public:
@@ -26,8 +26,11 @@ public:
         if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
             camera.moveUp(deltaTime);
         }
-        if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
+        if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
             camera.moveDown(deltaTime);
+        }
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+            glfwSetWindowShouldClose(window, true);
         }
     }
 

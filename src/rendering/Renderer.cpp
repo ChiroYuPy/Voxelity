@@ -2,7 +2,7 @@
 // Created by adrian on 13/05/25.
 //
 
-#include "Renderer.h"
+#include "../../include/rendering/Renderer.h"
 
 Renderer::Renderer(const std::vector<FaceInstance>& instances_, const Shader& shader_)
 : instances(instances_), shader(shader_) {

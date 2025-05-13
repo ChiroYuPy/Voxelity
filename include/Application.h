@@ -6,8 +6,8 @@
 #define APPLICATION_H
 #include <memory>
 
-#include "Camera.h"
-#include "Renderer.h"
+#include "rendering/Camera.h"
+#include "rendering/Renderer.h"
 
 class GLFWwindow;
 

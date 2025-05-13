@@ -8,11 +8,13 @@ include_directories(externals/include)
 
 add_executable(Voxelity
         main.cpp
-        src/glad.c
+        externals/src/glad.c
         src/Application.cpp
-        src/Renderer.cpp
-        src/Camera.cpp
-        src/Shader.cpp
+        src/rendering/Renderer.cpp
+        src/rendering/Camera.cpp
+        src/rendering/Shader.cpp
+        src/blocks/BlockRegistry.cpp
+        src/Voxel.cpp
 )
 
 target_link_libraries(Voxelity glfw)
