@@ -4,7 +4,8 @@
 
 #ifndef BLOCKTYPE_H
 #define BLOCKTYPE_H
-#include <glm/fwd.hpp>
+
+#include <GLT.h>
 
 enum class BlockType : glm::uint8_t {
     Air = 0, // default block

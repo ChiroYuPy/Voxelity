@@ -5,10 +5,9 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include "GLT.h"
+#include <GLT.h>
 
 #include <fstream>
-#include <glm/glm.hpp>
 
 class Shader {
 public:

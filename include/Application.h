@@ -4,6 +4,9 @@
 
 #ifndef APPLICATION_H
 #define APPLICATION_H
+
+#include <GLT.h>
+
 #include <memory>
 
 #include "rendering/Camera.h"

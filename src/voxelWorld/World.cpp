@@ -7,7 +7,6 @@
 #include <ranges>
 
 #include "rendering/VoxelFace.h"
-#include <glm/vec3.hpp>
 
 World::World() {}
 

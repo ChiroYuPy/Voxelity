@@ -5,8 +5,6 @@
 #ifndef VOXELFACE_H
 #define VOXELFACE_H
 
-#include <glm/vec3.hpp>
-
 class VoxelFace {
 public:
     glm::ivec3 pos;

@@ -4,8 +4,10 @@
 
 #ifndef RENDERER_H
 #define RENDERER_H
+
+#include <GLT.h>
+
 #include <vector>
-#include <glm/glm.hpp>
 
 #include "Shader.h"
 

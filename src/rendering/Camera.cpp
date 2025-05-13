@@ -4,8 +4,6 @@
 
 #include "rendering/Camera.h"
 
-#include <glm/gtc/matrix_transform.hpp>
-
 Camera::Camera(const glm::vec3 startPos, const float yaw, const float pitch) : position(startPos), yaw(yaw), pitch(pitch) {}
 
 glm::mat4 Camera::getViewMatrix() const {

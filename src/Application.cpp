@@ -2,14 +2,10 @@
 // Created by adrian on 13/05/25.
 //
 
-#include "GLT.h"
-
 #include "Application.h"
 #include "InputManager.h"
 
 #include "rendering/VoxelFace.h"
-
-#include <glm/ext/matrix_clip_space.hpp>
 
 #include "rendering/Renderer.h"
 #include "rendering/Shader.h"

@@ -5,8 +5,9 @@
 #ifndef BLOCKREGISTERY_H
 #define BLOCKREGISTERY_H
 
+#include <GLT.h>
+
 #include "BlockType.h"
-#include <glm/vec3.hpp>
 #include <array>
 
 struct BlockData {

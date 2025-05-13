@@ -5,7 +5,7 @@
 #ifndef INPUTMANAGER_H
 #define INPUTMANAGER_H
 
-#include "GLT.h"
+#include <GLT.h>
 
 class Camera;
 

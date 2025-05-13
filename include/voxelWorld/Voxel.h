@@ -5,7 +5,7 @@
 #ifndef VOXEL_H
 #define VOXEL_H
 
-#include "../blocks/BlockType.h"
+#include "blocks/BlockType.h"
 #include "blocks/BlockRegistry.h"
 
 struct Voxel {

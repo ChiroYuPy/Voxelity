@@ -5,10 +5,11 @@
 #ifndef CHUNK_H
 #define CHUNK_H
 
-#include "Voxel.h"
+#include <GLT.h>
+
 #include <array>
 
-#include "glm/glm.hpp"
+#include "Voxel.h"
 
 constexpr int CHUNK_SIZE = 16;
 
