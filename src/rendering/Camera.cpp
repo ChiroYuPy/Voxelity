@@ -10,34 +10,33 @@ glm::mat4 Camera::getViewMatrix() const {
     return glm::lookAt(position, position + getFront(), glm::vec3(0, 1, 0));
 }
 
-// Mouvement dans la direction actuelle de la caméra
-void Camera::moveForward(const float deltaTime) {
-    position += getFront() * speed * deltaTime;
+void Camera::moveForward(const float amount) {
+    position += getFront() * amount;
 }
 
-void Camera::moveBackward(const float deltaTime) {
-    position -= getFront() * speed * deltaTime;
+void Camera::moveBackward(const float amount) {
+    position -= getFront() * amount;
 }
 
-void Camera::moveRight(const float deltaTime) {
-    position += getRight() * speed * deltaTime;
+void Camera::moveRight(const float amount) {
+    position += getRight() * amount;
 }
 
-void Camera::moveLeft(const float deltaTime) {
-    position -= getRight() * speed * deltaTime;
+void Camera::moveLeft(const float amount) {
+    position -= getRight() * amount;
 }
 
-void Camera::moveUp(const float deltaTime) {
-    position += glm::vec3(0, 1, 0) * speed * deltaTime;
+void Camera::moveUp(const float amount) {
+    position += glm::vec3(0, 1, 0) * amount;
 }
 
-void Camera::moveDown(const float deltaTime) {
-    position -= glm::vec3(0, 1, 0) * speed * deltaTime;
+void Camera::moveDown(const float amount) {
+    position -= glm::vec3(0, 1, 0) * amount;
 }
 
 void Camera::rotate(const float dx, const float dy) {
-    yaw += dx * sensitivity;
-    pitch -= dy * sensitivity;
+    yaw += dx;
+    pitch -= dy;
     pitch = glm::clamp(pitch, -89.0f, 89.0f);
 }
 

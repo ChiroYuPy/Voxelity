@@ -4,12 +4,11 @@
 
 #include "voxelWorld/Chunk.h"
 
-#include <iostream>
-
 #include "rendering/Mesh.h"
+#include "voxelWorld/World.h"
 
-Chunk::Chunk(const int cx, const int cy, const int cz) : dirty(true), position{cx, cy, cz} {
-    mesh = std::make_unique<Mesh>();
+Chunk::Chunk(const int cx, const int cy, const int cz, const World* world) : world(world), dirty(true), position{cx, cy, cz} {
+    mesh = std::make_shared<Mesh>();
 }
 
 void Chunk::setDirty(const bool dirty_) {
@@ -20,8 +19,8 @@ bool Chunk::isDirty() const {
     return dirty;
 }
 
-Voxel Chunk::get(const int x, const int y, const int z) const {
-    return voxels[index(x, y, z)];
+const Voxel* Chunk::getVoxelAt(const int x, const int y, const int z) const {
+    return &voxels[index(x, y, z)];
 }
 
 void Chunk::set(const int x, const int y, const int z, const Voxel voxel) {
@@ -51,6 +50,14 @@ void Chunk::updateMesh() {
     setDirty(false);
 }
 
+Chunk* Chunk::getNeighbor(const uint8_t direction) const {
+    return neighbors[static_cast<int>(direction)];
+}
+
+void Chunk::setNeighbor(const uint8_t direction, Chunk* neighbor) {
+    neighbors[static_cast<int>(direction)] = neighbor;
+}
+
 void Chunk::buildMesh() const {
-    mesh->build(this);
+    mesh->build(this, world);
 }

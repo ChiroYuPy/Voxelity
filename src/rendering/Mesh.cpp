@@ -6,6 +6,8 @@
 
 #include <iostream>
 
+#include "voxelWorld/World.h"
+
 Mesh::Mesh() {
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
@@ -44,7 +46,7 @@ void Mesh::render() const {
     glDrawArraysInstanced(GL_TRIANGLES, 0, 6, voxelFaces.size());
 }
 
-bool Mesh::isFaceVisible(const int x, const int y, const int z, const Chunk& chunk, const int face) {
+bool Mesh::isFaceVisible(const int x, const int y, const int z, const Chunk& chunk, const World& world, const int face) {
     static const glm::ivec3 directions[6] = {
         {1, 0, 0}, {-1, 0, 0},
         {0, 1, 0}, {0, -1, 0},
@@ -55,25 +57,28 @@ bool Mesh::isFaceVisible(const int x, const int y, const int z, const Chunk& chu
     const int ny = y + offset.y;
     const int nz = z + offset.z;
 
-    if (nx < 0 || ny < 0 || nz < 0 || nx >= CHUNK_SIZE || ny >= CHUNK_SIZE || nz >= CHUNK_SIZE)
-        return true;
-
-    return !chunk.get(nx, ny, nz).isSolid();
+    if (nx < 0 || ny < 0 || nz < 0 || nx >= CHUNK_SIZE || ny >= CHUNK_SIZE || nz >= CHUNK_SIZE) {
+        const glm::ivec3 worldPos = chunk.getPosition() * CHUNK_SIZE + glm::ivec3(nx, ny, nz);
+        const Voxel *voxel = world.getVoxelAt(worldPos.x, worldPos.y, worldPos.z);
+        if (voxel) return !voxel->isSolid();
+        return false;
+    }
+    return !chunk.getVoxelAt(nx, ny, nz)->isSolid();
 }
 
-std::vector<VoxelFace> Mesh::generateFaceInstances(const Chunk& chunk) {
+std::vector<VoxelFace> Mesh::generateFaceInstances(const Chunk& chunk, const World& world) {
     std::vector<VoxelFace> faces;
 
     for (int z = 0; z < CHUNK_SIZE; ++z)
         for (int y = 0; y < CHUNK_SIZE; ++y)
             for (int x = 0; x < CHUNK_SIZE; ++x) {
-                Voxel voxel = chunk.get(x, y, z);
-                if (!voxel.isSolid()) continue;
+                const Voxel* voxel = chunk.getVoxelAt(x, y, z);
+                if (!voxel->isSolid()) continue;
 
                 const glm::ivec3 worldPos = chunk.getPosition() * CHUNK_SIZE + glm::ivec3(x, y, z);
                 for (int face = 0; face < 6; ++face) {
-                    if (isFaceVisible(x, y, z, chunk, face)) {
-                        faces.emplace_back(worldPos, face, static_cast<int>(voxel.type));
+                    if (isFaceVisible(x, y, z, chunk, world, face)) {
+                        faces.emplace_back(worldPos, face, static_cast<int>(voxel->type));
                     }
                 }
             }
@@ -81,9 +86,8 @@ std::vector<VoxelFace> Mesh::generateFaceInstances(const Chunk& chunk) {
     return faces;
 }
 
-void Mesh::build(const Chunk* chunk) {
-    std::cout << "Building mesh..." << std::endl;
-    voxelFaces = generateFaceInstances(*chunk);
+void Mesh::build(const Chunk* chunk, const World* world) {
+    voxelFaces = generateFaceInstances(*chunk, *world);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, voxelFaces.size() * sizeof(VoxelFace), voxelFaces.data(), GL_STATIC_DRAW);

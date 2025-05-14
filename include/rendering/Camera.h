@@ -7,26 +7,24 @@ class Camera {
 public:
     glm::vec3 position;
     float yaw, pitch;
-    float speed = 32.0f;
-    float sensitivity = 0.1f;
 
-    explicit Camera(glm::vec3 startPos = glm::vec3(128, 128, 128),
+    explicit Camera(glm::vec3 startPos = glm::vec3(0, 0, 0),
                     float yaw = -90.0f,
                     float pitch = 0.0f);
 
     [[nodiscard]] glm::mat4 getViewMatrix() const;
 
-    void moveForward(float deltaTime);
+    void moveForward(float amount);
 
-    void moveBackward(float deltaTime);
+    void moveBackward(float amount);
 
-    void moveRight(float deltaTime);
+    void moveRight(float amount);
 
-    void moveLeft(float deltaTime);
+    void moveLeft(float amount);
 
-    void moveUp(float deltaTime);
+    void moveUp(float amount);
 
-    void moveDown(float deltaTime);
+    void moveDown(float amount);
 
     void rotate(float dx, float dy);
 

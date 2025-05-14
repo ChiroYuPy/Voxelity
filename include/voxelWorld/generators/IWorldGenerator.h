@@ -5,7 +5,9 @@
 #ifndef IWORLDGENERATOR_H
 #define IWORLDGENERATOR_H
 
-#include "voxelWorld/Chunk.h"
+#include "blocks/BlockType.h"
+
+class Chunk;
 
 class IWorldGenerator {
 public:

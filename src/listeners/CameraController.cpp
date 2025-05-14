@@ -76,10 +76,11 @@ void CameraController::handleMouse(const double xpos, const double ypos) {
 }
 
 void CameraController::update(const float deltaTime) const {
-    if (m_moveForward)  m_camera.moveForward(deltaTime);
-    if (m_moveBackward) m_camera.moveBackward(deltaTime);
-    if (m_moveLeft)     m_camera.moveLeft(deltaTime);
-    if (m_moveRight)    m_camera.moveRight(deltaTime);
-    if (m_moveUp)       m_camera.moveUp(deltaTime);
-    if (m_moveDown)     m_camera.moveDown(deltaTime);
+    static constexpr int speed = 12;
+    if (m_moveForward)  m_camera.moveForward(speed * deltaTime);
+    if (m_moveBackward) m_camera.moveBackward(speed * deltaTime);
+    if (m_moveLeft)     m_camera.moveLeft(speed * deltaTime);
+    if (m_moveRight)    m_camera.moveRight(speed * deltaTime);
+    if (m_moveUp)       m_camera.moveUp(speed * deltaTime);
+    if (m_moveDown)     m_camera.moveDown(speed * deltaTime);
 }

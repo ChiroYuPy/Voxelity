@@ -51,7 +51,7 @@ void main() {
     float lightIntensity = max(dot(normal, lightDir), 0.0);
 
     // Ajout d'une lumière ambiante pour éclairer tous les voxels
-    float ambientLight = 0.8;  // Valeur d'éclairage ambiant
+    float ambientLight = 0.5;  // Valeur d'éclairage ambiant
     lightIntensity += ambientLight;
 
     // Appliquer la lumière à la couleur du voxel

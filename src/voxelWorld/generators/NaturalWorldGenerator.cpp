@@ -18,15 +18,10 @@ int getHeightAt(const int x, const int z) {
 NaturalWorldGenerator::NaturalWorldGenerator() = default;
 
 BlockType NaturalWorldGenerator::generateVoxel(const glm::ivec3& position) {
-    if (const int height = getHeightAt(position.x, position.z); position.y == height) {
-        return BlockType::Grass;
-    } else {
-        if (position.y < height) {
-            if (position.y == height - 1) return BlockType::Dirt;
-            if (position.y == 0) return BlockType::Bedrock;
-            return BlockType::Stone;
-        }
-        return BlockType::Air;
-    }
+    const int height = getHeightAt(position.x, position.z);
+    if (position.y == height) return BlockType::Grass;
+    if (position.y == 0) return BlockType::Stone;
+    if (0 < position.y && position.y < height) return BlockType::Dirt;
+    return BlockType::Air;
 }
 

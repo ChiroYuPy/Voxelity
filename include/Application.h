@@ -11,9 +11,9 @@
 
 #include "rendering/Camera.h"
 
+class World;
 class CameraController;
 class EventDispatcher;
-class World;
 
 class Application {
 public:

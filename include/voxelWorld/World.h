@@ -7,10 +7,12 @@
 
 #include <memory>
 #include <unordered_map>
-#include <vector>
 
+#include "Voxel.h"
 #include "rendering/Shader.h"
 #include "voxelWorld/generators/IWorldGenerator.h"
+
+#include "voxelWorld/Chunk.h"
 
 class VoxelFace;
 
@@ -26,6 +28,10 @@ public:
 
     void update() const;
 
+    Chunk* getChunkAt(int cx, int cy, int cz) const;
+
+    const Voxel* getVoxelAt(int vx, int vy, int vz) const;
+
 private:
     std::unique_ptr<IWorldGenerator> generator;
     std::unordered_map<unsigned long, std::unique_ptr<Chunk>> chunks;
@@ -33,7 +39,6 @@ private:
     std::unique_ptr<Shader> chunkShader;
 
     static unsigned long chunkKey(int cx, int cy, int cz);
-    static bool isFaceVisible(int x, int y, int z, const Chunk& chunk, int face);
 };
 
 #endif //WORLD_H

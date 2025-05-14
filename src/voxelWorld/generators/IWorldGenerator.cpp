@@ -4,6 +4,8 @@
 
 #include "voxelWorld/generators/IWorldGenerator.h"
 
+#include "voxelWorld/Chunk.h"
+
 void IWorldGenerator::generate(Chunk& chunk) {
     const auto globalChunkPos = chunk.getPosition() * CHUNK_SIZE;
     for (int x = 0; x < CHUNK_SIZE; x++) {
