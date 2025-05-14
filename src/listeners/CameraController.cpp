@@ -6,8 +6,8 @@
 
 #include "rendering/Camera.h"
 
-CameraController::CameraController(Camera& camera)
-    : m_camera(camera) {}
+CameraController::CameraController(GLFWwindow* window, Camera& camera)
+    : m_camera(camera), m_window(window) {}
 
 void CameraController::onEvent(Event& e) {
     switch (e.type) {
@@ -29,31 +29,50 @@ void CameraController::onEvent(Event& e) {
 }
 
 void CameraController::handleKey(const int key, const bool pressed) {
-    switch (key) {
-        case GLFW_KEY_W: m_moveForward  = pressed; break;
-        case GLFW_KEY_S: m_moveBackward = pressed; break;
-        case GLFW_KEY_A: m_moveLeft     = pressed; break;
-        case GLFW_KEY_D: m_moveRight    = pressed; break;
-        case GLFW_KEY_SPACE: m_moveUp   = pressed; break;
-        case GLFW_KEY_LEFT_SHIFT: m_moveDown = pressed; break;
-        default: break;
+    if (key == GLFW_KEY_ESCAPE && pressed) {
+        m_control = false;
+        glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        m_moveForward  = false;
+        m_moveBackward = false;
+        m_moveLeft     = false;
+        m_moveRight    = false;
+        m_moveUp       = false;
+        m_moveDown     = false;
+    } else if (key == GLFW_KEY_F && pressed) {
+        m_control = true;
+        glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwGetCursorPos(m_window, &m_lastX, &m_lastY);
+    }
+
+    if (m_control) {
+        switch (key) {
+            case GLFW_KEY_W: m_moveForward  = pressed; break;
+            case GLFW_KEY_S: m_moveBackward = pressed; break;
+            case GLFW_KEY_A: m_moveLeft     = pressed; break;
+            case GLFW_KEY_D: m_moveRight    = pressed; break;
+            case GLFW_KEY_SPACE: m_moveUp   = pressed; break;
+            case GLFW_KEY_LEFT_SHIFT: m_moveDown = pressed; break;
+            default: break;
+        }
     }
 }
 
 void CameraController::handleMouse(const double xpos, const double ypos) {
-    if (m_firstMouse) {
+    if (m_control) {
+        if (m_firstMouse) {
+            m_lastX = xpos;
+            m_lastY = ypos;
+            m_firstMouse = false;
+        }
+
+        const auto dx = static_cast<float>(xpos - m_lastX);
+        const auto dy = static_cast<float>(ypos - m_lastY);
+
         m_lastX = xpos;
         m_lastY = ypos;
-        m_firstMouse = false;
+
+        m_camera.rotate(dx, dy);
     }
-
-    const auto dx = static_cast<float>(xpos - m_lastX);
-    const auto dy = static_cast<float>(ypos - m_lastY);
-
-    m_lastX = xpos;
-    m_lastY = ypos;
-
-    m_camera.rotate(dx, dy);
 }
 
 void CameraController::update(const float deltaTime) const {

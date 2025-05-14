@@ -55,8 +55,7 @@ Application::Application() : lastTime(0) {
     shader = std::make_unique<Shader>("../resources/shaders/vertex_shader.glsl", "../resources/shaders/fragment_shader.glsl");
     renderer = std::make_unique<Renderer>(faces, *shader);
     eventDispatcher = std::make_unique<EventDispatcher>();
-    cameraController = std::make_unique<CameraController>(camera);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    cameraController = std::make_unique<CameraController>(window, camera);
     eventDispatcher->subscribe(cameraController.get());
     GLFWEventAdapter(window, *eventDispatcher);
 }

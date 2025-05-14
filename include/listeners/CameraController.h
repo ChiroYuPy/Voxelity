@@ -13,13 +13,16 @@ class Camera;
 
 class CameraController final : public EventListener {
 public:
-    explicit CameraController(Camera& camera);
+    explicit CameraController(GLFWwindow* window, Camera& camera);
 
     void onEvent(Event& e) override;
     void update(float deltaTime) const;
 
 private:
     Camera& m_camera;
+    GLFWwindow* m_window;
+
+    bool m_control = false;
 
     bool m_moveForward  = false;
     bool m_moveBackward = false;
