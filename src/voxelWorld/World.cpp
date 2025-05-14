@@ -33,6 +33,22 @@ void World::generate(int cx, int cy, int cz) {
     }
 }
 
+void World::generateFromPosition(const int fx, const int fy, const int fz) {
+    static constexpr int RENDER_DISTANCE = 8;
+    static constexpr int RENDER_HEIGHT = 2;
+
+    for (int x = fx - RENDER_DISTANCE; x < fx + RENDER_DISTANCE; x++) {
+        for (int y = fy - RENDER_HEIGHT; y < fy + RENDER_HEIGHT; y++) {
+            for (int z = fz - RENDER_DISTANCE; z < fz + RENDER_DISTANCE; z++) {
+                float distance = std::sqrt((x - fx) * (x - fx) + (z - fz) * (z - fz));
+                if (distance <= RENDER_DISTANCE && y >= fy - RENDER_HEIGHT && y <= fy + RENDER_HEIGHT) {
+                    generate(x, y, z);
+                }
+            }
+        }
+    }
+}
+
 bool World::isFaceVisible(const int x, const int y, const int z, const Chunk& chunk, const int face) {
     // Pour simplifier, on ne regarde que dans ce chunk
     static const glm::ivec3 directions[6] = {

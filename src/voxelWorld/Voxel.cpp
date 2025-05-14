@@ -6,7 +6,7 @@
 
 #include "blocks/BlockRegistry.h"
 
-Voxel::Voxel() {}
+Voxel::Voxel() = default;
 
 Voxel::Voxel(const uint8_t id) {
     type = BlockRegistry::fromID(id);

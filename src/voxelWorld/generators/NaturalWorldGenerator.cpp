@@ -9,8 +9,9 @@
 OS2 noise;
 
 int getHeightAt(const int x, const int z) {
-    const auto noiseValue = static_cast<float>(noise.noise2(static_cast<float>(x), static_cast<float>(z)));
-    const int height = static_cast<int>((noiseValue + 1.0f) * 5);
+    constexpr double size = 1.f / 64.f;
+    const auto noiseValue = static_cast<float>(noise.noise2(static_cast<float>(x * size), static_cast<float>(z * size)));
+    const int height = static_cast<int>((noiseValue + 0.5f) * 10);
     return std::clamp(height, 0, 10);
 }
 

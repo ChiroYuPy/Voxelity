@@ -37,10 +37,11 @@ Renderer::~Renderer() {
     glDeleteBuffers(1, &vbo);
 }
 
-void Renderer::render(const glm::mat4& view, const glm::mat4& projection) const {
+void Renderer::render(const glm::mat4& view, const glm::mat4& projection, const glm::vec3& lightDirection) const {
     shader.use();
     shader.setUniform("uView", view);
     shader.setUniform("uProjection", projection);
+    shader.setUniform("uLightDirection", lightDirection);
 
     glBindVertexArray(vao);
     glDrawArraysInstanced(GL_TRIANGLES, 0, 6, voxelFaces.size());

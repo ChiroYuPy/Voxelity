@@ -35,6 +35,9 @@ private:
     std::unique_ptr<Renderer> renderer;
     std::unique_ptr<EventDispatcher> eventDispatcher;
     std::unique_ptr<CameraController> cameraController;
+
+    glm::vec3 lightDirection;
+
     float lastTime;
 };
 

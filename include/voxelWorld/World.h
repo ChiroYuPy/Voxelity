@@ -23,6 +23,8 @@ public:
 
     std::vector<VoxelFace> generateFaceInstances() const;
 
+    void generateFromPosition(int fx, int fy, int fz);
+
 private:
     std::unique_ptr<IWorldGenerator> generator;
     std::unordered_map<unsigned long, std::unique_ptr<Chunk>> chunks;

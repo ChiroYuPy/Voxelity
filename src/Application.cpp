@@ -20,7 +20,7 @@ Application& Application::get() {
     return *instance;
 }
 
-Application::Application() : lastTime(0) {
+Application::Application() : lightDirection(glm::normalize(glm::vec3(1.0f, 0.0f, -1.0f))), lastTime(0) {
     instance = this;
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -34,15 +34,8 @@ Application::Application() : lastTime(0) {
     glEnable(GL_DEPTH_TEST);
 
     world = std::make_unique<World>();
-    constexpr int RENDER_DISTANCE = 4;
 
-    for (int x = -RENDER_DISTANCE; x < RENDER_DISTANCE; x++) {
-        for (int y = -RENDER_DISTANCE; y < RENDER_DISTANCE; y++) {
-            for (int z = -RENDER_DISTANCE; z < RENDER_DISTANCE; z++) {
-                world->generate(x, y, z);
-            }
-        }
-    }
+    world->generateFromPosition(0, 0, 0);
 
     std::vector<VoxelFace> faces = world->generateFaceInstances();
     shader = std::make_unique<Shader>("../resources/shaders/vertex_shader.glsl", "../resources/shaders/fragment_shader.glsl");
@@ -74,7 +67,7 @@ void Application::run() {
         cameraController->update(deltaTime);
         view = camera.getViewMatrix();
 
-        renderer->render(view, projection);
+        renderer->render(view, projection, lightDirection);
 
         glfwSwapBuffers(window);
     }
