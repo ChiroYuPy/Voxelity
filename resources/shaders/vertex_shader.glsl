@@ -37,8 +37,8 @@ void main() {
 
     // Calcul des coordonnées UV en fonction du blockId
     // Atlas 2x2 -> chaque texture occupe 0.5x0.5 dans l'atlas
-    float texX = float(in_blockId % 2) * 0.5;  // 0 ou 0.5
-    float texY = float(in_blockId / 2) * 0.5;  // 0 ou 0.5
+    float texX = float((in_blockId - 1) % 2) * 0.5;  // 0 ou 0.5
+    float texY = float((in_blockId - 1) / 2) * 0.5;  // 0 ou 0.5
     vUV = uvCoords[vertexIdx] * 0.5 + vec2(texX, texY);  // Ajuste la coordonnée UV
 
     gl_Position = uProjection * uView * vec4(worldPos, 1.0);
