@@ -199,7 +199,7 @@ public:
   /**
    * 4D SuperSimplex noise, with XYZ oriented like noise3_Classic,
    * and W for an extra degree of freedom.
-   * Recommended for time-varied animations which texture a 3D object (W=time)
+   * Recommended for time-varied animations which textures a 3D object (W=time)
    */
   double noise4_XYZBeforeW(double x, double y, double z, double w);
 };

@@ -23,6 +23,11 @@ World::World() {
     chunkShader = std::make_unique<Shader>(
         "../resources/shaders/vertex_shader.glsl",
         "../resources/shaders/fragment_shader.glsl");
+
+    textureAtlas = std::make_unique<Texture>(
+        "../resources/textures/atlas.png");
+
+    textureAtlas->bind(0);
 }
 
 void World::render(const glm::mat4& view, const glm::mat4& projection, const glm::vec3& lightDirection) const {
@@ -30,6 +35,8 @@ void World::render(const glm::mat4& view, const glm::mat4& projection, const glm
     chunkShader->setUniform("uView", view);
     chunkShader->setUniform("uProjection", projection);
     chunkShader->setUniform("uLightDirection", lightDirection);
+    textureAtlas->bind(0);
+    chunkShader->setUniform("uAtlas", 0);
 
     int i = 0;
     for (const auto &val: chunks | std::views::values) {

@@ -10,8 +10,9 @@ add_executable(Voxelity
         main.cpp
 
         # librairies
-        externals/src/glad.c
-        externals/src/OS2.cpp
+        externals/src/glad.c    # glad
+        externals/src/OS2.cpp   # open simplex 2
+        externals/src/IMG.cpp   # stb image
 
         # project
         src/Application.cpp
@@ -27,8 +28,9 @@ add_executable(Voxelity
         src/voxelWorld/generators/FlatWorldGenerator.cpp
         src/voxelWorld/generators/NaturalWorldGenerator.cpp
         src/voxelWorld/generators/IWorldGenerator.cpp
-        include/rendering/ChunkMesh.h
         src/rendering/ChunkMesh.cpp
+        src/textures/Image.cpp
+        src/textures/Texture.cpp
 )
 
 target_link_libraries(Voxelity glfw)

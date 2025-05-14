@@ -1,6 +1,11 @@
 #version 460 core
-in vec3 vColor;
+
+in vec2 vUV;
 out vec4 FragColor;
+
+uniform sampler2D uAtlas;
+
 void main() {
-    FragColor = vec4(vColor, 1.0);
+    vec4 texColor = texture(uAtlas, vUV);
+    FragColor = texColor;
 }

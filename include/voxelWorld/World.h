@@ -10,10 +10,12 @@
 
 #include "Voxel.h"
 #include "rendering/Shader.h"
+#include "textures/Texture.h"
 #include "voxelWorld/generators/IWorldGenerator.h"
 
 #include "voxelWorld/Chunk.h"
 
+class Texture;
 class VoxelFace;
 
 class World {
@@ -36,6 +38,7 @@ private:
     std::unique_ptr<IWorldGenerator> generator;
     std::unordered_map<unsigned long, std::unique_ptr<Chunk>> chunks;
 
+    std::unique_ptr<Texture> textureAtlas;
     std::unique_ptr<Shader> chunkShader;
 
     static unsigned long chunkKey(int cx, int cy, int cz);
