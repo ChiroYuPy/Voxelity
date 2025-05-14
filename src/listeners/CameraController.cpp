@@ -84,7 +84,7 @@ void CameraController::update(const float deltaTime) const {
     static constexpr float sprint_speed = 256.f;
 
     const float speed = m_sprint ? sprint_speed : walk_speed;
-    const float displacement = deltaTime * speed;
+    const float displacement = speed * deltaTime;
 
     if (m_moveForward)  m_camera.moveForward(displacement);
     if (m_moveBackward) m_camera.moveBackward(displacement);

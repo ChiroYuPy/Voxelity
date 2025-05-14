@@ -94,8 +94,8 @@ void World::generate(const int cx, const int cy, const int cz) {
 }
 
 void World::generateFromPosition(const glm::ivec3 position) {
-    static constexpr int RENDER_DISTANCE = 8;
-    static constexpr int RENDER_HEIGHT = 1;
+    static constexpr int RENDER_DISTANCE = 16;
+    static constexpr int RENDER_HEIGHT = 8;
 
     const auto chunkPos = glm::ivec3(
         floorDiv(position.x, CHUNK_SIZE),

@@ -11,11 +11,15 @@ glm::mat4 Camera::getViewMatrix() const {
 }
 
 void Camera::moveForward(const float amount) {
-    position += getFront() * amount;
+    glm::vec3 flatFront = getFront();
+    flatFront.y = 0;
+    position += glm::normalize(flatFront) * amount;
 }
 
 void Camera::moveBackward(const float amount) {
-    position -= getFront() * amount;
+    glm::vec3 flatFront = getFront();
+    flatFront.y = 0;
+    position -= glm::normalize(flatFront) * amount;
 }
 
 void Camera::moveRight(const float amount) {
