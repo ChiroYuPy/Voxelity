@@ -33,23 +33,14 @@ Application::Application() : lastTime(0) {
 
     glEnable(GL_DEPTH_TEST);
 
-    const std::vector<VoxelFace> instances = {
-        {{0, 0, 0}, 0, {1.0, 0.0, 0.0}},
-        {{0, 0, 0}, 1, {0.8, 0.0, 0.0}},
-        {{0, 0, 0}, 2, {0.0, 1.0, 0.0}},
-        {{2, 0, 0}, 3, {0.0, 0.8, 0.0}},
-        {{0, 0, 0}, 4, {0.0, 0.0, 1.0}},
-        {{0, 0, 0}, 5, {0.0, 0.0, 0.8}},
-    };
-
     world = std::make_unique<World>();
     auto& chunk = world->getOrCreateChunk(0, 0, 0);
 
     for (int z = 0; z < CHUNK_SIZE; ++z)
-        for (int y = 0; y < CHUNK_SIZE; ++y)
-            for (int x = 0; x < CHUNK_SIZE; ++x) {
-                if (y <= 2) chunk.set(x, y, z, Voxel{static_cast<uint8_t>((y + 1) % 3 + 1)});
-            }
+    for (int y = 0; y < CHUNK_SIZE; ++y)
+    for (int x = 0; x < CHUNK_SIZE; ++x) {
+        chunk.set(x, y, z, Voxel{static_cast<uint8_t>((y + 1) % 3 + 1)});
+    }
 
     std::vector<VoxelFace> faces = world->generateFaceInstances();
     shader = std::make_unique<Shader>("../resources/shaders/vertex_shader.glsl", "../resources/shaders/fragment_shader.glsl");

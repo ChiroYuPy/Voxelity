@@ -9,9 +9,9 @@ class VoxelFace {
 public:
     glm::ivec3 pos;
     int faceId;
-    glm::vec3 color;
+    int type;
 
-    VoxelFace(const glm::ivec3 p, const int id, const glm::vec3 c) : pos(p), faceId(id), color(c) {}
+    VoxelFace(const glm::ivec3 p, const int id, const int type) : pos(p), faceId(id), type(type) {}
 };
 
 #endif //VOXELFACE_H

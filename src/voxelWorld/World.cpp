@@ -8,7 +8,7 @@
 
 #include "rendering/VoxelFace.h"
 
-World::World() {}
+World::World() = default;
 
 int64_t World::chunkKey(const int cx, const int cy, const int cz) {
     return (static_cast<int64_t>(cx) << 40) |
@@ -48,22 +48,22 @@ std::vector<VoxelFace> World::generateFaceInstances() const {
     for (const auto &chunkPtr: chunks | std::views::values) {
         const auto& chunk = *chunkPtr;
         for (int z = 0; z < CHUNK_SIZE; ++z)
-            for (int y = 0; y < CHUNK_SIZE; ++y)
-                for (int x = 0; x < CHUNK_SIZE; ++x) {
-                    Voxel voxel = chunk.get(x, y, z);
-                    if (!voxel.isSolid()) continue;
+        for (int y = 0; y < CHUNK_SIZE; ++y)
+        for (int x = 0; x < CHUNK_SIZE; ++x) {
+            Voxel voxel = chunk.get(x, y, z);
+            if (!voxel.isSolid()) continue;
 
-                    const glm::ivec3 worldPos = chunk.getPosition() * CHUNK_SIZE + glm::ivec3(x, y, z);
-                    for (int face = 0; face < 6; ++face) {
-                        if (isFaceVisible(x, y, z, chunk, face)) {
-                            faces.push_back(VoxelFace{
-                                worldPos,
-                                face,
-                                {1.0, 0.0, 1.0}
-                            });
-                        }
-                    }
+            const glm::ivec3 worldPos = chunk.getPosition() * CHUNK_SIZE + glm::ivec3(x, y, z);
+            for (int face = 0; face < 6; ++face) {
+                if (isFaceVisible(x, y, z, chunk, face)) {
+                    faces.emplace_back(
+                        worldPos,
+                        face,
+                        static_cast<int>(voxel.type)
+                    );
                 }
+            }
+        }
     }
 
     return faces;

@@ -7,25 +7,28 @@
 #include "rendering/VoxelFace.h"
 
 Renderer::Renderer(const std::vector<VoxelFace>& instances_, const Shader& shader_)
-: instances(instances_), shader(shader_) {
+: voxelFaces(instances_), shader(shader_) {
 
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
 
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, instances.size() * sizeof(VoxelFace), instances.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, voxelFaces.size() * sizeof(VoxelFace), voxelFaces.data(), GL_STATIC_DRAW);
 
+    // Position
     glEnableVertexAttribArray(0);
     glVertexAttribIPointer(0, 3, GL_INT, sizeof(VoxelFace), static_cast<void *>(nullptr));
     glVertexAttribDivisor(0, 1);
 
+    // faceId
     glEnableVertexAttribArray(1);
     glVertexAttribIPointer(1, 1, GL_INT, sizeof(VoxelFace), reinterpret_cast<void *>(offsetof(VoxelFace, faceId)));
     glVertexAttribDivisor(1, 1);
 
+    // type
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(VoxelFace), reinterpret_cast<void *>(offsetof(VoxelFace, color)));
+    glVertexAttribIPointer(2, 1, GL_INT, sizeof(VoxelFace), reinterpret_cast<void *>(offsetof(VoxelFace, type)));
     glVertexAttribDivisor(2, 1);
 }
 
@@ -40,5 +43,5 @@ void Renderer::render(const glm::mat4& view, const glm::mat4& projection) const 
     shader.setUniform("uProjection", projection);
 
     glBindVertexArray(vao);
-    glDrawArraysInstanced(GL_TRIANGLES, 0, 6, instances.size());
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 6, voxelFaces.size());
 }

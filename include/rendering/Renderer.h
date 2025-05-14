@@ -16,7 +16,7 @@ class VoxelFace;
 class Renderer {
 public:
     GLuint vao, vbo;
-    std::vector<VoxelFace> instances;
+    std::vector<VoxelFace> voxelFaces;
     Shader shader;
 
     explicit Renderer(const std::vector<VoxelFace>& instances_, const Shader& shader_);
