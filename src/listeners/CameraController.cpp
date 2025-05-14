@@ -38,6 +38,7 @@ void CameraController::handleKey(const int key, const bool pressed) {
         m_moveRight    = false;
         m_moveUp       = false;
         m_moveDown     = false;
+        m_sprint       = false;
     } else if (key == GLFW_KEY_F && pressed) {
         m_control = true;
         glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -46,18 +47,21 @@ void CameraController::handleKey(const int key, const bool pressed) {
 
     if (m_control) {
         switch (key) {
-            case GLFW_KEY_W: m_moveForward  = pressed; break;
-            case GLFW_KEY_S: m_moveBackward = pressed; break;
-            case GLFW_KEY_A: m_moveLeft     = pressed; break;
-            case GLFW_KEY_D: m_moveRight    = pressed; break;
-            case GLFW_KEY_SPACE: m_moveUp   = pressed; break;
+            case GLFW_KEY_W: m_moveForward       = pressed; break;
+            case GLFW_KEY_S: m_moveBackward      = pressed; break;
+            case GLFW_KEY_A: m_moveLeft          = pressed; break;
+            case GLFW_KEY_D: m_moveRight         = pressed; break;
+            case GLFW_KEY_SPACE: m_moveUp        = pressed; break;
             case GLFW_KEY_LEFT_SHIFT: m_moveDown = pressed; break;
+            case GLFW_KEY_R: m_sprint  = pressed; break;
             default: break;
         }
     }
 }
 
 void CameraController::handleMouse(const double xpos, const double ypos) {
+    static constexpr float mouse_sensitivity = 0.2f;
+
     if (m_control) {
         if (m_firstMouse) {
             m_lastX = xpos;
@@ -65,8 +69,8 @@ void CameraController::handleMouse(const double xpos, const double ypos) {
             m_firstMouse = false;
         }
 
-        const auto dx = static_cast<float>(xpos - m_lastX);
-        const auto dy = static_cast<float>(ypos - m_lastY);
+        const auto dx = static_cast<float>(xpos - m_lastX) * mouse_sensitivity;
+        const auto dy = static_cast<float>(ypos - m_lastY) * mouse_sensitivity;
 
         m_lastX = xpos;
         m_lastY = ypos;
@@ -76,11 +80,16 @@ void CameraController::handleMouse(const double xpos, const double ypos) {
 }
 
 void CameraController::update(const float deltaTime) const {
-    static constexpr int speed = 12;
-    if (m_moveForward)  m_camera.moveForward(speed * deltaTime);
-    if (m_moveBackward) m_camera.moveBackward(speed * deltaTime);
-    if (m_moveLeft)     m_camera.moveLeft(speed * deltaTime);
-    if (m_moveRight)    m_camera.moveRight(speed * deltaTime);
-    if (m_moveUp)       m_camera.moveUp(speed * deltaTime);
-    if (m_moveDown)     m_camera.moveDown(speed * deltaTime);
+    static constexpr float walk_speed = 16.f;
+    static constexpr float sprint_speed = 256.f;
+
+    const float speed = m_sprint ? sprint_speed : walk_speed;
+    const float displacement = deltaTime * speed;
+
+    if (m_moveForward)  m_camera.moveForward(displacement);
+    if (m_moveBackward) m_camera.moveBackward(displacement);
+    if (m_moveLeft)     m_camera.moveLeft(displacement);
+    if (m_moveRight)    m_camera.moveRight(displacement);
+    if (m_moveUp)       m_camera.moveUp(displacement);
+    if (m_moveDown)     m_camera.moveDown(displacement);
 }

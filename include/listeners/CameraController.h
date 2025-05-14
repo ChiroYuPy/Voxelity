@@ -30,6 +30,7 @@ private:
     bool m_moveRight    = false;
     bool m_moveUp       = false;
     bool m_moveDown     = false;
+    bool m_sprint       = false;
 
     double m_lastX = 400.0, m_lastY = 300.0;
     bool m_firstMouse = true;
