@@ -9,25 +9,28 @@
 #include <unordered_map>
 #include <vector>
 
-#include "Chunk.h"
-
+#include "rendering/Shader.h"
 #include "voxelWorld/generators/IWorldGenerator.h"
 
 class VoxelFace;
 
 class World {
 public:
-    World();
+    explicit World();
 
     void generate(int cx, int cy, int cz);
 
-    std::vector<VoxelFace> generateFaceInstances() const;
+    void generateFromPosition(glm::ivec3 position);
 
-    void generateFromPosition(int fx, int fy, int fz);
+    void render(const glm::mat4& view, const glm::mat4& projection, const glm::vec3& lightDirection) const;
+
+    void update() const;
 
 private:
     std::unique_ptr<IWorldGenerator> generator;
     std::unordered_map<unsigned long, std::unique_ptr<Chunk>> chunks;
+
+    std::unique_ptr<Shader> chunkShader;
 
     static unsigned long chunkKey(int cx, int cy, int cz);
     static bool isFaceVisible(int x, int y, int z, const Chunk& chunk, int face);

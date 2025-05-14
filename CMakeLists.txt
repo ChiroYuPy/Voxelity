@@ -15,7 +15,6 @@ add_executable(Voxelity
 
         # project
         src/Application.cpp
-        src/rendering/Renderer.cpp
         src/rendering/Camera.cpp
         src/rendering/Shader.cpp
         src/blocks/BlockRegistry.cpp
@@ -28,6 +27,8 @@ add_executable(Voxelity
         src/voxelWorld/generators/FlatWorldGenerator.cpp
         src/voxelWorld/generators/NaturalWorldGenerator.cpp
         src/voxelWorld/generators/IWorldGenerator.cpp
+        include/rendering/Mesh.h
+        src/rendering/Mesh.cpp
 )
 
 target_link_libraries(Voxelity glfw)

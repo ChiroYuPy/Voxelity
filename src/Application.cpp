@@ -7,12 +7,10 @@
 #include "listeners/CameraController.h"
 #include "events/EventDispatcher.h"
 #include "events/GLFWEventAdapter.h"
-
-#include "rendering/VoxelFace.h"
-
-#include "rendering/Renderer.h"
-#include "rendering/Shader.h"
 #include "voxelWorld/World.h"
+
+constexpr unsigned int SCREEN_WIDTH = 1920;
+constexpr unsigned int SCREEN_HEIGHT = 1080;
 
 Application* Application::instance = nullptr;
 
@@ -20,14 +18,14 @@ Application& Application::get() {
     return *instance;
 }
 
-Application::Application() : lightDirection(glm::normalize(glm::vec3(1.0f, 0.0f, -1.0f))), lastTime(0) {
+Application::Application() : lastTime(0) {
     instance = this;
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    window = glfwCreateWindow(800, 600, "Voxel Renderer", nullptr, nullptr);
+    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Voxel Renderer", nullptr, nullptr);
     glfwMakeContextCurrent(window);
     gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
 
@@ -35,11 +33,8 @@ Application::Application() : lightDirection(glm::normalize(glm::vec3(1.0f, 0.0f,
 
     world = std::make_unique<World>();
 
-    world->generateFromPosition(0, 0, 0);
+    world->generateFromPosition(glm::ivec3(0, 0, 0));
 
-    std::vector<VoxelFace> faces = world->generateFaceInstances();
-    shader = std::make_unique<Shader>("../resources/shaders/vertex_shader.glsl", "../resources/shaders/fragment_shader.glsl");
-    renderer = std::make_unique<Renderer>(faces, *shader);
     eventDispatcher = std::make_unique<EventDispatcher>();
     cameraController = std::make_unique<CameraController>(window, camera);
     eventDispatcher->subscribe(cameraController.get());
@@ -52,7 +47,7 @@ Application::~Application() {
 }
 
 void Application::run() {
-    const glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.f / 600.f, 0.1f, 1000.f);
+    const glm::mat4 projection = glm::perspective(glm::radians(45.0f), static_cast<float>(SCREEN_WIDTH) / static_cast<float>(SCREEN_HEIGHT), 0.1f, 1000.f);
     glm::mat4 view = camera.getViewMatrix();
 
     while (!glfwWindowShouldClose(window)) {
@@ -67,7 +62,10 @@ void Application::run() {
         cameraController->update(deltaTime);
         view = camera.getViewMatrix();
 
-        renderer->render(view, projection, lightDirection);
+        world->generateFromPosition(camera.position);
+
+        world->update();
+        world->render(view, projection, glm::ivec3(1.0, 1.0, 1.0));
 
         glfwSwapBuffers(window);
     }
