@@ -11,10 +11,10 @@
 
 struct Voxel;
 
-class Mesh {
+class ChunkMesh {
 public:
-    explicit Mesh();
-    ~Mesh();
+    explicit ChunkMesh();
+    ~ChunkMesh();
 
     void render() const;
 

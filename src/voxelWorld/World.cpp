@@ -8,7 +8,7 @@
 #include <ranges>
 #include <utility>
 
-#include "rendering/Mesh.h"
+#include "rendering/ChunkMesh.h"
 #include "rendering/Shader.h"
 #include "voxelWorld/generators/FlatWorldGenerator.h"
 #include "voxelWorld/generators/NaturalWorldGenerator.h"

@@ -13,7 +13,7 @@
 #include "Voxel.h"
 
 class World;
-class Mesh;
+class ChunkMesh;
 constexpr int CHUNK_SIZE = 16;
 
 class Chunk {
@@ -28,7 +28,7 @@ public:
     void set(int x, int y, int z, BlockType blockType);
 
     [[nodiscard]] glm::ivec3 getPosition() const;
-    [[nodiscard]] std::shared_ptr<Mesh> getMesh() const;
+    [[nodiscard]] std::shared_ptr<ChunkMesh> getMesh() const;
     void updateMesh();
 
     [[nodiscard]] Chunk* getNeighbor(uint8_t direction) const;
@@ -42,7 +42,7 @@ private:
     bool dirty;
     glm::ivec3 position;
     std::array<Voxel, CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE> voxels;
-    std::shared_ptr<Mesh> mesh;
+    std::shared_ptr<ChunkMesh> mesh;
     Chunk* neighbors[6] = {nullptr};
 
     static int index(int x, int y, int z);

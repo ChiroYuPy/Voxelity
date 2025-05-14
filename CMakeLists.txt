@@ -27,8 +27,8 @@ add_executable(Voxelity
         src/voxelWorld/generators/FlatWorldGenerator.cpp
         src/voxelWorld/generators/NaturalWorldGenerator.cpp
         src/voxelWorld/generators/IWorldGenerator.cpp
-        include/rendering/Mesh.h
-        src/rendering/Mesh.cpp
+        include/rendering/ChunkMesh.h
+        src/rendering/ChunkMesh.cpp
 )
 
 target_link_libraries(Voxelity glfw)

@@ -4,11 +4,11 @@
 
 #include "voxelWorld/Chunk.h"
 
-#include "rendering/Mesh.h"
+#include "rendering/ChunkMesh.h"
 #include "voxelWorld/World.h"
 
 Chunk::Chunk(const int cx, const int cy, const int cz, const World* world) : world(world), dirty(true), position{cx, cy, cz} {
-    mesh = std::make_shared<Mesh>();
+    mesh = std::make_shared<ChunkMesh>();
 }
 
 void Chunk::setDirty(const bool dirty_) {
@@ -41,7 +41,7 @@ int Chunk::index(const int x, const int y, const int z) {
     return x + CHUNK_SIZE * (y + CHUNK_SIZE * z);
 }
 
-std::shared_ptr<Mesh> Chunk::getMesh() const {
+std::shared_ptr<ChunkMesh> Chunk::getMesh() const {
     return mesh;
 }
 

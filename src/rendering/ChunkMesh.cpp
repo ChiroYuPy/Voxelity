@@ -2,13 +2,13 @@
 // Created by adrian on 14/05/25.
 //
 
-#include "rendering/Mesh.h"
+#include "rendering/ChunkMesh.h"
 
 #include <iostream>
 
 #include "voxelWorld/World.h"
 
-Mesh::Mesh() {
+ChunkMesh::ChunkMesh() {
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
 
@@ -34,19 +34,19 @@ Mesh::Mesh() {
     glVertexAttribDivisor(2, 1);
 }
 
-Mesh::~Mesh() {
+ChunkMesh::~ChunkMesh() {
     glDeleteVertexArrays(1, &vao);
     glDeleteBuffers(1, &vbo);
 }
 
-void Mesh::render() const {
+void ChunkMesh::render() const {
     if (voxelFaces.empty()) return;
 
     glBindVertexArray(vao);
     glDrawArraysInstanced(GL_TRIANGLES, 0, 6, voxelFaces.size());
 }
 
-bool Mesh::isFaceVisible(const int x, const int y, const int z, const Chunk& chunk, const World& world, const int face) {
+bool ChunkMesh::isFaceVisible(const int x, const int y, const int z, const Chunk& chunk, const World& world, const int face) {
     static const glm::ivec3 directions[6] = {
         {1, 0, 0}, {-1, 0, 0},
         {0, 1, 0}, {0, -1, 0},
@@ -66,7 +66,7 @@ bool Mesh::isFaceVisible(const int x, const int y, const int z, const Chunk& chu
     return !chunk.getVoxelAt(nx, ny, nz)->isSolid();
 }
 
-std::vector<VoxelFace> Mesh::generateFaceInstances(const Chunk& chunk, const World& world) {
+std::vector<VoxelFace> ChunkMesh::generateFaceInstances(const Chunk& chunk, const World& world) {
     std::vector<VoxelFace> faces;
 
     for (int z = 0; z < CHUNK_SIZE; ++z)
@@ -86,7 +86,7 @@ std::vector<VoxelFace> Mesh::generateFaceInstances(const Chunk& chunk, const Wor
     return faces;
 }
 
-void Mesh::build(const Chunk* chunk, const World* world) {
+void ChunkMesh::build(const Chunk* chunk, const World* world) {
     voxelFaces = generateFaceInstances(*chunk, *world);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
