@@ -34,12 +34,14 @@ Application::Application() : lastTime(0) {
     glEnable(GL_DEPTH_TEST);
 
     world = std::make_unique<World>();
-    auto& chunk = world->getOrCreateChunk(0, 0, 0);
+    constexpr int RENDER_DISTANCE = 4;
 
-    for (int z = 0; z < CHUNK_SIZE; ++z)
-    for (int y = 0; y < CHUNK_SIZE; ++y)
-    for (int x = 0; x < CHUNK_SIZE; ++x) {
-        chunk.set(x, y, z, Voxel{static_cast<uint8_t>((y + 1) % 3 + 1)});
+    for (int x = -RENDER_DISTANCE; x < RENDER_DISTANCE; x++) {
+        for (int y = -RENDER_DISTANCE; y < RENDER_DISTANCE; y++) {
+            for (int z = -RENDER_DISTANCE; z < RENDER_DISTANCE; z++) {
+                world->generate(x, y, z);
+            }
+        }
     }
 
     std::vector<VoxelFace> faces = world->generateFaceInstances();
@@ -57,7 +59,7 @@ Application::~Application() {
 }
 
 void Application::run() {
-    const glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.f / 600.f, 0.1f, 100.f);
+    const glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.f / 600.f, 0.1f, 1000.f);
     glm::mat4 view = camera.getViewMatrix();
 
     while (!glfwWindowShouldClose(window)) {

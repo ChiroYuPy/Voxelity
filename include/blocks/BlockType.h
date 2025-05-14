@@ -12,6 +12,7 @@ enum class BlockType : glm::uint8_t {
     Grass,
     Dirt,
     Stone,
+    Bedrock,
     COUNT    // count of block types
 };
 

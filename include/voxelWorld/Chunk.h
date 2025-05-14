@@ -20,6 +20,8 @@ public:
     Voxel get(int x, int y, int z) const;
     void set(int x, int y, int z, Voxel voxel);
 
+    void set(int x, int y, int z, BlockType blockType);
+
     glm::ivec3 getPosition() const;
 
 private:

@@ -8,7 +8,12 @@ include_directories(externals/include)
 
 add_executable(Voxelity
         main.cpp
+
+        # librairies
         externals/src/glad.c
+        externals/src/OS2.cpp
+
+        # project
         src/Application.cpp
         src/rendering/Renderer.cpp
         src/rendering/Camera.cpp
@@ -20,6 +25,9 @@ add_executable(Voxelity
         src/listeners/CameraController.cpp
         src/events/GLFWEventAdapter.cpp
         src/events/EventDispatcher.cpp
+        src/voxelWorld/generators/FlatWorldGenerator.cpp
+        src/voxelWorld/generators/NaturalWorldGenerator.cpp
+        src/voxelWorld/generators/IWorldGenerator.cpp
 )
 
 target_link_libraries(Voxelity glfw)

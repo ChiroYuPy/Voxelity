@@ -7,21 +7,30 @@
 #include <ranges>
 
 #include "rendering/VoxelFace.h"
+#include "voxelWorld/generators/FlatWorldGenerator.h"
+#include "voxelWorld/generators/NaturalWorldGenerator.h"
 
-World::World() = default;
-
-int64_t World::chunkKey(const int cx, const int cy, const int cz) {
-    return (static_cast<int64_t>(cx) << 40) |
-           (static_cast<int64_t>(cy) << 20) |
-           static_cast<int64_t>(cz);
+World::World() {
+    generator = std::make_unique<NaturalWorldGenerator>();
 }
 
-Chunk& World::getOrCreateChunk(int cx, int cy, int cz) {
+unsigned long World::chunkKey(const int cx, const int cy, const int cz) {
+    constexpr int OFFSET = 1 << 20;
+
+    const unsigned long ux = static_cast<unsigned long>(cx + OFFSET) & 0x1FFFFF;
+    const unsigned long uy = static_cast<unsigned long>(cy + OFFSET) & 0x1FFFFF;
+    const unsigned long uz = static_cast<unsigned long>(cz + OFFSET) & 0x1FFFFF;
+
+    return (ux << 42) | (uy << 21) | uz;
+}
+
+void World::generate(int cx, int cy, int cz) {
     const auto key = chunkKey(cx, cy, cz);
     if (!chunks.contains(key)) {
-        chunks[key] = std::make_unique<Chunk>(cx, cy, cz);
+        auto chunk = std::make_unique<Chunk>(cx, cy, cz);
+        generator->generate(*chunk);
+        chunks[key] = std::move(chunk);
     }
-    return *chunks[key];
 }
 
 bool World::isFaceVisible(const int x, const int y, const int z, const Chunk& chunk, const int face) {

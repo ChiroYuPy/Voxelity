@@ -7,10 +7,10 @@ class Camera {
 public:
     glm::vec3 position;
     float yaw, pitch;
-    float speed = 5.0f;
+    float speed = 32.0f;
     float sensitivity = 0.1f;
 
-    explicit Camera(glm::vec3 startPos = glm::vec3(0, 0, 3),
+    explicit Camera(glm::vec3 startPos = glm::vec3(128, 128, 128),
                     float yaw = -90.0f,
                     float pitch = 0.0f);
 

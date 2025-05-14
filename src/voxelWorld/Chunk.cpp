@@ -14,6 +14,10 @@ void Chunk::set(const int x, const int y, const int z, const Voxel voxel) {
     voxels[index(x, y, z)] = voxel;
 }
 
+void Chunk::set(const int x, const int y, const int z, const BlockType blockType) {
+    voxels[index(x, y, z)] = Voxel{static_cast<uint8_t>(blockType)};
+}
+
 glm::ivec3 Chunk::getPosition() const {
     return position;
 }
