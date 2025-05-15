@@ -2,7 +2,7 @@
 // Created by adrian on 14/05/25.
 //
 
-#include "../../include/listeners/CameraController.h"
+#include "CameraController.h"
 
 #include "rendering/Camera.h"
 

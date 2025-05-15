@@ -3,11 +3,11 @@ project(Voxelity)
 
 set(CMAKE_CXX_STANDARD 20)
 
-include_directories(include)
+include_directories(Voxelity)
 include_directories(externals/include)
 
 add_executable(Voxelity
-        main.cpp
+        Voxelity/main.cpp
 
         # librairies
         externals/src/glad.c    # glad
@@ -15,23 +15,23 @@ add_executable(Voxelity
         externals/src/IMG.cpp   # stb image
 
         # project
-        src/Application.cpp
-        src/rendering/Camera.cpp
-        src/rendering/Shader.cpp
-        src/blocks/BlockRegistry.cpp
-        src/voxelWorld/Voxel.cpp
-        src/voxelWorld/Chunk.cpp
-        src/voxelWorld/World.cpp
-        src/listeners/CameraController.cpp
-        src/events/GLFWEventAdapter.cpp
-        src/events/EventDispatcher.cpp
-        src/voxelWorld/generators/FlatWorldGenerator.cpp
-        src/voxelWorld/generators/NaturalWorldGenerator.cpp
-        src/voxelWorld/generators/IWorldGenerator.cpp
-        src/rendering/ChunkMesh.cpp
-        src/textures/Image.cpp
-        src/textures/Texture.cpp
-        src/Profiler.cpp
+        Voxelity/Application.cpp
+        Voxelity/rendering/Camera.cpp
+        Voxelity/rendering/Shader.cpp
+        Voxelity/blocks/BlockRegistry.cpp
+        Voxelity/voxelWorld/Voxel.cpp
+        Voxelity/voxelWorld/Chunk.cpp
+        Voxelity/voxelWorld/World.cpp
+        Voxelity/listeners/CameraController.cpp
+        Voxelity/events/GLFWEventAdapter.cpp
+        Voxelity/events/EventDispatcher.cpp
+        Voxelity/voxelWorld/generators/FlatWorldGenerator.cpp
+        Voxelity/voxelWorld/generators/NaturalWorldGenerator.cpp
+        Voxelity/voxelWorld/generators/IWorldGenerator.cpp
+        Voxelity/rendering/ChunkMesh.cpp
+        Voxelity/textures/Image.cpp
+        Voxelity/textures/Texture.cpp
+        Voxelity/Profiler.cpp
 )
 
 target_link_libraries(Voxelity glfw)
