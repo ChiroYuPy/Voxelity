@@ -11,41 +11,49 @@
 #include <memory>
 
 #include "Voxel.h"
+#include "math/Direction.h"
 
-class World;
 class ChunkMesh;
-constexpr int CHUNK_SIZE = 16;
 
 class Chunk {
 public:
-    Chunk(int cx, int cy, int cz, const World* world);
+    static constexpr int SIZE = 16;
 
-    void setDirty(bool dirty_);
-    [[nodiscard]] bool isDirty() const;
+private:
+    std::array<Voxel, SIZE * SIZE * SIZE> voxels;
 
-    [[nodiscard]] const Voxel* getVoxelAt(int x, int y, int z) const;
-    void set(int x, int y, int z, Voxel voxel);
-    void set(int x, int y, int z, BlockType blockType);
+    glm::ivec3 position;
+    bool dirty;
+
+    Chunk* neighbors[6] = {nullptr};
+
+    void buildMesh() const;
+
+    std::shared_ptr<ChunkMesh> mesh;
+
+    static unsigned int index(unsigned int x, unsigned int y, unsigned int z);
+    static unsigned int index(glm::uvec3 position);
+
+public:
+    explicit Chunk(glm::ivec3 position);
+
+    [[nodiscard]] const Voxel* at(unsigned int x, unsigned int y, unsigned int z) const;
+    void set(unsigned int x, unsigned int y, unsigned int z, BlockType blockType);
+
+    [[nodiscard]] const Voxel* at(glm::uvec3 position) const;
+    void set(glm::uvec3 position, BlockType blockType);
 
     [[nodiscard]] glm::ivec3 getPosition() const;
+
     [[nodiscard]] std::shared_ptr<ChunkMesh> getMesh() const;
     void updateMesh();
 
-    [[nodiscard]] Chunk* getNeighbor(uint8_t direction) const;
-    void setNeighbor(uint8_t direction, Chunk* neighbor);
+    [[nodiscard]] Chunk* getNeighbor(Direction direction) const;
+    void setNeighbor(Direction direction, Chunk* neighbor);
 
-private:
-    void buildMesh() const;
+    void markDirty();
+    [[nodiscard]] bool isDirty() const;
 
-    const World *world;
-
-    bool dirty;
-    glm::ivec3 position;
-    std::array<Voxel, CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE> voxels;
-    std::shared_ptr<ChunkMesh> mesh;
-    Chunk* neighbors[6] = {nullptr};
-
-    static int index(int x, int y, int z);
 };
 
 #endif //CHUNK_H

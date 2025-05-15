@@ -2,7 +2,7 @@
 // Created by adrian on 13/05/25.
 //
 
-#include "../Application.h"
+#include "Application.h"
 
 #include <iostream>
 
@@ -46,6 +46,8 @@ Application::Application()
     cameraController = std::make_unique<CameraController>(window, camera);
     eventDispatcher->subscribe(cameraController.get());
     GLFWEventAdapter(window, *eventDispatcher);
+
+    world->generateFromPosition(camera.position);
 }
 
 Application::~Application() {
@@ -70,7 +72,7 @@ void Application::update() {
     }
 
     cameraController->update(deltaTime);
-    world->generateFromPosition(camera.position);
+    // world->generateFromPosition(camera.position);
     world->update();
 }
 

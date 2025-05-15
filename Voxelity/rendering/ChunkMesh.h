@@ -18,11 +18,11 @@ public:
 
     void render() const;
 
-    static bool isFaceVisible(int x, int y, int z, const Chunk &chunk, const World& world, int face);
+    static bool isFaceVisible(int x, int y, int z, const Chunk &chunk, Direction direction);
 
-    static std::vector<VoxelFace> generateFaceInstances(const Chunk &chunk, const World& world) ;
+    static std::vector<VoxelFace> generateFaceInstances(const Chunk &chunk) ;
 
-    void build(const Chunk* chunk, const World* world);
+    void build(const Chunk* chunk);
 
 private:
     GLuint vao{}, vbo{};

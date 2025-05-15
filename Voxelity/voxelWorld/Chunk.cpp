@@ -9,38 +9,46 @@
 #include "rendering/ChunkMesh.h"
 #include "voxelWorld/World.h"
 
-Chunk::Chunk(const int cx, const int cy, const int cz, const World* world) : world(world), dirty(true), position{cx, cy, cz} {
+Chunk::Chunk(const glm::ivec3 position) : position(position), dirty(true) {
     mesh = std::make_shared<ChunkMesh>();
 }
 
-void Chunk::setDirty(const bool dirty_) {
-    dirty = dirty_;
+void Chunk::markDirty() {
+    dirty = true;
 }
 
 bool Chunk::isDirty() const {
     return dirty;
 }
 
-const Voxel* Chunk::getVoxelAt(const int x, const int y, const int z) const {
+const Voxel* Chunk::at(const unsigned int x, const unsigned int y, const unsigned int z) const {
     return &voxels[index(x, y, z)];
 }
 
-void Chunk::set(const int x, const int y, const int z, const Voxel voxel) {
-    voxels[index(x, y, z)] = voxel;
-    setDirty(true);
+void Chunk::set(const unsigned int x, unsigned const int y, unsigned const int z, const BlockType blockType) {
+    voxels[index(x, y, z)] = Voxel{static_cast<uint8_t>(blockType)};
+    markDirty();
 }
 
-void Chunk::set(const int x, const int y, const int z, const BlockType blockType) {
-    voxels[index(x, y, z)] = Voxel{static_cast<uint8_t>(blockType)};
-    setDirty(true);
+const Voxel* Chunk::at(const glm::uvec3 position) const {
+    return &voxels[index(position)];
+}
+
+void Chunk::set(const glm::uvec3 position, const BlockType blockType) {
+    voxels[index(position)] = Voxel{static_cast<uint8_t>(blockType)};
+    markDirty();
 }
 
 glm::ivec3 Chunk::getPosition() const {
     return position;
 }
 
-int Chunk::index(const int x, const int y, const int z) {
-    return x + CHUNK_SIZE * (y + CHUNK_SIZE * z);
+unsigned int Chunk::index(const unsigned int x, const unsigned int y, const unsigned int z) {
+    return x + SIZE * (y + SIZE * z);
+}
+
+unsigned int Chunk::index(const glm::uvec3 position) {
+    return position.x + SIZE * position.y + SIZE * position.z;
 }
 
 std::shared_ptr<ChunkMesh> Chunk::getMesh() const {
@@ -50,18 +58,18 @@ std::shared_ptr<ChunkMesh> Chunk::getMesh() const {
 void Chunk::updateMesh() {
     if (isDirty()) {
         buildMesh();
-        setDirty(false);
+        dirty = false;
     }
 }
 
-Chunk* Chunk::getNeighbor(const uint8_t direction) const {
+void Chunk::buildMesh() const {
+    mesh->build(this);
+}
+
+Chunk* Chunk::getNeighbor(const Direction direction) const {
     return neighbors[static_cast<int>(direction)];
 }
 
-void Chunk::setNeighbor(const uint8_t direction, Chunk* neighbor) {
+void Chunk::setNeighbor(const Direction direction, Chunk* neighbor) {
     neighbors[static_cast<int>(direction)] = neighbor;
-}
-
-void Chunk::buildMesh() const {
-    mesh->build(this, world);
 }

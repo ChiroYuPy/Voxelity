@@ -24,6 +24,8 @@ public:
 
     void generate(int cx, int cy, int cz);
 
+    void generateChunk(Chunk *chunk) const;
+
     void generateFromPosition(glm::ivec3 position);
 
     void pruneChunks(const glm::ivec3& center);

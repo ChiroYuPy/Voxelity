@@ -32,6 +32,7 @@ add_executable(Voxelity
         Voxelity/textures/Image.cpp
         Voxelity/textures/Texture.cpp
         Voxelity/core/utils/Profiler.cpp
+        Voxelity/math/Direction.h
 
 )
 
