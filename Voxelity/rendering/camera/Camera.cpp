@@ -2,7 +2,7 @@
 // Created by adrian on 13/05/25.
 //
 
-#include "rendering/Camera.h"
+#include "Camera.h"
 
 Camera::Camera(const glm::vec3 startPos, const float yaw, const float pitch) : position(startPos), yaw(yaw), pitch(pitch) {}
 

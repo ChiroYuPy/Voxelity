@@ -9,7 +9,7 @@
 
 #include <memory>
 
-#include "rendering/Camera.h"
+#include "rendering/camera/Camera.h"
 
 class World;
 class CameraController;

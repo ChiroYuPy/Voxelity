@@ -4,7 +4,7 @@
 
 #include "CameraController.h"
 
-#include "rendering/Camera.h"
+#include "../rendering/camera/Camera.h"
 
 CameraController::CameraController(GLFWwindow* window, Camera& camera)
     : m_camera(camera), m_window(window) {}
