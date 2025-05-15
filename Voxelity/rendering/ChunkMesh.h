@@ -13,10 +13,12 @@ struct Voxel;
 
 class ChunkMesh {
 public:
-    explicit ChunkMesh();
+    explicit ChunkMesh(Chunk* chunk);
     ~ChunkMesh();
 
     void render() const;
+
+    bool hasVisibleFaces() const;
 
     static bool isFaceVisible(int x, int y, int z, const Chunk &chunk, Direction direction);
 
@@ -27,6 +29,7 @@ public:
     void clear();
 
 private:
+    Chunk* chunk;
     GLuint vao{}, vbo{};
     std::vector<VoxelFace> voxelFaces;
 };

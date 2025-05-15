@@ -9,8 +9,9 @@
 #include "rendering/ChunkMesh.h"
 #include "voxelWorld/World.h"
 
-Chunk::Chunk(const glm::ivec3 position) : position(position), dirty(true) {
-    mesh = std::make_shared<ChunkMesh>();
+Chunk::Chunk(const glm::ivec3 position) : position(position), dirty(true), empty(true) {
+    mesh = std::make_shared<ChunkMesh>(this);
+    fill(BlockType::Air);
 }
 
 void Chunk::markDirty() {
@@ -19,6 +20,28 @@ void Chunk::markDirty() {
 
 bool Chunk::isDirty() const {
     return dirty;
+}
+
+bool Chunk::isEmpty() const {
+    return empty;
+}
+
+void Chunk::fill(BlockType blockType) {
+    const Voxel voxelToSet{static_cast<uint8_t>(blockType)};
+    for (auto& voxel : voxels) {
+        voxel = voxelToSet;
+    }
+    empty = blockType == BlockType::Air;
+}
+
+void Chunk::updateEmptyFlag() {
+    for (const Voxel& voxel : voxels) {
+        if (voxel.type != BlockType::Air) {
+            empty = false;
+            return;
+        }
+    }
+    empty = true;
 }
 
 const Voxel* Chunk::at(const unsigned int x, const unsigned int y, const unsigned int z) const {
@@ -58,6 +81,7 @@ std::shared_ptr<ChunkMesh> Chunk::getMesh() const {
 void Chunk::updateMesh() {
     if (isDirty()) {
         buildMesh();
+        updateEmptyFlag();
         dirty = false;
     }
 }

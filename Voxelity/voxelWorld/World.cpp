@@ -10,6 +10,7 @@
 
 #include "engine/Application.h"
 #include "core/utils/Profiler.h"
+#include "math/Frustrum.h"
 #include "rendering/ChunkMesh.h"
 #include "rendering/shader/Shader.h"
 #include "voxelWorld/generators/FlatWorldGenerator.h"
@@ -19,7 +20,7 @@ inline int floorDiv(const int a, const int b) {
     return (a >= 0) ? (a / b) : ((a - b + 1) / b);
 }
 
-World::World() {
+World::World() : frustum() {
     generator = std::make_unique<NaturalWorldGenerator>();
 
     chunkShader = std::make_unique<Shader>(
@@ -36,14 +37,30 @@ void World::render(const glm::mat4& view,
                    const glm::mat4& projection,
                    const glm::vec3& lightDirection,
                    const glm::vec3& lightColor,
-                   const glm::vec3& ambientColor) const {
+                   const glm::vec3& ambientColor) {
     PROFILE_FUNCTION();
-
     prepareShader(view, projection, lightDirection, lightColor, ambientColor);
     prepareTextures();
 
-    for (const auto& chunk : chunks | std::views::values) {
-        chunk->getMesh()->render();
+    // update frustum
+    const glm::mat4 viewProj = projection * view;
+    frustum.update(viewProj);
+
+    int draws = 0;
+    for (const auto& chunkPtr : chunks | std::views::values) {
+        const auto& chunk = *chunkPtr;
+
+        // AABB calcul
+        const glm::vec3 chunkWorldMin = chunk.getPosition() * Chunk::SIZE;
+        const glm::vec3 halfSize = glm::vec3(Chunk::SIZE) * 0.5f;
+        const glm::vec3 center = chunkWorldMin + halfSize;
+
+        // frustum culling
+        if (frustum.intersectsAABB(center, halfSize)
+            && chunk.getMesh()->hasVisibleFaces()) {
+            chunk.getMesh()->render();
+            ++draws;
+            }
     }
 }
 
@@ -106,12 +123,8 @@ unsigned long World::chunkKey(const int cx, const int cy, const int cz) {
 }
 
 void World::generate(const int cx, const int cy, const int cz) {
-    static int counter = 0;
     const auto key = chunkKey(cx, cy, cz);
     if (!chunks.contains(key)) {
-        counter++;
-        // std::cout << counter << std::endl;
-
         auto chunk = std::make_unique<Chunk>(glm::ivec3(cx, cy, cz));
         generateChunk(chunk.get());
         chunks[key] = std::move(chunk);

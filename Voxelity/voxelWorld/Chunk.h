@@ -24,6 +24,7 @@ private:
 
     glm::ivec3 position;
     bool dirty;
+    bool empty;
 
     Chunk* neighbors[6] = {nullptr};
 
@@ -33,6 +34,8 @@ private:
 
     static unsigned int index(unsigned int x, unsigned int y, unsigned int z);
     static unsigned int index(glm::uvec3 position);
+
+    void updateEmptyFlag();
 
 public:
     explicit Chunk(glm::ivec3 position);
@@ -54,6 +57,9 @@ public:
     void markDirty();
     [[nodiscard]] bool isDirty() const;
 
+    [[nodiscard]] bool isEmpty() const;
+
+    void fill(BlockType blockType);
 };
 
 #endif //CHUNK_H

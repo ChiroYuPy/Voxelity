@@ -10,6 +10,7 @@
 
 #include "Voxel.h"
 #include "../rendering/shader/Shader.h"
+#include "math/Frustrum.h"
 #include "textures/Texture.h"
 #include "voxelWorld/generators/IWorldGenerator.h"
 
@@ -28,7 +29,7 @@ public:
 
     void generateFromPosition(glm::ivec3 position);
 
-    void render(const glm::mat4 & view, const glm::mat4 & projection, const glm::vec3 & lightDirection, const glm::vec3 & lightColor, const glm::vec3 & ambientColor) const;
+    void render(const glm::mat4 & view, const glm::mat4 & projection, const glm::vec3 & lightDirection, const glm::vec3 & lightColor, const glm::vec3 & ambientColor);
 
     void prepareShader(const glm::mat4& view,
                               const glm::mat4& projection,
@@ -45,6 +46,8 @@ public:
     const Voxel* getVoxelAt(int vx, int vy, int vz) const;
 
 private:
+    Frustum frustum;
+
     std::unique_ptr<IWorldGenerator> generator;
     std::unordered_map<unsigned long, std::unique_ptr<Chunk>> chunks;
 

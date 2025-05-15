@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-ChunkMesh::ChunkMesh() {
+ChunkMesh::ChunkMesh(Chunk* chunk) : chunk(chunk) {
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
 
@@ -41,7 +41,11 @@ void ChunkMesh::render() const {
     glDrawArraysInstanced(GL_TRIANGLES, 0, 6, voxelFaces.size());
 }
 
-bool ChunkMesh::isFaceVisible(int x, int y, int z, const Chunk& chunk, Direction direction) {
+bool ChunkMesh::hasVisibleFaces() const {
+    return !voxelFaces.empty();
+}
+
+bool ChunkMesh::isFaceVisible(const int x, const int y, const int z, const Chunk& chunk, const Direction direction) {
     const glm::ivec3 offset = DIRECTION_NORMALS[static_cast<int>(direction)];
     glm::ivec3 neighborPos = { x + offset.x, y + offset.y, z + offset.z };
 

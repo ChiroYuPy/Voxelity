@@ -33,6 +33,7 @@ add_executable(Voxelity
         Voxelity/textures/Texture.cpp
         Voxelity/core/utils/Profiler.cpp
         Voxelity/math/Direction.h
+        Voxelity/math/Frustrum.h
 
 )
 
