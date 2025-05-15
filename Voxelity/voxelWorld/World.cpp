@@ -38,26 +38,37 @@ void World::render(const glm::mat4& view,
                    const glm::vec3& lightColor,
                    const glm::vec3& ambientColor) const {
     PROFILE_FUNCTION();
-    chunkShader->use();
 
-    chunkShader->setUniform("uView", view);
-    chunkShader->setUniform("uProjection", projection);
+    prepareShader(view, projection, lightDirection, lightColor, ambientColor);
+    prepareTextures();
 
-    chunkShader->setUniform("uLightDirection", glm::normalize(lightDirection));
-    chunkShader->setUniform("uLightColor", lightColor);
-
-    chunkShader->setUniform("uAmbientColor", ambientColor);
-
-    glActiveTexture(GL_TEXTURE0);
-    textureAtlas->bind(0);
-    chunkShader->setUniform("uAtlas", 0);
-
-    // Render de tous les chunks
-    for (const auto &chunk: chunks | std::views::values) {
+    for (const auto& chunk : chunks | std::views::values) {
         chunk->getMesh()->render();
     }
 }
 
+void World::prepareShader(const glm::mat4& view,
+                          const glm::mat4& projection,
+                          const glm::vec3& lightDir,
+                          const glm::vec3& lightCol,
+                          const glm::vec3& ambientCol) const {
+    PROFILE_FUNCTION();
+
+    chunkShader->use();
+    chunkShader->setUniform("uView", view);
+    chunkShader->setUniform("uProjection", projection);
+    chunkShader->setUniform("uLightDirection", glm::normalize(lightDir));
+    chunkShader->setUniform("uLightColor", lightCol);
+    chunkShader->setUniform("uAmbientColor", ambientCol);
+}
+
+void World::prepareTextures() const {
+    PROFILE_FUNCTION();
+
+    glActiveTexture(GL_TEXTURE0);
+    textureAtlas->bind(0);
+    chunkShader->setUniform("uAtlas", 0);
+}
 
 void World::update() const {
     for (const auto &val: chunks | std::views::values) val->updateMesh();
@@ -121,7 +132,7 @@ void World::generateChunk(Chunk* chunk) const {
 
 void World::generateFromPosition(const glm::ivec3 position) {
     PROFILE_FUNCTION();
-    static constexpr int RENDER_DISTANCE = 24;
+    static constexpr int RENDER_DISTANCE = 8;
     static constexpr int CHUNK_RENDER_HEIGHT = 8;
 
     const auto chunkPos = glm::ivec3(
