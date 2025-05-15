@@ -2,15 +2,15 @@
 // Created by adrian on 13/05/25.
 //
 
-#include "Application.h"
+#include "../Application.h"
 
 #include <iostream>
 
-#include "Profiler.h"
-#include "listeners/CameraController.h"
-#include "events/EventDispatcher.h"
-#include "events/GLFWEventAdapter.h"
-#include "voxelWorld/World.h"
+#include "../core/utils/Profiler.h"
+#include "../listeners/CameraController.h"
+#include "../events/EventDispatcher.h"
+#include "../events/GLFWEventAdapter.h"
+#include "../voxelWorld/World.h"
 
 constexpr unsigned int SCREEN_WIDTH = 800;
 constexpr unsigned int SCREEN_HEIGHT = 600;

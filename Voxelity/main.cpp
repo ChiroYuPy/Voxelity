@@ -1,5 +1,5 @@
-#include "Application.h"
-#include "Profiler.h"
+#include "engine/Application.h"
+#include "core/utils/Profiler.h"
 
 int main() {
     Profiler::BeginSession();

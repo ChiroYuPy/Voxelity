@@ -9,7 +9,7 @@
 #include <unordered_map>
 
 #include "Voxel.h"
-#include "rendering/Shader.h"
+#include "../rendering/shader/Shader.h"
 #include "textures/Texture.h"
 #include "voxelWorld/generators/IWorldGenerator.h"
 

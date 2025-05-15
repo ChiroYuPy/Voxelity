@@ -15,9 +15,9 @@ add_executable(Voxelity
         externals/src/IMG.cpp   # stb image
 
         # project
-        Voxelity/Application.cpp
+        Voxelity/engine/Application.cpp
         Voxelity/rendering/camera/Camera.cpp
-        Voxelity/rendering/Shader.cpp
+        Voxelity/rendering/shader/Shader.cpp
         Voxelity/blocks/BlockRegistry.cpp
         Voxelity/voxelWorld/Voxel.cpp
         Voxelity/voxelWorld/Chunk.cpp
@@ -31,7 +31,7 @@ add_executable(Voxelity
         Voxelity/rendering/ChunkMesh.cpp
         Voxelity/textures/Image.cpp
         Voxelity/textures/Texture.cpp
-        Voxelity/Profiler.cpp
+        Voxelity/core/utils/Profiler.cpp
 
 )
 
