@@ -37,14 +37,13 @@ vec2(0.0, 0.0), vec2(1.0, 1.0), vec2(1.0, 0.0)
 
 void main() {
     int vertexIdx = gl_VertexID % 6;
-    int faceId = clamp(in_faceId, 0, 5);
 
-    vec3 offset = faceVertices[faceId][vertexIdx];
+    vec3 offset = faceVertices[in_faceId][vertexIdx];
     vec3 worldPos = vec3(in_voxelPos) + offset;
 
     // Passer la position et normale au fragment shader
     vWorldPos = worldPos;
-    vNormal = faceNormals[faceId];
+    vNormal = faceNormals[in_faceId];
 
     float texX = float((in_blockId - 1) % 2) * 0.5;
     float texY = float((in_blockId - 1) / 2) * 0.5;

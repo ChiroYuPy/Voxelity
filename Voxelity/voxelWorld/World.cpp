@@ -21,12 +21,12 @@ inline int floorDiv(const int a, const int b) {
 }
 
 // TODO: DONE   Lazy Update ( dirty flag )
-// TODO: DONE   Distance Base Chunk Activation ( Render Distance )
+// TODO: DONE   Distance Culling ( Render Distance )
 // TODO: DONE   Frustum Culling ( viewProj & chunk AABB )
 // TODO: DONE   Face Culling ( isVisible() test )
 // TODO: DONE   Basic Occlusion Culling ( isEmpty() & hasVisibleFaces() tests )
 // TODO         Complete Occlusion Culling
-// TODO         LOD
+// TODO         Level Of Details
 // TODO         Greedy Meshing
 // TODO         Multi-Threading -> world generation, chunk meshing, rendering
 // TODO         Voxel and VoxelFace memory optimisations -> Data Compression
@@ -85,8 +85,12 @@ void World::prepareShader(const glm::mat4& view,
     PROFILE_FUNCTION();
 
     chunkShader->use();
+
+    // vertex shader
     chunkShader->setUniform("uView", view);
     chunkShader->setUniform("uProjection", projection);
+
+    // fragment shader
     chunkShader->setUniform("uLightDirection", glm::normalize(lightDir));
     chunkShader->setUniform("uLightColor", lightCol);
     chunkShader->setUniform("uAmbientColor", ambientCol);
@@ -158,8 +162,8 @@ void World::generateChunk(Chunk* chunk) const {
 
 void World::generateFromPosition(const glm::ivec3 position) {
     PROFILE_FUNCTION();
-    static constexpr int RENDER_DISTANCE = 8;
-    static constexpr int CHUNK_RENDER_HEIGHT = 8;
+    static constexpr int RENDER_DISTANCE = 32;
+    static constexpr int CHUNK_RENDER_HEIGHT = 4;
 
     const auto chunkPos = glm::ivec3(
         floorDiv(position.x, Chunk::SIZE),

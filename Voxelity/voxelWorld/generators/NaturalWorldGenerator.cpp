@@ -9,7 +9,7 @@
 OS2 noise;
 
 int getHeightAt(const int x, const int z) {
-    constexpr double size = 1.0 / 256.0;
+    constexpr double size = 1.0 / 64.0;
     // Bruit de base entre [-1, 1]
     auto noiseValue = static_cast<float>(noise.noise2(x * size, z * size));
 
@@ -20,11 +20,11 @@ int getHeightAt(const int x, const int z) {
     // Exemples possibles :
     // - bruit^e (e.g. 1.5, 2) : creuse les vallées, accentue les sommets
     // - sqrt(bruit) : aplatie les hauts-reliefs
-    constexpr float exponent = 2.2f;
+    constexpr float exponent = 2.8f;
     const float shaped = std::pow(noiseValue, exponent);  // accentue les pics
 
-    const int height = static_cast<int>(shaped * 127); // max height
-    return std::clamp(height, 0, 127);
+    const int height = static_cast<int>(shaped * 63); // max height
+    return std::clamp(height, 0, 63);
 }
 
 NaturalWorldGenerator::NaturalWorldGenerator() = default;

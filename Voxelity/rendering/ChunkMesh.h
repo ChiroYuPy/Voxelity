@@ -18,7 +18,7 @@ public:
 
     void render() const;
 
-    bool hasVisibleFaces() const;
+    [[nodiscard]] bool hasVisibleFaces() const;
 
     static bool isFaceVisible(int x, int y, int z, const Chunk &chunk, Direction direction);
 
@@ -30,7 +30,7 @@ public:
 
 private:
     Chunk* chunk;
-    GLuint vao{}, vbo{};
+    GLuint vao{}, staticVBO, vbo{};
     std::vector<VoxelFace> voxelFaces;
 };
 
