@@ -4,6 +4,9 @@
 
 #include "Application.h"
 
+#include <iostream>
+
+#include "Profiler.h"
 #include "listeners/CameraController.h"
 #include "events/EventDispatcher.h"
 #include "events/GLFWEventAdapter.h"
@@ -33,8 +36,6 @@ Application::Application() : lastTime(0) {
 
     world = std::make_unique<World>();
 
-    world->generateFromPosition(glm::ivec3(0, 0, 0));
-
     eventDispatcher = std::make_unique<EventDispatcher>();
     cameraController = std::make_unique<CameraController>(window, camera);
     eventDispatcher->subscribe(cameraController.get());
@@ -50,6 +51,7 @@ void Application::run() {
     const glm::mat4 projection = glm::perspective(glm::radians(45.0f), static_cast<float>(SCREEN_WIDTH) / static_cast<float>(SCREEN_HEIGHT), 0.1f, 1000.f);
 
     while (!glfwWindowShouldClose(window)) {
+        PROFILE_SCOPE("Main loop");
         glfwPollEvents();
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -57,6 +59,16 @@ void Application::run() {
         const auto currentTime = static_cast<float>(glfwGetTime());
         const float deltaTime = currentTime - lastTime;
         lastTime = currentTime;
+
+        static int frames = 0;
+        static float lastPrint = 0.0f;
+
+        frames++;
+        if (currentTime - lastPrint >= 1.0f) {
+            std::cout << "FPS: " << frames << std::endl;
+            frames = 0;
+            lastPrint = currentTime;
+        }
 
         cameraController->update(deltaTime);
         glm::mat4 view = camera.getViewMatrix();

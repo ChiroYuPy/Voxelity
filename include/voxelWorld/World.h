@@ -26,6 +26,8 @@ public:
 
     void generateFromPosition(glm::ivec3 position);
 
+    void pruneChunks(const glm::ivec3& center);
+
     void render(const glm::mat4 & view, const glm::mat4 & projection, const glm::vec3 & lightDirection, const glm::vec3 & lightColor, const glm::vec3 & ambientColor) const;
 
     void update() const;
@@ -42,6 +44,8 @@ private:
     std::unique_ptr<Shader> chunkShader;
 
     static unsigned long chunkKey(int cx, int cy, int cz);
+
+    glm::ivec3 keyToPos(unsigned long key);
 };
 
 #endif //WORLD_H

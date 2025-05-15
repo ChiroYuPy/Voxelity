@@ -22,6 +22,7 @@
 #include "Application.h"
 #include "Application.h"
 #include "Application.h"
+#include "Profiler.h"
 #include "rendering/ChunkMesh.h"
 #include "rendering/Shader.h"
 #include "voxelWorld/generators/FlatWorldGenerator.h"
@@ -49,7 +50,7 @@ void World::render(const glm::mat4& view,
                    const glm::vec3& lightDirection,
                    const glm::vec3& lightColor,
                    const glm::vec3& ambientColor) const {
-
+    PROFILE_FUNCTION();
     chunkShader->use();
 
     chunkShader->setUniform("uView", view);
@@ -65,7 +66,7 @@ void World::render(const glm::mat4& view,
     chunkShader->setUniform("uAtlas", 0);
 
     // Render de tous les chunks
-    for (auto const& [_, chunk] : chunks) {
+    for (const auto &chunk: chunks | std::views::values) {
         chunk->getMesh()->render();
     }
 }
@@ -130,15 +131,15 @@ void World::generate(const int cx, const int cy, const int cz) {
 }
 
 void World::generateFromPosition(const glm::ivec3 position) {
-    static constexpr int RENDER_DISTANCE = 32;
-    static constexpr int CHUNK_RENDER_HEIGHT = 1;
+    PROFILE_FUNCTION();
+    static constexpr int RENDER_DISTANCE = 24;
+    static constexpr int CHUNK_RENDER_HEIGHT = 4;
 
     const auto chunkPos = glm::ivec3(
         floorDiv(position.x, CHUNK_SIZE),
         floorDiv(position.y, CHUNK_SIZE),
         floorDiv(position.z, CHUNK_SIZE)
     );
-
 
     for (int x = chunkPos.x - RENDER_DISTANCE; x <= chunkPos.x + RENDER_DISTANCE; x++) {
         for (int y = - CHUNK_RENDER_HEIGHT; y < CHUNK_RENDER_HEIGHT; y++) {
@@ -148,5 +149,24 @@ void World::generateFromPosition(const glm::ivec3 position) {
                 if (dx * dx + dz * dz <= RENDER_DISTANCE * RENDER_DISTANCE) generate(x, y, z);
             }
         }
+    }
+
+    std::vector<glm::ivec3> chunksToRemove;
+
+    for (const auto& [key, chunk] : chunks) {
+        glm::ivec3 cPos = chunk->getPosition();
+        int dx = cPos.x - chunkPos.x;
+        int dz = cPos.z - chunkPos.z;
+
+        if (dx * dx + dz * dz > RENDER_DISTANCE * RENDER_DISTANCE ||
+            cPos.y < -CHUNK_RENDER_HEIGHT || cPos.y >= CHUNK_RENDER_HEIGHT) {
+            chunksToRemove.push_back(cPos);
+            }
+    }
+
+    // Supprimer les chunks hors zone de rendu
+    for (const auto& pos : chunksToRemove) {
+        const auto key = chunkKey(pos.x, pos.y, pos.z);
+        chunks.erase(key);
     }
 }
