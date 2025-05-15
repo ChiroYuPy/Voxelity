@@ -20,7 +20,21 @@ inline int floorDiv(const int a, const int b) {
     return (a >= 0) ? (a / b) : ((a - b + 1) / b);
 }
 
-World::World() : frustum() {
+// TODO: DONE   Lazy Update ( dirty flag )
+// TODO: DONE   Distance Base Chunk Activation ( Render Distance )
+// TODO: DONE   Frustum Culling ( viewProj & chunk AABB )
+// TODO: DONE   Face Culling ( isVisible() test )
+// TODO: DONE   Basic Occlusion Culling ( isEmpty() & hasVisibleFaces() tests )
+// TODO         Complete Occlusion Culling
+// TODO         LOD
+// TODO         Greedy Meshing
+// TODO         Multi-Threading -> world generation, chunk meshing, rendering
+// TODO         Voxel and VoxelFace memory optimisations -> Data Compression
+
+// TODO         Minimize Shaders Calculs
+// TODO         Optimize Shaders Uniforms
+
+World::World() {
     generator = std::make_unique<NaturalWorldGenerator>();
 
     chunkShader = std::make_unique<Shader>(
