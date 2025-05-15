@@ -5,23 +5,28 @@ layout(location = 1) in int in_faceId;
 layout(location = 2) in int in_blockId;
 
 out vec2 vUV;
+out vec3 vNormal;
+out vec3 vWorldPos;
 
 uniform mat4 uProjection;
 uniform mat4 uView;
-uniform vec3 uLightDirection; // Direction de la lumière
+
+// Normales fixes par face
+const vec3 faceNormals[6] = vec3[](
+vec3(1, 0, 0),  // +X
+vec3(-1, 0, 0), // -X
+vec3(0, 1, 0),  // +Y
+vec3(0, -1, 0), // -Y
+vec3(0, 0, 1),  // +Z
+vec3(0, 0, -1)  // -Z
+);
 
 const vec3 faceVertices[6][6] = vec3[6][6](
-// +X
 vec3[6](vec3(0.5, -0.5, -0.5), vec3(0.5, 0.5, -0.5), vec3(0.5, 0.5, 0.5), vec3(0.5, -0.5, -0.5), vec3(0.5, 0.5, 0.5), vec3(0.5, -0.5, 0.5)),
-// -X
 vec3[6](vec3(-0.5, -0.5, -0.5), vec3(-0.5, -0.5, 0.5), vec3(-0.5, 0.5, 0.5), vec3(-0.5, -0.5, -0.5), vec3(-0.5, 0.5, 0.5), vec3(-0.5, 0.5, -0.5)),
-// +Y
 vec3[6](vec3(-0.5, 0.5, -0.5), vec3(-0.5, 0.5, 0.5), vec3(0.5, 0.5, 0.5), vec3(-0.5, 0.5, -0.5), vec3(0.5, 0.5, 0.5), vec3(0.5, 0.5, -0.5)),
-// -Y
 vec3[6](vec3(-0.5, -0.5, -0.5), vec3(0.5, -0.5, -0.5), vec3(0.5, -0.5, 0.5), vec3(-0.5, -0.5, -0.5), vec3(0.5, -0.5, 0.5), vec3(-0.5, -0.5, 0.5)),
-// +Z
 vec3[6](vec3(-0.5, -0.5, 0.5), vec3(0.5, -0.5, 0.5), vec3(0.5, 0.5, 0.5), vec3(-0.5, -0.5, 0.5), vec3(0.5, 0.5, 0.5), vec3(-0.5, 0.5, 0.5)),
-// -Z
 vec3[6](vec3(-0.5, -0.5, -0.5), vec3(-0.5, 0.5, -0.5), vec3(0.5, 0.5, -0.5), vec3(-0.5, -0.5, -0.5), vec3(0.5, 0.5, -0.5), vec3(0.5, -0.5, -0.5))
 );
 
@@ -32,8 +37,14 @@ vec2(0.0, 0.0), vec2(1.0, 1.0), vec2(1.0, 0.0)
 
 void main() {
     int vertexIdx = gl_VertexID % 6;
-    vec3 offset = faceVertices[in_faceId][vertexIdx];
+    int faceId = clamp(in_faceId, 0, 5);
+
+    vec3 offset = faceVertices[faceId][vertexIdx];
     vec3 worldPos = vec3(in_voxelPos) + offset;
+
+    // Passer la position et normale au fragment shader
+    vWorldPos = worldPos;
+    vNormal = faceNormals[faceId];
 
     float texX = float((in_blockId - 1) % 2) * 0.5;
     float texY = float((in_blockId - 1) / 2) * 0.5;

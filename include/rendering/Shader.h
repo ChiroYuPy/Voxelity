@@ -25,6 +25,8 @@ public:
 
     void setUniform(const std::string& name, int value) const;
 
+    void setUniform(const std::string &name, float value) const;
+
 private:
     static std::string readFile(const char* path);
 

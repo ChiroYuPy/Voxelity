@@ -8,6 +8,20 @@
 #include <ranges>
 #include <utility>
 
+#include "Application.h"
+#include "Application.h"
+#include "Application.h"
+#include "Application.h"
+#include "Application.h"
+#include "Application.h"
+#include "Application.h"
+#include "Application.h"
+#include "Application.h"
+#include "Application.h"
+#include "Application.h"
+#include "Application.h"
+#include "Application.h"
+#include "Application.h"
 #include "rendering/ChunkMesh.h"
 #include "rendering/Shader.h"
 #include "voxelWorld/generators/FlatWorldGenerator.h"
@@ -30,20 +44,32 @@ World::World() {
     textureAtlas->bind(0);
 }
 
-void World::render(const glm::mat4& view, const glm::mat4& projection, const glm::vec3& lightDirection) const {
+void World::render(const glm::mat4& view,
+                   const glm::mat4& projection,
+                   const glm::vec3& lightDirection,
+                   const glm::vec3& lightColor,
+                   const glm::vec3& ambientColor) const {
+
     chunkShader->use();
+
     chunkShader->setUniform("uView", view);
     chunkShader->setUniform("uProjection", projection);
-    chunkShader->setUniform("uLightDirection", lightDirection);
+
+    chunkShader->setUniform("uLightDirection", glm::normalize(lightDirection));
+    chunkShader->setUniform("uLightColor", lightColor);
+
+    chunkShader->setUniform("uAmbientColor", ambientColor);
+
+    glActiveTexture(GL_TEXTURE0);
     textureAtlas->bind(0);
     chunkShader->setUniform("uAtlas", 0);
 
-    int i = 0;
-    for (const auto &val: chunks | std::views::values) {
-        val->getMesh()->render();
-        i++;
+    // Render de tous les chunks
+    for (auto const& [_, chunk] : chunks) {
+        chunk->getMesh()->render();
     }
 }
+
 
 void World::update() const {
     for (const auto &val: chunks | std::views::values) val->updateMesh();
@@ -104,7 +130,7 @@ void World::generate(const int cx, const int cy, const int cz) {
 }
 
 void World::generateFromPosition(const glm::ivec3 position) {
-    static constexpr int RENDER_DISTANCE = 8;
+    static constexpr int RENDER_DISTANCE = 32;
     static constexpr int CHUNK_RENDER_HEIGHT = 1;
 
     const auto chunkPos = glm::ivec3(

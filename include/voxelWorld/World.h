@@ -26,7 +26,7 @@ public:
 
     void generateFromPosition(glm::ivec3 position);
 
-    void render(const glm::mat4& view, const glm::mat4& projection, const glm::vec3& lightDirection) const;
+    void render(const glm::mat4 & view, const glm::mat4 & projection, const glm::vec3 & lightDirection, const glm::vec3 & lightColor, const glm::vec3 & ambientColor) const;
 
     void update() const;
 

@@ -64,7 +64,11 @@ void Application::run() {
         world->generateFromPosition(camera.position);
 
         world->update();
-        world->render(view, projection, glm::ivec3(1.0, 1.0, 1.0));
+        world->render(view, projection,
+                     glm::vec3(0.5f, -1.0f, 0.3f),   // direction du soleil
+                     glm::vec3(1.0f, 0.95f, 0.8f),   // couleur du soleil
+                     glm::vec3(0.25f, 0.25f, 0.3f)); // couleur ambiante
+
 
         glfwSwapBuffers(window);
     }
