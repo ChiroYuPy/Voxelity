@@ -16,7 +16,7 @@ add_executable(Voxelity
 
         # project
         Voxelity/Application.cpp
-        Voxelity/rendering/Camera.cpp
+        Voxelity/rendering/camera/Camera.cpp
         Voxelity/rendering/Shader.cpp
         Voxelity/blocks/BlockRegistry.cpp
         Voxelity/voxelWorld/Voxel.cpp
@@ -32,6 +32,24 @@ add_executable(Voxelity
         Voxelity/textures/Image.cpp
         Voxelity/textures/Texture.cpp
         Voxelity/Profiler.cpp
+        Voxelity/rendering/shader/IShader.h
+        Voxelity/rendering/shader/OpenGLShader.cpp
+        Voxelity/rendering/shader/OpenGLShader.h
+        Voxelity/rendering/shader/ShaderLoader.cpp
+        Voxelity/rendering/shader/ShaderLoader.h
+        Voxelity/rendering/mesh/IMesh.h
+        Voxelity/rendering/mesh/OpenGLMesh.cpp
+        Voxelity/rendering/mesh/OpenGLMesh.h
+        Voxelity/rendering/texture/ITexture.h
+        Voxelity/rendering/material/Material.cpp
+        Voxelity/rendering/material/Material.h
+        Voxelity/rendering/texture/OpenGLTexture2D.cpp
+        Voxelity/rendering/texture/OpenGLTexture2D.h
+        Voxelity/resources/ResourceCache.cpp
+        Voxelity/resources/ResourceCache.h
+        Voxelity/resources/ResourceManager.cpp
+        Voxelity/resources/ResourceManager.h
+        Voxelity/resources/TextureLoader.h
 )
 
 target_link_libraries(Voxelity glfw)
