@@ -21,9 +21,12 @@ struct Plane {
 
 class Frustum {
 public:
-    std::array<Plane,6> planes;
+    std::array<Plane,6> planes{};
 
     void update(const glm::mat4& viewProj) {
+        if (viewProj == cachedViewProj) return;
+        cachedViewProj = viewProj;
+
         const auto m = reinterpret_cast<const float *>(&viewProj);
 
         // Left :  m[3] + m[0]
@@ -73,6 +76,9 @@ public:
         }
         return true;
     }
+
+private:
+    glm::mat4 cachedViewProj = glm::mat4(0);
 };
 
 #endif //FRUSTRUM_H

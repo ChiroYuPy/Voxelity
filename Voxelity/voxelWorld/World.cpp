@@ -56,11 +56,10 @@ void World::render(const glm::mat4& view,
         const glm::vec3 center = chunkWorldMin + halfSize;
 
         // frustum culling
-        if (frustum.intersectsAABB(center, halfSize)
-            && chunk.getMesh()->hasVisibleFaces()) {
+        if (frustum.intersectsAABB(center, halfSize) && chunk.getMesh()->hasVisibleFaces()) {
             chunk.getMesh()->render();
             ++draws;
-            }
+        }
     }
 }
 
