@@ -32,6 +32,7 @@ add_executable(Voxelity
         Voxelity/textures/Image.cpp
         Voxelity/textures/Texture.cpp
         Voxelity/Profiler.cpp
+
 )
 
 target_link_libraries(Voxelity glfw)
