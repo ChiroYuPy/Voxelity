@@ -80,19 +80,22 @@ unsigned long World::chunkKey(const int cx, const int cy, const int cz) {
     return (ux << 42) | (uy << 21) | uz;
 }
 
+static constexpr glm::ivec3 DIRECTIONS[6] = {
+    {1, 0, 0}, {-1, 0, 0},
+    {0, 1, 0}, {0, -1, 0},
+    {0, 0, 1}, {0, 0, -1},
+};
+
 void World::generate(const int cx, const int cy, const int cz) {
+    static int counter = 0;
     const auto key = chunkKey(cx, cy, cz);
     if (!chunks.contains(key)) {
+        counter++;
+        std::cout << counter << std::endl;
+
         auto chunk = std::make_unique<Chunk>(cx, cy, cz, this);
         generator->generate(*chunk);
         chunks[key] = std::move(chunk);
-
-        static constexpr glm::ivec3 DIRECTIONS[6] = {
-            {1, 0, 0}, {-1, 0, 0},
-            {0, 1, 0}, {0, -1, 0},
-            {0, 0, 1}, {0, 0, -1},
-        };
-
         for (const auto& dir : DIRECTIONS) {
             Chunk* neighbor = getChunkAt(cx + dir.x, cy + dir.y, cz + dir.z);
             if (neighbor) neighbor->setDirty(true);
@@ -101,8 +104,8 @@ void World::generate(const int cx, const int cy, const int cz) {
 }
 
 void World::generateFromPosition(const glm::ivec3 position) {
-    static constexpr int RENDER_DISTANCE = 16;
-    static constexpr int RENDER_HEIGHT = 8;
+    static constexpr int RENDER_DISTANCE = 8;
+    static constexpr int CHUNK_RENDER_HEIGHT = 1;
 
     const auto chunkPos = glm::ivec3(
         floorDiv(position.x, CHUNK_SIZE),
@@ -110,15 +113,13 @@ void World::generateFromPosition(const glm::ivec3 position) {
         floorDiv(position.z, CHUNK_SIZE)
     );
 
-    const unsigned long ck = chunkKey(chunkPos.x, chunkPos.y, chunkPos.z);
-    if (!chunks.contains(ck)) {
-        for (int x = chunkPos.x - RENDER_DISTANCE; x <= chunkPos.x + RENDER_DISTANCE; x++) {
-            for (int y = - RENDER_HEIGHT; y <= RENDER_HEIGHT; y++) {
-                for (int z = chunkPos.z - RENDER_DISTANCE; z <= chunkPos.z + RENDER_DISTANCE; z++) {
-                    const int dx = x - chunkPos.x;
-                    const int dz = z - chunkPos.z;
-                    if (dx * dx + dz * dz <= RENDER_DISTANCE * RENDER_DISTANCE) generate(x, y, z);
-                }
+
+    for (int x = chunkPos.x - RENDER_DISTANCE; x <= chunkPos.x + RENDER_DISTANCE; x++) {
+        for (int y = - CHUNK_RENDER_HEIGHT; y < CHUNK_RENDER_HEIGHT; y++) {
+            for (int z = chunkPos.z - RENDER_DISTANCE; z <= chunkPos.z + RENDER_DISTANCE; z++) {
+                const int dx = x - chunkPos.x;
+                const int dz = z - chunkPos.z;
+                if (dx * dx + dz * dz <= RENDER_DISTANCE * RENDER_DISTANCE) generate(x, y, z);
             }
         }
     }

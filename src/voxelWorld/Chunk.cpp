@@ -4,6 +4,8 @@
 
 #include "voxelWorld/Chunk.h"
 
+#include <iostream>
+
 #include "rendering/ChunkMesh.h"
 #include "voxelWorld/World.h"
 
@@ -46,8 +48,10 @@ std::shared_ptr<ChunkMesh> Chunk::getMesh() const {
 }
 
 void Chunk::updateMesh() {
-    if (isDirty()) buildMesh();
-    setDirty(false);
+    if (isDirty()) {
+        buildMesh();
+        setDirty(false);
+    }
 }
 
 Chunk* Chunk::getNeighbor(const uint8_t direction) const {

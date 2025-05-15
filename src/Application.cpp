@@ -9,8 +9,8 @@
 #include "events/GLFWEventAdapter.h"
 #include "voxelWorld/World.h"
 
-constexpr unsigned int SCREEN_WIDTH = 1920;
-constexpr unsigned int SCREEN_HEIGHT = 1080;
+constexpr unsigned int SCREEN_WIDTH = 800;
+constexpr unsigned int SCREEN_HEIGHT = 600;
 
 Application* Application::instance = nullptr;
 
@@ -48,7 +48,6 @@ Application::~Application() {
 
 void Application::run() {
     const glm::mat4 projection = glm::perspective(glm::radians(45.0f), static_cast<float>(SCREEN_WIDTH) / static_cast<float>(SCREEN_HEIGHT), 0.1f, 1000.f);
-    glm::mat4 view = camera.getViewMatrix();
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
@@ -60,7 +59,7 @@ void Application::run() {
         lastTime = currentTime;
 
         cameraController->update(deltaTime);
-        view = camera.getViewMatrix();
+        glm::mat4 view = camera.getViewMatrix();
 
         world->generateFromPosition(camera.position);
 
