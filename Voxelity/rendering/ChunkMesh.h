@@ -24,6 +24,8 @@ public:
 
     void build(const Chunk* chunk);
 
+    void clear();
+
 private:
     GLuint vao{}, vbo{};
     std::vector<VoxelFace> voxelFaces;

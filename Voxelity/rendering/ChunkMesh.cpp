@@ -6,8 +6,6 @@
 
 #include <iostream>
 
-#include "voxelWorld/World.h"
-
 ChunkMesh::ChunkMesh() {
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
@@ -90,4 +88,10 @@ void ChunkMesh::build(const Chunk* chunk) {
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, voxelFaces.size() * sizeof(VoxelFace), voxelFaces.data(), GL_STATIC_DRAW);
+}
+
+void ChunkMesh::clear() {
+    voxelFaces.clear();
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_STATIC_DRAW);
 }
