@@ -23,8 +23,8 @@ int getHeightAt(const int x, const int z) {
     constexpr float exponent = 2.2f;
     const float shaped = std::pow(noiseValue, exponent);  // accentue les pics
 
-    const int height = static_cast<int>(shaped * 15); // max height
-    return std::clamp(height, 0, 15);
+    const int height = static_cast<int>(shaped * 127); // max height
+    return std::clamp(height, 0, 127);
 }
 
 NaturalWorldGenerator::NaturalWorldGenerator() = default;

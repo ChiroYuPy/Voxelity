@@ -22,6 +22,10 @@ public:
     Application();
     ~Application();
 
+    void update();
+
+    void render() const;
+
     void run();
 
 private:
@@ -31,6 +35,8 @@ private:
     std::unique_ptr<World> world;
     std::unique_ptr<EventDispatcher> eventDispatcher;
     std::unique_ptr<CameraController> cameraController;
+
+    const glm::mat4 projection;
 
     float lastTime;
 };

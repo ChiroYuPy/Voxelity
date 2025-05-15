@@ -21,7 +21,12 @@ Application& Application::get() {
     return *instance;
 }
 
-Application::Application() : lastTime(0) {
+Application::Application()
+  : projection(glm::perspective(glm::radians(45.0f),
+    static_cast<float>(SCREEN_WIDTH) / static_cast<float>(SCREEN_HEIGHT),
+    0.1f, 1000.f)),
+    lastTime(0)
+{
     instance = this;
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -30,6 +35,7 @@ Application::Application() : lastTime(0) {
 
     window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Voxel Renderer", nullptr, nullptr);
     glfwMakeContextCurrent(window);
+    glfwSwapInterval(0);
     gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
 
     glEnable(GL_DEPTH_TEST);
@@ -47,41 +53,58 @@ Application::~Application() {
     glfwTerminate();
 }
 
-void Application::run() {
-    const glm::mat4 projection = glm::perspective(glm::radians(45.0f), static_cast<float>(SCREEN_WIDTH) / static_cast<float>(SCREEN_HEIGHT), 0.1f, 1000.f);
+void Application::update() {
+    PROFILE_FUNCTION();
+    const auto currentTime = static_cast<float>(glfwGetTime());
+    const float deltaTime = currentTime - lastTime;
+    lastTime = currentTime;
 
-    while (!glfwWindowShouldClose(window)) {
-        PROFILE_SCOPE("Main loop");
-        glfwPollEvents();
+    static int frames = 0;
+    static float lastPrint = 0.0f;
+
+    frames++;
+    if (currentTime - lastPrint >= 1.0f) {
+        std::cout << "FPS: " << frames << std::endl;
+        frames = 0;
+        lastPrint = currentTime;
+    }
+
+    cameraController->update(deltaTime);
+    world->generateFromPosition(camera.position);
+    world->update();
+}
+
+void Application::render() const {
+    PROFILE_FUNCTION();
+
+    {
+        PROFILE_SCOPE("glClear");
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
 
-        const auto currentTime = static_cast<float>(glfwGetTime());
-        const float deltaTime = currentTime - lastTime;
-        lastTime = currentTime;
+    const glm::mat4 view = camera.getViewMatrix();
 
-        static int frames = 0;
-        static float lastPrint = 0.0f;
-
-        frames++;
-        if (currentTime - lastPrint >= 1.0f) {
-            std::cout << "FPS: " << frames << std::endl;
-            frames = 0;
-            lastPrint = currentTime;
-        }
-
-        cameraController->update(deltaTime);
-        glm::mat4 view = camera.getViewMatrix();
-
-        world->generateFromPosition(camera.position);
-
-        world->update();
+    {
+        PROFILE_SCOPE("world.render");
         world->render(view, projection,
-                     glm::vec3(0.5f, -1.0f, 0.3f),   // direction du soleil
-                     glm::vec3(1.0f, 0.95f, 0.8f),   // couleur du soleil
-                     glm::vec3(0.25f, 0.25f, 0.3f)); // couleur ambiante
+                     glm::vec3(0.5f, -1.0f, 0.3f),
+                     glm::vec3(1.0f, 0.95f, 0.8f),
+                     glm::vec3(0.25f, 0.25f, 0.3f));
+    }
 
-
+    {
+        PROFILE_SCOPE("swapBuffers");
         glfwSwapBuffers(window);
+    }
+}
+
+void Application::run() {
+    while (!glfwWindowShouldClose(window)) {
+        PROFILE_SCOPE("MainLoop");
+        glfwPollEvents();
+
+        update();
+        render();
     }
 }

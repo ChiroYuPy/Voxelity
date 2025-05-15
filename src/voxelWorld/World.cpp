@@ -118,7 +118,7 @@ void World::generate(const int cx, const int cy, const int cz) {
     const auto key = chunkKey(cx, cy, cz);
     if (!chunks.contains(key)) {
         counter++;
-        std::cout << counter << std::endl;
+        // std::cout << counter << std::endl;
 
         auto chunk = std::make_unique<Chunk>(cx, cy, cz, this);
         generator->generate(*chunk);
@@ -133,7 +133,7 @@ void World::generate(const int cx, const int cy, const int cz) {
 void World::generateFromPosition(const glm::ivec3 position) {
     PROFILE_FUNCTION();
     static constexpr int RENDER_DISTANCE = 24;
-    static constexpr int CHUNK_RENDER_HEIGHT = 4;
+    static constexpr int CHUNK_RENDER_HEIGHT = 8;
 
     const auto chunkPos = glm::ivec3(
         floorDiv(position.x, CHUNK_SIZE),
