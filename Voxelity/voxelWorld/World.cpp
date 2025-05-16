@@ -10,7 +10,7 @@
 
 #include "engine/Application.h"
 #include "core/utils/Profiler.h"
-#include "math/Frustrum.h"
+#include "math/Frustum.h"
 #include "rendering/ChunkMesh.h"
 #include "rendering/shader/Shader.h"
 #include "voxelWorld/generators/FlatWorldGenerator.h"
@@ -61,20 +61,17 @@ void World::render(const glm::mat4& view,
     const glm::mat4 viewProj = projection * view;
     frustum.update(viewProj);
 
-    int draws = 0;
     for (const auto& chunkPtr : chunks | std::views::values) {
         const auto& chunk = *chunkPtr;
-        chunkShader->setUniform("uChunkOffset", chunk.getWorldPosition());
-
         // AABB calcul
-        const glm::vec3 chunkWorldMin = chunk.getPosition() * Chunk::SIZE;
+        const glm::vec3 chunkWorldMin = chunk.getPosition() * Chunk::SIZE; // GOULET ?
         constexpr glm::vec3 halfSize = glm::vec3(Chunk::SIZE) * 0.5f;
         const glm::vec3 center = chunkWorldMin + halfSize;
 
         // frustum culling
         if (frustum.intersectsAABB(center, halfSize) && chunk.getMesh()->hasVisibleFaces()) {
+            chunkShader->setUniform("uChunkOffset", chunk.getWorldPosition());
             chunk.getMesh()->render();
-            ++draws;
         }
     }
 }
@@ -84,8 +81,6 @@ void World::prepareShader(const glm::mat4& view,
                           const glm::vec3& lightDir,
                           const glm::vec3& lightCol,
                           const glm::vec3& ambientCol) const {
-    PROFILE_FUNCTION();
-
     chunkShader->use();
 
     // vertex shader
@@ -99,8 +94,6 @@ void World::prepareShader(const glm::mat4& view,
 }
 
 void World::prepareTextures() const {
-    PROFILE_FUNCTION();
-
     glActiveTexture(GL_TEXTURE0);
     textureAtlas->bind(0);
     chunkShader->setUniform("uAtlas", 0);
@@ -142,6 +135,9 @@ unsigned long World::chunkKey(const int cx, const int cy, const int cz) {
 }
 
 void World::generate(const int cx, const int cy, const int cz) {
+    static int counter = 0;
+    counter++;
+    std::cout << "chunks loaded: " << counter << " | voxels loaded: " << counter * 4096 <<std::endl;
     const auto key = chunkKey(cx, cy, cz);
     if (!chunks.contains(key)) {
         auto chunk = std::make_unique<Chunk>(glm::ivec3(cx, cy, cz));
@@ -151,6 +147,7 @@ void World::generate(const int cx, const int cy, const int cz) {
 }
 
 void World::generateChunk(Chunk* chunk) const {
+    PROFILE_FUNCTION();
     generator->generate(*chunk);
     for (const auto& direction : DIRECTIONS) {
         const glm::vec3 neighborPos = chunk->getPosition() + getNormal(direction);
@@ -164,7 +161,7 @@ void World::generateChunk(Chunk* chunk) const {
 
 void World::generateFromPosition(const glm::ivec3 position) {
     PROFILE_FUNCTION();
-    static constexpr int RENDER_DISTANCE = 8;
+    static constexpr int RENDER_DISTANCE = 32;
     static constexpr int CHUNK_RENDER_HEIGHT = 4;
 
     const auto chunkPos = glm::ivec3(

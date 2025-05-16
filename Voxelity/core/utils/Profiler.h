@@ -35,7 +35,7 @@ private:
 
 class ProfileScope {
 public:
-    ProfileScope(std::string  name);
+    explicit ProfileScope(std::string  name);
     ~ProfileScope();
 private:
     std::string m_Name;

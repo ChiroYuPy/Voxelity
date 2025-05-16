@@ -81,26 +81,19 @@ void Application::update() {
 void Application::render() const {
     PROFILE_FUNCTION();
 
-    {
-        PROFILE_SCOPE("glClear");
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    }
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     const glm::mat4 view = camera.getViewMatrix();
 
-    {
-        PROFILE_SCOPE("world.render");
-        world->render(view, projection,
-                     glm::vec3(0.5f, -1.0f, 0.3f),
-                     glm::vec3(1.0f, 0.95f, 0.8f),
-                     glm::vec3(0.25f, 0.25f, 0.3f));
-    }
 
-    {
-        PROFILE_SCOPE("swapBuffers");
-        glfwSwapBuffers(window);
-    }
+    world->render(view, projection,
+                 glm::vec3(0.5f, -1.0f, 0.3f),
+                 glm::vec3(1.0f, 0.95f, 0.8f),
+                 glm::vec3(0.25f, 0.25f, 0.3f));
+
+
+    glfwSwapBuffers(window);
 }
 
 void Application::run() {

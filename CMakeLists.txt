@@ -33,8 +33,10 @@ add_executable(Voxelity
         Voxelity/textures/Texture.cpp
         Voxelity/core/utils/Profiler.cpp
         Voxelity/math/Direction.h
-        Voxelity/math/Frustrum.h
-
+        Voxelity/math/Frustum.h
 )
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -fno-omit-frame-pointer")
 
 target_link_libraries(Voxelity glfw)

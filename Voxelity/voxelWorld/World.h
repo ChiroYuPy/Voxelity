@@ -10,7 +10,7 @@
 
 #include "Voxel.h"
 #include "../rendering/shader/Shader.h"
-#include "math/Frustrum.h"
+#include "math/Frustum.h"
 #include "textures/Texture.h"
 #include "voxelWorld/generators/IWorldGenerator.h"
 
