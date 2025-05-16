@@ -9,7 +9,8 @@
 
 #include <memory>
 
-#include "../rendering/camera/Camera.h"
+#include "rendering/camera/Camera.h"
+#include "voxelWorld/Chunk.h"
 
 class World;
 class CameraController;

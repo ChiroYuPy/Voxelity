@@ -6,14 +6,12 @@
 #define CHUNKRENDERER_H
 
 #include <memory>
-#include <ranges>
 #include <glm/glm.hpp>
 
 #include "rendering/shader/Shader.h"
 #include "math/Frustum.h"
+#include "textures/Texture.h"
 #include "voxelWorld/ChunkManager.h"
-
-class Texture;
 
 class ChunkRenderer {
 public:

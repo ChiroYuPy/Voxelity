@@ -4,15 +4,13 @@
 
 #include "voxelWorld/World.h"
 
-#include <iostream>
 #include <ranges>
 #include <utility>
 
-#include "core/Application.h"
+#include "Chunk.h"
 #include "core/Constants.h"
 #include "core/utils/Profiler.h"
 #include "math/Frustum.h"
-#include "rendering/ChunkMesh.h"
 
 inline int floorDiv(const int a, const int b) {
     return (a >= 0) ? (a / b) : ((a - b + 1) / b);
@@ -47,73 +45,11 @@ void World::update() const {
     for (const auto &chunkPtr: chunkManager.chunks | std::views::values) chunkPtr->updateMesh();
 }
 
-void World::generateChunk(Chunk* chunk) {
-    PROFILE_FUNCTION();
-    const ChunkData generatedChunkData = generator->generate(chunk->getPosition() * Constants::ChunkSize);
-    chunk->setData(generatedChunkData);
-    for (const auto& direction : DIRECTIONS) {
-        const glm::ivec3 neighborPos = chunk->getPosition() + getNormal(direction);
-        Chunk* neighbor = chunkManager.getChunkAt(neighborPos);
-        if (!neighbor) continue;
-        neighbor->markDirty();
-        chunk->setNeighbor(direction, neighbor);
-        neighbor->setNeighbor(getOpposite(direction), chunk);
-    }
-}
-
-void World::generateFromPlayerPosition(const glm::ivec3& position) {
-    const auto chunkPosition = glm::ivec3(
-        floorDiv(position.x, Constants::ChunkSize),
-        floorDiv(position.y, Constants::ChunkSize),
-        floorDiv(position.z, Constants::ChunkSize)
-    );
-    generateFromChunkPosition(chunkPosition);
-}
-
-void World::generateFromChunkPosition(const glm::ivec3 playerPosition) {
-    PROFILE_FUNCTION();
-
-    static int nbChunkLoaded = 0;
-    static std::optional<glm::ivec3> lastPosition;
-
-    if (lastPosition && *lastPosition == playerPosition) return;
-    lastPosition = playerPosition;
-
-    for (int x = playerPosition.x - Constants::RenderDistance; x <= playerPosition.x + Constants::RenderDistance; x++) {
-        for (int y = - Constants::RenderHeight; y < Constants::RenderHeight; y++) {
-            for (int z = playerPosition.z - Constants::RenderDistance; z <= playerPosition.z + Constants::RenderDistance; z++) {
-                const int dx = x - playerPosition.x;
-                const int dz = z - playerPosition.z;
-                if (!chunkManager.hasChunkAt({x, y, z}) && dx * dx + dz * dz <= Constants::RenderDistance * Constants::RenderDistance) {
-                    auto chunk = std::make_unique<Chunk>(glm::ivec3(x, y, z)); // create
-                    generateChunk(chunk.get()); // generate
-                    chunkManager.addChunk(std::move(chunk)); // pointer move
-
-                    nbChunkLoaded++;
-                }
-            }
-        }
-    }
-
-    std::vector<glm::ivec3> chunksToRemove;
-
-    for (const auto &chunkPtr: chunkManager.chunks | std::views::values) {
-        glm::ivec3 cPos = chunkPtr->getPosition();
-        const int dx = cPos.x - playerPosition.x;
-        const int dz = cPos.z - playerPosition.z;
-
-        if (dx * dx + dz * dz > Constants::RenderDistance * Constants::RenderDistance ||
-            cPos.y < -Constants::RenderHeight || cPos.y >= Constants::RenderHeight) {
-            chunksToRemove.push_back(cPos);
-        }
-    }
-
-    for (const auto& pos : chunksToRemove) {
-        chunkManager.removeChunk(pos);
-        nbChunkLoaded--;
-    }
-
-    std::cout << "Chunks loaded: " << nbChunkLoaded
-          << " | Memory usage: " << nbChunkLoaded * 0.015625 << " MB" << std::endl;
-
+void World::updateFromPlayerPosition(const glm::ivec3& playerWorldPos) {
+    const glm::ivec3 chunkPos = {
+        floorDiv(playerWorldPos.x, Constants::ChunkSize),
+        floorDiv(playerWorldPos.y, Constants::ChunkSize),
+        floorDiv(playerWorldPos.z, Constants::ChunkSize)
+    };
+    chunkLoader.updateChunksAround(chunkPos, chunkManager, *generator);
 }

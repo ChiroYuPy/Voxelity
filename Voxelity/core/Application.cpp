@@ -7,10 +7,10 @@
 #include <iostream>
 
 #include "utils/Profiler.h"
-#include "../listeners/CameraController.h"
-#include "../events/EventDispatcher.h"
-#include "../events/GLFWEventAdapter.h"
-#include "../voxelWorld/World.h"
+#include "listeners/CameraController.h"
+#include "events/EventDispatcher.h"
+#include "events/GLFWEventAdapter.h"
+#include "voxelWorld/World.h"
 #include "voxelWorld/generators/NaturalWorldGenerator.h"
 
 constexpr unsigned int SCREEN_WIDTH = 1280;
@@ -50,7 +50,7 @@ Application::Application()
     eventDispatcher->subscribe(cameraController.get());
     GLFWEventAdapter(window, *eventDispatcher);
 
-    world->generateFromPlayerPosition(camera.position);
+    world->updateFromPlayerPosition(camera.position);
 }
 
 Application::~Application() {

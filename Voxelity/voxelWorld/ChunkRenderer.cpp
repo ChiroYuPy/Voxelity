@@ -4,6 +4,8 @@
 
 #include "ChunkRenderer.h"
 
+#include <ranges>
+
 #include "Chunk.h"
 #include "core/Constants.h"
 #include "core/utils/Profiler.h"
