@@ -161,8 +161,6 @@ void World::generateChunk(Chunk* chunk) const {
 
 void World::generateFromPosition(const glm::ivec3 position) {
     PROFILE_FUNCTION();
-    static constexpr int RENDER_DISTANCE = 32;
-    static constexpr int CHUNK_RENDER_HEIGHT = 4;
 
     const auto chunkPos = glm::ivec3(
         floorDiv(position.x, Chunk::SIZE),

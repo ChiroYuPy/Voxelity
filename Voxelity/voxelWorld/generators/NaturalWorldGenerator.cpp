@@ -6,6 +6,8 @@
 #include "OS2.hpp"
 #include <algorithm>
 
+#include "voxelWorld/World.h"
+
 OS2 noise;
 
 int getHeightAt(const int x, const int z) {
@@ -23,8 +25,9 @@ int getHeightAt(const int x, const int z) {
     constexpr float exponent = 2.8f;
     const float shaped = std::pow(noiseValue, exponent);  // accentue les pics
 
-    const int height = static_cast<int>(shaped * 63); // max height
-    return std::clamp(height, 0, 63);
+    constexpr int worldHeight = World::CHUNK_RENDER_HEIGHT * Chunk::SIZE - 1;
+    const int height = static_cast<int>(shaped * worldHeight); // max height
+    return std::clamp(height, 0, worldHeight);
 }
 
 NaturalWorldGenerator::NaturalWorldGenerator() = default;

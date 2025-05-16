@@ -19,8 +19,11 @@
 class Texture;
 class VoxelFace;
 
-class World {
+class  World {
 public:
+    static constexpr int RENDER_DISTANCE = 32;
+    static constexpr int CHUNK_RENDER_HEIGHT = 1;
+
     explicit World();
 
     void generate(int cx, int cy, int cz);
