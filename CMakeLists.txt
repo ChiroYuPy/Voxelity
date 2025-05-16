@@ -33,6 +33,8 @@ add_executable(Voxelity
         Voxelity/textures/Texture.cpp
         Voxelity/core/utils/Profiler.cpp
         Voxelity/voxelWorld/ChunkData.cpp
+        Voxelity/voxelWorld/ChunkManager.cpp
+        Voxelity/voxelWorld/ChunkManager.h
 )
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")

@@ -8,7 +8,7 @@
 #include <memory>
 #include <unordered_map>
 
-#include "Voxel.h"
+#include "ChunkManager.h"
 #include "rendering/shader/Shader.h"
 #include "math/Frustum.h"
 #include "textures/Texture.h"
@@ -31,20 +31,17 @@ public:
 
     void update() const;
 
-    Chunk* getChunkAt(int cx, int cy, int cz) const;
-
-    const Voxel* getVoxelAt(int vx, int vy, int vz) const;
-
 private:
+    ChunkManager chunkManager;
+
     Frustum frustum;
 
     std::unique_ptr<IWorldGenerator> generator;
-    std::unordered_map<unsigned long, std::unique_ptr<Chunk>> chunks;
 
     std::unique_ptr<Texture> textureAtlas;
     std::unique_ptr<Shader> chunkShader;
 
-    void generateChunk(Chunk *chunk) const;
+    void generateChunk(Chunk *chunk);
 
     void prepareShader(const glm::mat4& view,
                               const glm::mat4& projection,
@@ -53,8 +50,6 @@ private:
                               const glm::vec3& ambientCol) const;
 
     void prepareTextures() const;
-
-    static unsigned long chunkKey(int cx, int cy, int cz);
 };
 
 #endif //WORLD_H
