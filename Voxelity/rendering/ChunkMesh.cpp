@@ -6,6 +6,9 @@
 
 #include <iostream>
 
+#include "core/Constants.h"
+#include "voxelWorld/Chunk.h"
+
 ChunkMesh::ChunkMesh(Chunk* chunk) : chunk(chunk) {
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
@@ -29,7 +32,7 @@ void ChunkMesh::render() const {
     if (voxelFaces.empty()) return;
 
     glBindVertexArray(vao);
-    glDrawArraysInstanced(GL_TRIANGLES, 0, 6, voxelFaces.size());
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 6, static_cast<GLsizei>(voxelFaces.size()));
 }
 
 bool ChunkMesh::hasVisibleFaces() const {
@@ -42,34 +45,34 @@ bool ChunkMesh::isFaceVisible(const int x, const int y, const int z, const Chunk
 
     const Chunk* targetChunk = &chunk;
 
-    if (neighborPos.x < 0 || neighborPos.x >= Chunk::SIZE ||
-        neighborPos.y < 0 || neighborPos.y >= Chunk::SIZE ||
-        neighborPos.z < 0 || neighborPos.z >= Chunk::SIZE) {
+    if (neighborPos.x < 0 || neighborPos.x >= Constants::ChunkSize ||
+        neighborPos.y < 0 || neighborPos.y >= Constants::ChunkSize ||
+        neighborPos.z < 0 || neighborPos.z >= Constants::ChunkSize) {
 
         targetChunk = chunk.getNeighbor(direction);
         if (!targetChunk) return true;
 
-        neighborPos.x = (neighborPos.x + Chunk::SIZE) % Chunk::SIZE;
-        neighborPos.y = (neighborPos.y + Chunk::SIZE) % Chunk::SIZE;
-        neighborPos.z = (neighborPos.z + Chunk::SIZE) % Chunk::SIZE;
+        neighborPos.x = (neighborPos.x + Constants::ChunkSize) % Constants::ChunkSize;
+        neighborPos.y = (neighborPos.y + Constants::ChunkSize) % Constants::ChunkSize;
+        neighborPos.z = (neighborPos.z + Constants::ChunkSize) % Constants::ChunkSize;
         }
 
-    const Voxel* voxel = targetChunk->at(neighborPos.x, neighborPos.y, neighborPos.z);
-    return !voxel || !voxel->isSolid();
+    const Voxel voxel = targetChunk->getData().get(neighborPos.x, neighborPos.y, neighborPos.z);
+    return !voxel.isSolid();
 }
 
 std::vector<VoxelFace> ChunkMesh::generateFaceInstances(const Chunk& chunk) {
     std::vector<VoxelFace> faces;
 
-    for (int z = 0; z < Chunk::SIZE; ++z)
-        for (int y = 0; y < Chunk::SIZE; ++y)
-            for (int x = 0; x < Chunk::SIZE; ++x) {
-                const Voxel* voxel = chunk.at(x, y, z);
+    for (int z = 0; z < Constants::ChunkSize; ++z)
+        for (int y = 0; y < Constants::ChunkSize; ++y)
+            for (int x = 0; x < Constants::ChunkSize; ++x) {
+                const Voxel* voxel = &chunk.getData().get(x, y, z);
                 if (!voxel->isSolid()) continue;
 
                 for (const Direction direction : DIRECTIONS) {
                     if (isFaceVisible(x, y, z, chunk, direction)) {
-                        faces.emplace_back(glm::ivec3(x, y, z), static_cast<int>(direction), static_cast<int>(voxel->type));
+                        faces.emplace_back(glm::ivec3(x, y, z), static_cast<int>(direction), static_cast<int>(voxel->getType()));
                     }
                 }
             }
@@ -81,7 +84,7 @@ void ChunkMesh::build(const Chunk* chunk) {
     voxelFaces = generateFaceInstances(*chunk);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, voxelFaces.size() * sizeof(VoxelFace), voxelFaces.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(voxelFaces.size() * sizeof(VoxelFace)), voxelFaces.data(), GL_STATIC_DRAW);
 }
 
 void ChunkMesh::clear() {

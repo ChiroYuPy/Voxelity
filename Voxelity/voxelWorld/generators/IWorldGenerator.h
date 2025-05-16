@@ -7,6 +7,7 @@
 
 #include "blocks/BlockType.h"
 
+struct ChunkData;
 class Chunk;
 
 class IWorldGenerator {
@@ -15,7 +16,7 @@ public:
 
     virtual BlockType generateVoxel(const glm::ivec3& globalPos) = 0;
 
-    void generate(Chunk& chunk);
+    ChunkData generate(glm::ivec3 globalChunkPos);
 };
 
 #endif //IWORLDGENERATOR_H

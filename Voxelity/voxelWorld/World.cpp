@@ -8,7 +8,8 @@
 #include <ranges>
 #include <utility>
 
-#include "engine/Application.h"
+#include "../core/Application.h"
+#include "core/Constants.h"
 #include "core/utils/Profiler.h"
 #include "math/Frustum.h"
 #include "rendering/ChunkMesh.h"
@@ -64,14 +65,14 @@ void World::render(const glm::mat4& view,
     for (const auto& chunkPtr : chunks | std::views::values) {
         const auto& chunk = *chunkPtr;
         // AABB calcul
-        const glm::vec3 chunkWorldMin = chunk.getPosition() * Chunk::SIZE; // GOULET ?
-        constexpr glm::vec3 halfSize = glm::vec3(Chunk::SIZE) * 0.5f;
+        const glm::vec3 chunkWorldMin = chunk.getPosition() * Constants::ChunkSize; // GOULET ?
+        constexpr glm::vec3 halfSize = glm::vec3(Constants::ChunkSize) * 0.5f;
         const glm::vec3 center = chunkWorldMin + halfSize;
 
         // frustum culling
-        if (frustum.intersectsAABB(center, halfSize) && chunk.getMesh()->hasVisibleFaces()) {
+        if (frustum.intersectsAABB(center, halfSize) && chunk.getMesh().hasVisibleFaces()) {
             chunkShader->setUniform("uChunkOffset", chunk.getWorldPosition());
-            chunk.getMesh()->render();
+            chunk.getMesh().render();
         }
     }
 }
@@ -110,18 +111,18 @@ Chunk* World::getChunkAt(const int cx, const int cy, const int cz) const {
 }
 
 const Voxel* World::getVoxelAt(const int vx, const int vy, const int vz) const {
-    const int cx = floorDiv(vx, Chunk::SIZE);
-    const int cy = floorDiv(vy, Chunk::SIZE);
-    const int cz = floorDiv(vz, Chunk::SIZE);
+    const int cx = floorDiv(vx, Constants::ChunkSize);
+    const int cy = floorDiv(vy, Constants::ChunkSize);
+    const int cz = floorDiv(vz, Constants::ChunkSize);
 
-    const int xInChunk = ((vx % Chunk::SIZE) + Chunk::SIZE) % Chunk::SIZE;
-    const int yInChunk = ((vy % Chunk::SIZE) + Chunk::SIZE) % Chunk::SIZE;
-    const int zInChunk = ((vz % Chunk::SIZE) + Chunk::SIZE) % Chunk::SIZE;
+    const int xInChunk = ((vx % Constants::ChunkSize) + Constants::ChunkSize) % Constants::ChunkSize;
+    const int yInChunk = ((vy % Constants::ChunkSize) + Constants::ChunkSize) % Constants::ChunkSize;
+    const int zInChunk = ((vz % Constants::ChunkSize) + Constants::ChunkSize) % Constants::ChunkSize;
 
     const Chunk* chunk = getChunkAt(cx, cy, cz);
     if (!chunk) return nullptr;
 
-    return chunk->at(xInChunk, yInChunk, zInChunk);
+    return &chunk->getData().get(xInChunk, yInChunk, zInChunk);
 }
 
 unsigned long World::chunkKey(const int cx, const int cy, const int cz) {
@@ -136,7 +137,8 @@ unsigned long World::chunkKey(const int cx, const int cy, const int cz) {
 
 void World::generateChunk(Chunk* chunk) const {
     PROFILE_FUNCTION();
-    generator->generate(*chunk);
+    const ChunkData generatedChunkData = generator->generate(chunk->getPosition() * Constants::ChunkSize);
+    chunk->setData(generatedChunkData);
     for (const auto& direction : DIRECTIONS) {
         const glm::vec3 neighborPos = chunk->getPosition() + getNormal(direction);
         Chunk* neighbor = getChunkAt(static_cast<int>(neighborPos.x), static_cast<int>(neighborPos.y), static_cast<int>(neighborPos.z));
@@ -149,9 +151,9 @@ void World::generateChunk(Chunk* chunk) const {
 
 void World::generateFromPlayerPosition(const glm::ivec3& position) {
     const auto chunkPosition = glm::ivec3(
-        floorDiv(position.x, Chunk::SIZE),
-        floorDiv(position.y, Chunk::SIZE),
-        floorDiv(position.z, Chunk::SIZE)
+        floorDiv(position.x, Constants::ChunkSize),
+        floorDiv(position.y, Constants::ChunkSize),
+        floorDiv(position.z, Constants::ChunkSize)
     );
     generateFromChunkPosition(chunkPosition);
 }
@@ -165,13 +167,13 @@ void World::generateFromChunkPosition(const glm::ivec3 playerPosition) {
     if (lastPosition && *lastPosition == playerPosition) return;
     lastPosition = playerPosition;
 
-    for (int x = playerPosition.x - RENDER_DISTANCE; x <= playerPosition.x + RENDER_DISTANCE; x++) {
-        for (int y = - CHUNK_RENDER_HEIGHT; y < CHUNK_RENDER_HEIGHT; y++) {
-            for (int z = playerPosition.z - RENDER_DISTANCE; z <= playerPosition.z + RENDER_DISTANCE; z++) {
+    for (int x = playerPosition.x - Constants::RenderDistance; x <= playerPosition.x + Constants::RenderDistance; x++) {
+        for (int y = - Constants::RenderHeight; y < Constants::RenderHeight; y++) {
+            for (int z = playerPosition.z - Constants::RenderDistance; z <= playerPosition.z + Constants::RenderDistance; z++) {
                 const int dx = x - playerPosition.x;
                 const int dz = z - playerPosition.z;
                 const auto key = chunkKey(x, y, z);
-                if (!chunks.contains(key) && dx * dx + dz * dz <= RENDER_DISTANCE * RENDER_DISTANCE) {
+                if (!chunks.contains(key) && dx * dx + dz * dz <= Constants::RenderDistance * Constants::RenderDistance) {
                     auto chunk = std::make_unique<Chunk>(glm::ivec3(x, y, z)); // create
                     generateChunk(chunk.get()); // generate
                     chunks[key] = std::move(chunk); // move pointer
@@ -189,8 +191,8 @@ void World::generateFromChunkPosition(const glm::ivec3 playerPosition) {
         const int dx = cPos.x - playerPosition.x;
         const int dz = cPos.z - playerPosition.z;
 
-        if (dx * dx + dz * dz > RENDER_DISTANCE * RENDER_DISTANCE ||
-            cPos.y < -CHUNK_RENDER_HEIGHT || cPos.y >= CHUNK_RENDER_HEIGHT) {
+        if (dx * dx + dz * dz > Constants::RenderDistance * Constants::RenderDistance ||
+            cPos.y < -Constants::RenderHeight || cPos.y >= Constants::RenderHeight) {
             chunksToRemove.push_back(cPos);
         }
     }

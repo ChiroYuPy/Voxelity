@@ -15,7 +15,7 @@ add_executable(Voxelity
         externals/src/IMG.cpp   # stb image
 
         # project
-        Voxelity/engine/Application.cpp
+        Voxelity/core/Application.cpp
         Voxelity/rendering/camera/Camera.cpp
         Voxelity/rendering/shader/Shader.cpp
         Voxelity/blocks/BlockRegistry.cpp
@@ -32,6 +32,7 @@ add_executable(Voxelity
         Voxelity/textures/Image.cpp
         Voxelity/textures/Texture.cpp
         Voxelity/core/utils/Profiler.cpp
+        Voxelity/voxelWorld/ChunkData.cpp
 )
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")

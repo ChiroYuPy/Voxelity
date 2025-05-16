@@ -7,7 +7,9 @@
 
 #include <vector>
 #include "VoxelFace.h"
-#include "voxelWorld/Chunk.h"
+#include "math/Direction.h"
+
+class Chunk;
 
 struct Voxel;
 

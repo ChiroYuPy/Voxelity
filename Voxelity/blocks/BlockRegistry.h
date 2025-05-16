@@ -13,7 +13,6 @@
 struct BlockData {
     BlockType type;
     bool solid;
-    glm::vec3 color;
 };
 
 class BlockRegistry {
@@ -21,6 +20,9 @@ public:
     static const BlockData &get(BlockType type);
 
     static BlockType fromID(uint8_t id);
+
+    static bool isSolid(BlockType type);
+    static bool isVoid(BlockType type);
 
 private:
     static const std::array<BlockData, static_cast<size_t>(BlockType::COUNT)> data;

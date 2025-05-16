@@ -6,15 +6,16 @@
 
 #include "voxelWorld/Chunk.h"
 
-void IWorldGenerator::generate(Chunk& chunk) {
-    const auto globalChunkPos = chunk.getPosition() * Chunk::SIZE;
-    for (int x = 0; x < Chunk::SIZE; x++) {
-        for (int y = 0; y < Chunk::SIZE; y++) {
-            for (int z = 0; z < Chunk::SIZE; z++) {
+ChunkData IWorldGenerator::generate(const glm::ivec3 globalChunkPos) {
+    auto data = ChunkData();
+    for (int x = 0; x < Constants::ChunkSize; x++) {
+        for (int y = 0; y < Constants::ChunkSize; y++) {
+            for (int z = 0; z < Constants::ChunkSize; z++) {
                 auto globalVoxelPos = globalChunkPos + glm::ivec3(x, y, z);
                 const BlockType blockType = generateVoxel(globalVoxelPos);
-                chunk.set(x, y, z, blockType);
+                data.set(x, y, z, Voxel{blockType});
             }
         }
     }
+    return data;
 }

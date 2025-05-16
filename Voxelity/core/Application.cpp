@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-#include "../core/utils/Profiler.h"
+#include "utils/Profiler.h"
 #include "../listeners/CameraController.h"
 #include "../events/EventDispatcher.h"
 #include "../events/GLFWEventAdapter.h"
@@ -74,7 +74,7 @@ void Application::update() {
     }
 
     cameraController->update(deltaTime);
-    // world->generateFromPlayerPosition(camera.position);
+    world->generateFromPlayerPosition(camera.position);
     world->update();
 }
 

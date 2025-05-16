@@ -9,12 +9,45 @@
 #include "blocks/BlockRegistry.h"
 
 struct Voxel {
-    BlockType type = BlockType::Air;
+private:
+    uint32_t data;
 
+    static constexpr uint32_t TYPE_BITS         = 10;                           // jusqu'à 1024 types de blocs
+    static constexpr uint32_t METADATA_BITS     = 6;                            // 64 variantes / états
+    static constexpr uint32_t LIGHT_BITS        = 4;                            // lumière (0-15)
+    static constexpr uint32_t RESERVED_BITS     = 12;                           // réservé pour futur usage
+
+    static constexpr uint32_t TYPE_MASK         = (1u << TYPE_BITS) - 1;        // 0x3FF
+    static constexpr uint32_t VARIANT_MASK      = (1u << METADATA_BITS) - 1;    // 0x3F
+    static constexpr uint32_t LIGHT_MASK        = (1u << LIGHT_BITS) - 1;       // 0xF
+
+    static constexpr uint32_t VARIANT_SHIFT     = TYPE_BITS;                    // 10
+    static constexpr uint32_t LIGHT_SHIFT       = TYPE_BITS + METADATA_BITS;    // 16
+
+public:
     explicit Voxel();
-    explicit Voxel(uint8_t id);
+
+    explicit Voxel(BlockType type_);
+
+    explicit Voxel(BlockType type_, uint8_t variant, uint8_t light);
+
+    [[nodiscard]] BlockType getType() const;
+
+    [[nodiscard]] uint8_t getVariant() const;
+
+    [[nodiscard]] uint8_t getLight() const;
+
+    void setType(BlockType type_);
+
+    void setType(uint32_t type_);
+
+    void setVariant(uint8_t variant);
+
+    void setLight(uint8_t light);
 
     [[nodiscard]] bool isSolid() const;
+
+    [[nodiscard]] bool isVoid() const;
 };
 
 #endif //VOXEL_H
