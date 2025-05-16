@@ -66,6 +66,10 @@ glm::ivec3 Chunk::getPosition() const {
     return position;
 }
 
+glm::ivec3 Chunk::getWorldPosition() const {
+    return position * SIZE;
+}
+
 unsigned int Chunk::index(const unsigned int x, const unsigned int y, const unsigned int z) {
     return x + SIZE * (y + SIZE * z);
 }

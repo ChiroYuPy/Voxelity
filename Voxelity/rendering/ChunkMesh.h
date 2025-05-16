@@ -30,7 +30,7 @@ public:
 
 private:
     Chunk* chunk;
-    GLuint vao{}, staticVBO, vbo{};
+    GLuint vao{}, staticVBO{}, vbo{};
     std::vector<VoxelFace> voxelFaces;
 };
 

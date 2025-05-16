@@ -29,7 +29,8 @@ inline int floorDiv(const int a, const int b) {
 // TODO         Level Of Details
 // TODO         Greedy Meshing
 // TODO         Multi-Threading -> world generation, chunk meshing, rendering
-// TODO         Voxel and VoxelFace memory optimisations -> Data Compression
+
+// TODO: DONE   VoxelFace Data Compression
 
 // TODO         Minimize Shaders Calculs
 // TODO         Optimize Shaders Uniforms
@@ -63,10 +64,11 @@ void World::render(const glm::mat4& view,
     int draws = 0;
     for (const auto& chunkPtr : chunks | std::views::values) {
         const auto& chunk = *chunkPtr;
+        chunkShader->setUniform("uChunkOffset", chunk.getWorldPosition());
 
         // AABB calcul
         const glm::vec3 chunkWorldMin = chunk.getPosition() * Chunk::SIZE;
-        const glm::vec3 halfSize = glm::vec3(Chunk::SIZE) * 0.5f;
+        constexpr glm::vec3 halfSize = glm::vec3(Chunk::SIZE) * 0.5f;
         const glm::vec3 center = chunkWorldMin + halfSize;
 
         // frustum culling
@@ -162,7 +164,7 @@ void World::generateChunk(Chunk* chunk) const {
 
 void World::generateFromPosition(const glm::ivec3 position) {
     PROFILE_FUNCTION();
-    static constexpr int RENDER_DISTANCE = 32;
+    static constexpr int RENDER_DISTANCE = 8;
     static constexpr int CHUNK_RENDER_HEIGHT = 4;
 
     const auto chunkPos = glm::ivec3(

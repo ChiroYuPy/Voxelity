@@ -47,6 +47,7 @@ public:
     void set(glm::uvec3 position, BlockType blockType);
 
     [[nodiscard]] glm::ivec3 getPosition() const;
+    [[nodiscard]] glm::ivec3 getWorldPosition() const;
 
     [[nodiscard]] std::shared_ptr<ChunkMesh> getMesh() const;
     void updateMesh();

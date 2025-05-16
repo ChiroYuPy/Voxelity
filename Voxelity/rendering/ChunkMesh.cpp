@@ -15,18 +15,9 @@ ChunkMesh::ChunkMesh(Chunk* chunk) : chunk(chunk) {
 
     glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_STATIC_DRAW);
 
-    // Layouts
     glEnableVertexAttribArray(0);
-    glVertexAttribIPointer(0, 3, GL_INT, sizeof(VoxelFace), reinterpret_cast<void *>(offsetof(VoxelFace, pos)));
+    glVertexAttribIPointer(0, 1, GL_UNSIGNED_INT, sizeof(VoxelFace), reinterpret_cast<void *>(offsetof(VoxelFace, data)));
     glVertexAttribDivisor(0, 1);
-
-    glEnableVertexAttribArray(1);
-    glVertexAttribIPointer(1, 1, GL_INT, sizeof(VoxelFace), reinterpret_cast<void *>(offsetof(VoxelFace, faceId)));
-    glVertexAttribDivisor(1, 1);
-
-    glEnableVertexAttribArray(2);
-    glVertexAttribIPointer(2, 1, GL_INT, sizeof(VoxelFace), reinterpret_cast<void *>(offsetof(VoxelFace, type)));
-    glVertexAttribDivisor(2, 1);
 }
 
 ChunkMesh::~ChunkMesh() {
@@ -76,10 +67,9 @@ std::vector<VoxelFace> ChunkMesh::generateFaceInstances(const Chunk& chunk) {
                 const Voxel* voxel = chunk.at(x, y, z);
                 if (!voxel->isSolid()) continue;
 
-                const glm::ivec3 worldPos = chunk.getPosition() * Chunk::SIZE + glm::ivec3(x, y, z);
                 for (const Direction direction : DIRECTIONS) {
                     if (isFaceVisible(x, y, z, chunk, direction)) {
-                        faces.emplace_back(worldPos, static_cast<int>(direction), static_cast<int>(voxel->type));
+                        faces.emplace_back(glm::ivec3(x, y, z), static_cast<int>(direction), static_cast<int>(voxel->type));
                     }
                 }
             }

@@ -39,6 +39,8 @@ Application::Application()
     gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glFrontFace(GL_CCW);
 
     world = std::make_unique<World>();
 
