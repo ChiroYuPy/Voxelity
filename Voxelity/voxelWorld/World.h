@@ -26,21 +26,11 @@ public:
 
     explicit World();
 
-    void generateChunk(Chunk *chunk) const;
-
     void generateFromPlayerPosition(const glm::ivec3& position);
 
     void generateFromChunkPosition(glm::ivec3 playerPosition);
 
     void render(const glm::mat4 & view, const glm::mat4 & projection, const glm::vec3 & lightDirection, const glm::vec3 & lightColor, const glm::vec3 & ambientColor);
-
-    void prepareShader(const glm::mat4& view,
-                              const glm::mat4& projection,
-                              const glm::vec3& lightDir,
-                              const glm::vec3& lightCol,
-                              const glm::vec3& ambientCol) const;
-
-    void prepareTextures() const;
 
     void update() const;
 
@@ -56,6 +46,16 @@ private:
 
     std::unique_ptr<Texture> textureAtlas;
     std::unique_ptr<Shader> chunkShader;
+
+    void generateChunk(Chunk *chunk) const;
+
+    void prepareShader(const glm::mat4& view,
+                              const glm::mat4& projection,
+                              const glm::vec3& lightDir,
+                              const glm::vec3& lightCol,
+                              const glm::vec3& ambientCol) const;
+
+    void prepareTextures() const;
 
     static unsigned long chunkKey(int cx, int cy, int cz);
 
