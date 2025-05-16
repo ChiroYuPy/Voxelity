@@ -9,7 +9,7 @@
 #include <unordered_map>
 
 #include "Voxel.h"
-#include "../rendering/shader/Shader.h"
+#include "rendering/shader/Shader.h"
 #include "math/Frustum.h"
 #include "textures/Texture.h"
 #include "voxelWorld/generators/IWorldGenerator.h"
@@ -21,7 +21,7 @@ class VoxelFace;
 
 class  World {
 public:
-    explicit World();
+    explicit World(std::unique_ptr<IWorldGenerator> generator);
 
     void generateFromPlayerPosition(const glm::ivec3& position);
 
@@ -55,8 +55,6 @@ private:
     void prepareTextures() const;
 
     static unsigned long chunkKey(int cx, int cy, int cz);
-
-    glm::ivec3 keyToPos(unsigned long key);
 };
 
 #endif //WORLD_H

@@ -14,8 +14,6 @@
 #include "math/Frustum.h"
 #include "rendering/ChunkMesh.h"
 #include "rendering/shader/Shader.h"
-#include "voxelWorld/generators/FlatWorldGenerator.h"
-#include "voxelWorld/generators/NaturalWorldGenerator.h"
 
 inline int floorDiv(const int a, const int b) {
     return (a >= 0) ? (a / b) : ((a - b + 1) / b);
@@ -36,8 +34,7 @@ inline int floorDiv(const int a, const int b) {
 // TODO         Minimize Shaders Calculs
 // TODO         Optimize Shaders Uniforms
 
-World::World() {
-    generator = std::make_unique<NaturalWorldGenerator>();
+World::World(std::unique_ptr<IWorldGenerator> generator) : generator(std::move(generator)) {
 
     chunkShader = std::make_unique<Shader>(
         "../resources/shaders/vertex_shader.glsl",
