@@ -134,18 +134,6 @@ unsigned long World::chunkKey(const int cx, const int cy, const int cz) {
     return (ux << 42) | (uy << 21) | uz;
 }
 
-void World::generate(const int cx, const int cy, const int cz) {
-    static int counter = 0;
-    counter++;
-    std::cout << "chunks loaded: " << counter << " | voxels loaded: " << counter * 4096 <<std::endl;
-    const auto key = chunkKey(cx, cy, cz);
-    if (!chunks.contains(key)) {
-        auto chunk = std::make_unique<Chunk>(glm::ivec3(cx, cy, cz));
-        generateChunk(chunk.get());
-        chunks[key] = std::move(chunk);
-    }
-}
-
 void World::generateChunk(Chunk* chunk) const {
     PROFILE_FUNCTION();
     generator->generate(*chunk);
@@ -159,21 +147,37 @@ void World::generateChunk(Chunk* chunk) const {
     }
 }
 
-void World::generateFromPosition(const glm::ivec3 position) {
-    PROFILE_FUNCTION();
-
-    const auto chunkPos = glm::ivec3(
+void World::generateFromPlayerPosition(const glm::ivec3& position) {
+    const auto chunkPosition = glm::ivec3(
         floorDiv(position.x, Chunk::SIZE),
         floorDiv(position.y, Chunk::SIZE),
         floorDiv(position.z, Chunk::SIZE)
     );
+    generateFromChunkPosition(chunkPosition);
+}
 
-    for (int x = chunkPos.x - RENDER_DISTANCE; x <= chunkPos.x + RENDER_DISTANCE; x++) {
+void World::generateFromChunkPosition(const glm::ivec3 playerPosition) {
+    PROFILE_FUNCTION();
+
+    static int nbChunkLoaded = 0;
+    static std::optional<glm::ivec3> lastPosition;
+
+    if (lastPosition && *lastPosition == playerPosition) return;
+    lastPosition = playerPosition;
+
+    for (int x = playerPosition.x - RENDER_DISTANCE; x <= playerPosition.x + RENDER_DISTANCE; x++) {
         for (int y = - CHUNK_RENDER_HEIGHT; y < CHUNK_RENDER_HEIGHT; y++) {
-            for (int z = chunkPos.z - RENDER_DISTANCE; z <= chunkPos.z + RENDER_DISTANCE; z++) {
-                const int dx = x - chunkPos.x;
-                const int dz = z - chunkPos.z;
-                if (dx * dx + dz * dz <= RENDER_DISTANCE * RENDER_DISTANCE) generate(x, y, z);
+            for (int z = playerPosition.z - RENDER_DISTANCE; z <= playerPosition.z + RENDER_DISTANCE; z++) {
+                const int dx = x - playerPosition.x;
+                const int dz = z - playerPosition.z;
+                const auto key = chunkKey(x, y, z);
+                if (!chunks.contains(key) && dx * dx + dz * dz <= RENDER_DISTANCE * RENDER_DISTANCE) {
+                    auto chunk = std::make_unique<Chunk>(glm::ivec3(x, y, z)); // create
+                    generateChunk(chunk.get()); // generate
+                    chunks[key] = std::move(chunk); // move pointer
+
+                    nbChunkLoaded++;
+                }
             }
         }
     }
@@ -182,18 +186,21 @@ void World::generateFromPosition(const glm::ivec3 position) {
 
     for (const auto &chunk: chunks | std::views::values) {
         glm::ivec3 cPos = chunk->getPosition();
-        const int dx = cPos.x - chunkPos.x;
-        const int dz = cPos.z - chunkPos.z;
+        const int dx = cPos.x - playerPosition.x;
+        const int dz = cPos.z - playerPosition.z;
 
         if (dx * dx + dz * dz > RENDER_DISTANCE * RENDER_DISTANCE ||
             cPos.y < -CHUNK_RENDER_HEIGHT || cPos.y >= CHUNK_RENDER_HEIGHT) {
             chunksToRemove.push_back(cPos);
-            }
+        }
     }
 
     // Supprimer les chunks hors zone de rendu
     for (const auto& pos : chunksToRemove) {
         const auto key = chunkKey(pos.x, pos.y, pos.z);
         chunks.erase(key);
+        nbChunkLoaded--;
     }
+
+    std::cout << "chunks loaded: " << nbChunkLoaded << " | voxels loaded: " << nbChunkLoaded * 4096 <<std::endl;
 }

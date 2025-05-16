@@ -22,9 +22,9 @@ Application& Application::get() {
 }
 
 Application::Application()
-  : projection(glm::perspective(glm::radians(45.0f),
+  : projection(glm::perspective(glm::radians(70.0f),
     static_cast<float>(SCREEN_WIDTH) / static_cast<float>(SCREEN_HEIGHT),
-    0.1f, 1000.f)),
+    0.1f, 2048.f)),
     lastTime(0)
 {
     instance = this;
@@ -49,7 +49,7 @@ Application::Application()
     eventDispatcher->subscribe(cameraController.get());
     GLFWEventAdapter(window, *eventDispatcher);
 
-    world->generateFromPosition(camera.position);
+    // world->generateFromPlayerPosition(camera.position);
 }
 
 Application::~Application() {
@@ -74,7 +74,7 @@ void Application::update() {
     }
 
     cameraController->update(deltaTime);
-    // world->generateFromPosition(camera.position);
+    world->generateFromPlayerPosition(camera.position);
     world->update();
 }
 

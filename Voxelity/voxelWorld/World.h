@@ -26,11 +26,11 @@ public:
 
     explicit World();
 
-    void generate(int cx, int cy, int cz);
-
     void generateChunk(Chunk *chunk) const;
 
-    void generateFromPosition(glm::ivec3 position);
+    void generateFromPlayerPosition(const glm::ivec3& position);
+
+    void generateFromChunkPosition(glm::ivec3 playerPosition);
 
     void render(const glm::mat4 & view, const glm::mat4 & projection, const glm::vec3 & lightDirection, const glm::vec3 & lightColor, const glm::vec3 & ambientColor);
 
