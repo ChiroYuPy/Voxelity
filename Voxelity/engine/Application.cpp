@@ -49,7 +49,7 @@ Application::Application()
     eventDispatcher->subscribe(cameraController.get());
     GLFWEventAdapter(window, *eventDispatcher);
 
-    // world->generateFromPlayerPosition(camera.position);
+    world->generateFromPlayerPosition(camera.position);
 }
 
 Application::~Application() {
@@ -74,7 +74,7 @@ void Application::update() {
     }
 
     cameraController->update(deltaTime);
-    world->generateFromPlayerPosition(camera.position);
+    // world->generateFromPlayerPosition(camera.position);
     world->update();
 }
 

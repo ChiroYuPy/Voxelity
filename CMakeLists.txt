@@ -32,8 +32,6 @@ add_executable(Voxelity
         Voxelity/textures/Image.cpp
         Voxelity/textures/Texture.cpp
         Voxelity/core/utils/Profiler.cpp
-        Voxelity/math/Direction.h
-        Voxelity/math/Frustum.h
 )
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
