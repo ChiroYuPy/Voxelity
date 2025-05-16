@@ -23,12 +23,13 @@ int getHeightAt(const int x, const int z) {
     // Exemples possibles :
     // - bruit^e (e.g. 1.5, 2) : creuse les vallées, accentue les sommets
     // - sqrt(bruit) : aplatie les hauts-reliefs
-    constexpr float exponent = 2.8f;
+    constexpr float exponent = 6.f;
     const float shaped = std::pow(noiseValue, exponent);  // accentue les pics
 
     constexpr int worldHeight = Constants::RenderHeight * Constants::ChunkSize - 1;
-    const int height = static_cast<int>(shaped * worldHeight); // max height
-    return std::clamp(height, 0, worldHeight);
+    static constexpr int startHeight = worldHeight / 2;
+    const int height = startHeight + static_cast<int>(shaped * (worldHeight - startHeight)); // max height
+    return std::clamp(height, startHeight, worldHeight);
 }
 
 NaturalWorldGenerator::NaturalWorldGenerator() = default;

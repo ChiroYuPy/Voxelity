@@ -204,5 +204,7 @@ void World::generateFromChunkPosition(const glm::ivec3 playerPosition) {
         nbChunkLoaded--;
     }
 
-    std::cout << "chunks loaded: " << nbChunkLoaded << " | voxels loaded: " << nbChunkLoaded * 4096 <<std::endl;
+    std::cout << "Chunks loaded: " << nbChunkLoaded
+          << " | Memory usage: " << nbChunkLoaded * 0.125f << " MB" << std::endl;
+
 }
