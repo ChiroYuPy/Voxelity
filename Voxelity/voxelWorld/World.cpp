@@ -22,7 +22,7 @@ inline int floorDiv(const int a, const int b) {
 // TODO: DONE   Face Culling ( isVisible() test )
 // TODO: DONE   Basic Occlusion Culling ( isEmpty() & hasVisibleFaces() tests )
 // TODO         Complete Occlusion Culling
-// TODO         Level Of Details
+// TODO         Level Of Details ( 16³, 8³, 4³, 2³, 1 chunk mesh volumes related to the distance )
 // TODO         Greedy Meshing
 // TODO         Multi-Threading -> world generation, chunk meshing, rendering
 
