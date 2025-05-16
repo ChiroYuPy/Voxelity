@@ -13,7 +13,6 @@
 #include "core/utils/Profiler.h"
 #include "math/Frustum.h"
 #include "rendering/ChunkMesh.h"
-#include "rendering/shader/Shader.h"
 
 inline int floorDiv(const int a, const int b) {
     return (a >= 0) ? (a / b) : ((a - b + 1) / b);
@@ -34,67 +33,14 @@ inline int floorDiv(const int a, const int b) {
 // TODO         Minimize Shaders Calculs
 // TODO         Optimize Shaders Uniforms
 
-World::World(std::unique_ptr<IWorldGenerator> generator) : generator(std::move(generator)) {
-
-    chunkShader = std::make_unique<Shader>(
-        "../resources/shaders/vertex_shader.glsl",
-        "../resources/shaders/fragment_shader.glsl");
-
-    textureAtlas = std::make_unique<Texture>(
-        "../resources/textures/atlas.png");
-
-    textureAtlas->bind(0);
-}
+World::World(std::unique_ptr<IWorldGenerator> generator) : generator(std::move(generator)) {}
 
 void World::render(const glm::mat4& view,
                    const glm::mat4& projection,
                    const glm::vec3& lightDirection,
                    const glm::vec3& lightColor,
                    const glm::vec3& ambientColor) {
-    PROFILE_FUNCTION();
-    prepareShader(view, projection, lightDirection, lightColor, ambientColor);
-    prepareTextures();
-
-    // update frustum
-    const glm::mat4 viewProj = projection * view;
-    frustum.update(viewProj);
-
-    for (const auto &chunkPtr: chunkManager.chunks | std::views::values) {
-        const auto& chunk = *chunkPtr;
-        // AABB calcul
-        const glm::vec3 chunkWorldMin = chunk.getPosition() * Constants::ChunkSize; // GOULET ?
-        constexpr glm::vec3 halfSize = glm::vec3(Constants::ChunkSize) * 0.5f;
-        const glm::vec3 center = chunkWorldMin + halfSize;
-
-        // frustum culling
-        if (frustum.intersectsAABB(center, halfSize) && chunk.getMesh().hasVisibleFaces()) {
-            chunkShader->setUniform("uChunkOffset", chunk.getWorldPosition());
-            chunk.getMesh().render();
-        }
-    }
-}
-
-void World::prepareShader(const glm::mat4& view,
-                          const glm::mat4& projection,
-                          const glm::vec3& lightDir,
-                          const glm::vec3& lightCol,
-                          const glm::vec3& ambientCol) const {
-    chunkShader->use();
-
-    // vertex shader
-    chunkShader->setUniform("uView", view);
-    chunkShader->setUniform("uProjection", projection);
-
-    // fragment shader
-    chunkShader->setUniform("uLightDirection", glm::normalize(lightDir));
-    chunkShader->setUniform("uLightColor", lightCol);
-    chunkShader->setUniform("uAmbientColor", ambientCol);
-}
-
-void World::prepareTextures() const {
-    glActiveTexture(GL_TEXTURE0);
-    textureAtlas->bind(0);
-    chunkShader->setUniform("uAtlas", 0);
+    chunkRenderer.render(chunkManager, view, projection, lightDirection, lightColor, ambientColor);
 }
 
 void World::update() const {

@@ -9,6 +9,7 @@
 #include <unordered_map>
 
 #include "ChunkManager.h"
+#include "ChunkRenderer.h"
 #include "rendering/shader/Shader.h"
 #include "math/Frustum.h"
 #include "textures/Texture.h"
@@ -33,6 +34,7 @@ public:
 
 private:
     ChunkManager chunkManager;
+    ChunkRenderer chunkRenderer;
 
     Frustum frustum;
 
@@ -42,14 +44,6 @@ private:
     std::unique_ptr<Shader> chunkShader;
 
     void generateChunk(Chunk *chunk);
-
-    void prepareShader(const glm::mat4& view,
-                              const glm::mat4& projection,
-                              const glm::vec3& lightDir,
-                              const glm::vec3& lightCol,
-                              const glm::vec3& ambientCol) const;
-
-    void prepareTextures() const;
 };
 
 #endif //WORLD_H
