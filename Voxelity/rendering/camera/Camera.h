@@ -8,11 +8,14 @@ public:
     glm::vec3 position;
     float yaw, pitch;
 
-    explicit Camera(glm::vec3 startPos = glm::vec3(0, 0, 0),
-                    float yaw = -90.0f,
-                    float pitch = 0.0f);
+    glm::mat4 viewMatrix;
+    bool viewMatrixDirty;
 
-    [[nodiscard]] glm::mat4 getViewMatrix() const;
+    explicit Camera(glm::vec3 startPos, float yaw, float pitch);
+
+    void markViewMatrixDirty();
+
+    [[nodiscard]] glm::mat4 getViewMatrix();
 
     void moveForward(float amount);
 

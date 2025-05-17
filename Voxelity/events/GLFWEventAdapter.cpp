@@ -14,6 +14,7 @@ GLFWEventAdapter::GLFWEventAdapter(GLFWwindow* window, EventDispatcher& dispatch
 void GLFWEventAdapter::registerCallbacks(GLFWwindow* window) {
     glfwSetKeyCallback(window, keyCallback);
     glfwSetCursorPosCallback(window, cursorPosCallback);
+    glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 }
 
 void GLFWEventAdapter::keyCallback(GLFWwindow*, const int key, const int scancode, const int action, const int mods) {
@@ -25,4 +26,11 @@ void GLFWEventAdapter::keyCallback(GLFWwindow*, const int key, const int scancod
 void GLFWEventAdapter::cursorPosCallback(GLFWwindow*, const double xpos, const double ypos) {
     Event e(xpos, ypos);
     s_dispatcher->dispatch(e);
+}
+
+void GLFWEventAdapter::framebufferSizeCallback(GLFWwindow*, const int width, const int height) {
+    if (s_dispatcher) {
+        Event e(width, height);
+        s_dispatcher->dispatch(e);
+    }
 }

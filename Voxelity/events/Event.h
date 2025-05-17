@@ -23,6 +23,11 @@ struct Event {
         struct {
             double x, y;
         } mouse;
+
+        struct {
+            int width;
+            int height;
+        } resize;
     };
 
     Event(const int k, const int s, const int a, const int m)
@@ -35,6 +40,11 @@ struct Event {
     Event(const double xpos, const double ypos) : type(EventType::MouseMoved) {
         mouse.x = xpos;
         mouse.y = ypos;
+    }
+
+    Event(const int width, const int height) : type(EventType::WindowResized) {
+        resize.width = width;
+        resize.height = height;
     }
 };
 

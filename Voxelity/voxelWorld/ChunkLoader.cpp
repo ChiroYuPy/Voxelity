@@ -24,7 +24,7 @@ void ChunkLoader::updateChunksAround(const glm::ivec3& playerChunkPos,
 
     // Génération des nouveaux chunks autour du joueur
     for (int x = playerChunkPos.x - Constants::RenderDistance; x <= playerChunkPos.x + Constants::RenderDistance; ++x) {
-        for (int y = -Constants::RenderHeight; y < Constants::RenderHeight; ++y) {
+        for (int y = 0; y < Constants::RenderHeight; ++y) {
             for (int z = playerChunkPos.z - Constants::RenderDistance; z <= playerChunkPos.z + Constants::RenderDistance; ++z) {
                 glm::ivec3 pos{x, y, z};
                 if (!manager.hasChunkAt(pos) && isWithinRenderDistance(playerChunkPos, pos)) {

@@ -4,10 +4,10 @@
 
 #include "CameraController.h"
 
-#include "../rendering/camera/Camera.h"
+#include "rendering/camera/Camera.h"
 
 CameraController::CameraController(GLFWwindow* window, Camera& camera)
-    : m_camera(camera), m_window(window) {}
+: m_window(window), m_camera(camera) {}
 
 void CameraController::onEvent(Event& e) {
     switch (e.type) {

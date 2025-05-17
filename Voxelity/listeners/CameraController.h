@@ -19,8 +19,8 @@ public:
     void update(float deltaTime) const;
 
 private:
-    Camera& m_camera;
     GLFWwindow* m_window;
+    Camera& m_camera;
 
     bool m_control = false;
 

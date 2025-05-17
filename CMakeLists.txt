@@ -36,6 +36,8 @@ add_executable(Voxelity
         Voxelity/voxelWorld/ChunkManager.cpp
         Voxelity/voxelWorld/ChunkRenderer.cpp
         Voxelity/voxelWorld/ChunkLoader.cpp
+        Voxelity/listeners/ResizeListener.cpp
+        Voxelity/listeners/ResizeListener.h
 )
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")

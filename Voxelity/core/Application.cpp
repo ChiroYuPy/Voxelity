@@ -10,11 +10,12 @@
 #include "listeners/CameraController.h"
 #include "events/EventDispatcher.h"
 #include "events/GLFWEventAdapter.h"
+#include "listeners/ResizeListener.h"
 #include "voxelWorld/World.h"
 #include "voxelWorld/generators/NaturalWorldGenerator.h"
 
-constexpr unsigned int SCREEN_WIDTH = 1280;
-constexpr unsigned int SCREEN_HEIGHT = 720;
+constexpr unsigned int SCREEN_WIDTH = 2560;
+constexpr unsigned int SCREEN_HEIGHT = 1600;
 
 Application* Application::instance = nullptr;
 
@@ -23,11 +24,10 @@ Application& Application::get() {
 }
 
 Application::Application()
-  : projection(glm::perspective(glm::radians(70.0f),
-    static_cast<float>(SCREEN_WIDTH) / static_cast<float>(SCREEN_HEIGHT),
-    0.1f, 2048.f)),
-    lastTime(0)
-{
+: camera({0, 0, 0}, 0, 0), projection(glm::perspective(glm::radians(Constants::FOV),
+                       static_cast<float>(SCREEN_WIDTH) / static_cast<float>(SCREEN_HEIGHT),
+                       Constants::NearPlane, Constants::FarPlane)),
+    lastTime(0) {
     instance = this;
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -47,8 +47,13 @@ Application::Application()
     world = std::make_unique<World>(std::make_unique<NaturalWorldGenerator>());
 
     eventDispatcher = std::make_unique<EventDispatcher>();
+
     cameraController = std::make_unique<CameraController>(window, camera);
     eventDispatcher->subscribe(cameraController.get());
+
+    resizeListener = std::make_unique<ResizeListener>(window, projection);
+    eventDispatcher->subscribe(resizeListener.get());
+
     GLFWEventAdapter(window, *eventDispatcher);
 
     world->updateFromPlayerPosition(camera.position);
@@ -80,7 +85,7 @@ void Application::update() {
     world->update();
 }
 
-void Application::render() const {
+void Application::render() {
     PROFILE_FUNCTION();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

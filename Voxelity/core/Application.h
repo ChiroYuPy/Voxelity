@@ -10,11 +10,11 @@
 #include <memory>
 
 #include "rendering/camera/Camera.h"
-#include "voxelWorld/Chunk.h"
 
 class World;
-class CameraController;
 class EventDispatcher;
+class CameraController;
+class ResizeListener;
 
 class Application {
 public:
@@ -25,7 +25,7 @@ public:
 
     void update();
 
-    void render() const;
+    void render();
 
     void run();
 
@@ -33,11 +33,13 @@ private:
     static Application* instance;
     GLFWwindow* window;
     Camera camera;
+
     std::unique_ptr<World> world;
     std::unique_ptr<EventDispatcher> eventDispatcher;
     std::unique_ptr<CameraController> cameraController;
+    std::unique_ptr<ResizeListener> resizeListener;
 
-    const glm::mat4 projection;
+    glm::mat4 projection;
 
     float lastTime;
 };

@@ -9,8 +9,7 @@
 #include <memory>
 #include <unordered_map>
 
-struct Voxel;
-class Chunk;
+#include "Chunk.h"
 
 using ChunkKey = unsigned long;
 
