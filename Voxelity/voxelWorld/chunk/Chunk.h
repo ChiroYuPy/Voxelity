@@ -8,7 +8,7 @@
 #include <GLT.h>
 #include <mutex>
 
-#include "../ChunkData.h"
+#include "ChunkData.h"
 #include "math/Direction.h"
 #include "rendering/ChunkMesh.h"
 

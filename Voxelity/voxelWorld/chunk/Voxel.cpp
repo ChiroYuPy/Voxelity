@@ -2,7 +2,7 @@
 // Created by adrian on 13/05/25.
 //
 
-#include "voxelWorld/Voxel.h"
+#include "Voxel.h"
 
 Voxel::Voxel() : data(0) {}
 

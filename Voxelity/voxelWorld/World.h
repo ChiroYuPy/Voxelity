@@ -9,7 +9,7 @@
 
 #include "chunk/ChunkLoader.h"
 #include "chunk/ChunkManager.h"
-#include "ChunkRenderer.h"
+#include "chunk/ChunkRenderer.h"
 #include "voxelWorld/generators/IWorldGenerator.h"
 
 class VoxelFace;

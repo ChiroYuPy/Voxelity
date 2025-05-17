@@ -5,6 +5,8 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+#include <cstdint>
+
 class Constants {
 public:
     static constexpr int ChunkSize = 16;

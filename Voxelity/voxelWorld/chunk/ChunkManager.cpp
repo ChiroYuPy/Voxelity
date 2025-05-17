@@ -2,7 +2,7 @@
 // Created by adrian on 16/05/25.
 //
 
-#include "../ChunkManager.h"
+#include "ChunkManager.h"
 
 #include "Chunk.h"
 #include "core/Constants.h"

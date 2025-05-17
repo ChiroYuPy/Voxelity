@@ -2,8 +2,7 @@
 // Created by adrian on 14/05/25.
 //
 
-#include "voxelWorld/Chunk.h"
-
+#include "core/Constants.h"
 #include "rendering/ChunkMesh.h"
 #include "voxelWorld/World.h"
 
