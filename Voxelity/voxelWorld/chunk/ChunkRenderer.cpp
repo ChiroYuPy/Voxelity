@@ -2,7 +2,7 @@
 // Created by adrian on 17/05/25.
 //
 
-#include "ChunkRenderer.h"
+#include "../ChunkRenderer.h"
 
 #include <ranges>
 

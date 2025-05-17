@@ -11,7 +11,7 @@
 #include "rendering/shader/Shader.h"
 #include "math/Frustum.h"
 #include "textures/Texture.h"
-#include "voxelWorld/ChunkManager.h"
+#include "ChunkManager.h"
 
 class ChunkRenderer {
 public:

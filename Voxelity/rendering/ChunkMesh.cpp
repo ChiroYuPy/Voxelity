@@ -7,7 +7,7 @@
 #include <iostream>
 
 #include "core/Constants.h"
-#include "voxelWorld/Chunk.h"
+#include "../voxelWorld/chunk/Chunk.h"
 
 ChunkMesh::ChunkMesh(Chunk* chunk) : chunk(chunk) {
     glGenVertexArrays(1, &vao);

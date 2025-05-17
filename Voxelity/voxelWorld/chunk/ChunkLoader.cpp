@@ -2,7 +2,7 @@
 // Created by adrian on 17/05/25.
 //
 
-#include "ChunkLoader.h"
+#include "../ChunkLoader.h"
 
 #include <ranges>
 #include <iostream>
@@ -11,8 +11,8 @@
 #include "ChunkManager.h"
 #include "core/Constants.h"
 #include "core/utils/Profiler.h"
-#include "generators/IWorldGenerator.h"
-#include "voxelWorld/Chunk.h"
+#include "../generators/IWorldGenerator.h"
+#include "Chunk.h"
 
 void ChunkLoader::updateChunksAround(const glm::ivec3& playerChunkPos,
                                      ChunkManager& manager,

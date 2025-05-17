@@ -7,7 +7,7 @@
 #include <ranges>
 #include <utility>
 
-#include "Chunk.h"
+#include "chunk/Chunk.h"
 #include "core/Constants.h"
 #include "core/utils/Profiler.h"
 #include "math/Frustum.h"

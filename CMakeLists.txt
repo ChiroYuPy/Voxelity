@@ -19,8 +19,8 @@ add_executable(Voxelity
         Voxelity/rendering/camera/CameraView.cpp
         Voxelity/rendering/shader/Shader.cpp
         Voxelity/blocks/BlockRegistry.cpp
-        Voxelity/voxelWorld/Voxel.cpp
-        Voxelity/voxelWorld/Chunk.cpp
+        Voxelity/voxelWorld/chunk/Voxel.cpp
+        Voxelity/voxelWorld/chunk/Chunk.cpp
         Voxelity/voxelWorld/World.cpp
         Voxelity/listeners/CameraController.cpp
         Voxelity/events/GLFWEventAdapter.cpp
@@ -32,10 +32,10 @@ add_executable(Voxelity
         Voxelity/textures/Image.cpp
         Voxelity/textures/Texture.cpp
         Voxelity/core/utils/Profiler.cpp
-        Voxelity/voxelWorld/ChunkData.cpp
-        Voxelity/voxelWorld/ChunkManager.cpp
-        Voxelity/voxelWorld/ChunkRenderer.cpp
-        Voxelity/voxelWorld/ChunkLoader.cpp
+        Voxelity/voxelWorld/chunk/ChunkData.cpp
+        Voxelity/voxelWorld/chunk/ChunkManager.cpp
+        Voxelity/voxelWorld/chunk/ChunkRenderer.cpp
+        Voxelity/voxelWorld/chunk/ChunkLoader.cpp
         Voxelity/listeners/ResizeListener.cpp
         Voxelity/listeners/ResizeListener.h
         Voxelity/rendering/camera/CameraProjection.cpp

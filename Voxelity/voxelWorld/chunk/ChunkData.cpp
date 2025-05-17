@@ -2,7 +2,7 @@
 // Created by adrian on 16/05/25.
 //
 
-#include "ChunkData.h"
+#include "../ChunkData.h"
 
 const Voxel& ChunkData::get(const unsigned int x, const unsigned int y, const unsigned int z) const {
     return voxels[index(x, y, z)];

@@ -4,7 +4,7 @@
 
 #include "voxelWorld/generators/IWorldGenerator.h"
 
-#include "voxelWorld/Chunk.h"
+#include "../chunk/Chunk.h"
 
 ChunkData IWorldGenerator::generate(const glm::ivec3 globalChunkPos) {
     auto data = ChunkData();

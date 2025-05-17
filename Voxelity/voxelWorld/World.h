@@ -7,8 +7,8 @@
 
 #include <memory>
 
-#include "ChunkLoader.h"
-#include "ChunkManager.h"
+#include "chunk/ChunkLoader.h"
+#include "chunk/ChunkManager.h"
 #include "ChunkRenderer.h"
 #include "voxelWorld/generators/IWorldGenerator.h"
 

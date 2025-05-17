@@ -5,7 +5,7 @@
 #ifndef CHUNKDATA_H
 #define CHUNKDATA_H
 
-#include "Voxel.h"
+#include "../Voxel.h"
 #include "core/Constants.h"
 
 struct ChunkData {
