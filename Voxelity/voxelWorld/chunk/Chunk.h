@@ -13,17 +13,19 @@
 #include "rendering/ChunkMesh.h"
 
 enum class ChunkState {
-    Unloaded,
-    Generating,
+    Unloaded,   // empty chunk, chunkData fill of air, chunkMesh without any vertices
+    Generating, // chunkData generation
     Generated,
-    Meshing,
-    Meshed
+    Meshing,    // chunkMesh calculation
+    Meshed,
+    Loaded      // Ready to render
 };
 
 class Chunk {
     glm::ivec3 position;
     ChunkData data;
     ChunkMesh mesh;
+
     bool dirty;
     bool empty;
 
@@ -57,7 +59,7 @@ public:
 
     void setState(ChunkState s);
 
-    ChunkState getState() const;
+    [[nodiscard]] ChunkState getState() const;
 
     void markDirty();
 
