@@ -22,13 +22,14 @@ ChunkRenderer::ChunkRenderer() {
 }
 
 void ChunkRenderer::render(const ChunkManager& chunkManager,
+                           const glm::vec3& cameraPosition,
                            const glm::mat4& view,
                            const glm::mat4& projection,
                            const glm::vec3& lightDirection,
                            const glm::vec3& lightColor,
                            const glm::vec3& ambientColor) {
     PROFILE_FUNCTION();
-    prepareShader(view, projection, lightDirection, lightColor, ambientColor);
+    prepareShader(cameraPosition, view, projection, lightDirection, lightColor, ambientColor);
     prepareTextures();
 
     const glm::mat4 viewProj = projection * view;
@@ -48,7 +49,8 @@ void ChunkRenderer::render(const ChunkManager& chunkManager,
     }
 }
 
-void ChunkRenderer::prepareShader(const glm::mat4& view,
+void ChunkRenderer::prepareShader(const glm::vec3& cameraPosition,
+                                  const glm::mat4& view,
                                   const glm::mat4& projection,
                                   const glm::vec3& lightDir,
                                   const glm::vec3& lightCol,
@@ -60,6 +62,11 @@ void ChunkRenderer::prepareShader(const glm::mat4& view,
     chunkShader->setUniform("uLightDirection", glm::normalize(lightDir));
     chunkShader->setUniform("uLightColor", lightCol);
     chunkShader->setUniform("uAmbientColor", ambientCol);
+
+    chunkShader->setUniform("uFogColor", glm::vec3(0.65f, 0.65f, 0.75f));
+    chunkShader->setUniform("uFogStart", Constants::ChunkSize * Constants::RenderDistance * 0.4f);
+    chunkShader->setUniform("uFogEnd", Constants::ChunkSize * Constants::RenderDistance * 1.6f);
+    chunkShader->setUniform("uCameraPos", cameraPosition);
 }
 
 void ChunkRenderer::prepareTextures() const {

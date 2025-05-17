@@ -18,6 +18,7 @@ public:
     ChunkRenderer();
 
     void render(const ChunkManager& chunkManager,
+                const glm::vec3& cameraPosition,
                 const glm::mat4& view,
                 const glm::mat4& projection,
                 const glm::vec3& lightDirection,
@@ -29,7 +30,8 @@ private:
     std::unique_ptr<Texture> textureAtlas;
     Frustum frustum;
 
-    void prepareShader(const glm::mat4& view,
+    void prepareShader(const glm::vec3& cameraPosition,
+                       const glm::mat4& view,
                        const glm::mat4& projection,
                        const glm::vec3& lightDir,
                        const glm::vec3& lightCol,

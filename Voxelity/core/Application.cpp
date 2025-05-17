@@ -39,6 +39,7 @@ Application::Application()
     glfwSwapInterval(0);
     gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
 
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_CCW);
@@ -82,13 +83,12 @@ void Application::update() {
 void Application::render() const {
     PROFILE_FUNCTION();
 
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     const glm::mat4 view = camera.getViewMatrix();
 
 
-    world->render(view, projection,
+    world->render(camera.position, view, projection,
                  glm::vec3(0.5f, -1.0f, 0.3f),
                  glm::vec3(1.0f, 0.95f, 0.8f),
                  glm::vec3(0.25f, 0.25f, 0.3f));

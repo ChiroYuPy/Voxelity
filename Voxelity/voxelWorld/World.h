@@ -20,7 +20,7 @@ public:
 
     void updateFromPlayerPosition(const glm::ivec3& playerWorldPos);
 
-    void render(const glm::mat4 & view, const glm::mat4 & projection, const glm::vec3 & lightDirection, const glm::vec3 & lightColor, const glm::vec3 & ambientColor);
+    void render(const glm::vec3& cameraPosition, const glm::mat4 & view, const glm::mat4 & projection, const glm::vec3 & lightDirection, const glm::vec3 & lightColor, const glm::vec3 & ambientColor);
 
     void update() const;
 

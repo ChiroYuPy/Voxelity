@@ -33,12 +33,13 @@ inline int floorDiv(const int a, const int b) {
 
 World::World(std::unique_ptr<IWorldGenerator> generator) : generator(std::move(generator)) {}
 
-void World::render(const glm::mat4& view,
+void World::render(const glm::vec3& cameraPosition,
+                   const glm::mat4& view,
                    const glm::mat4& projection,
                    const glm::vec3& lightDirection,
                    const glm::vec3& lightColor,
                    const glm::vec3& ambientColor) {
-    chunkRenderer.render(chunkManager, view, projection, lightDirection, lightColor, ambientColor);
+    chunkRenderer.render(chunkManager, cameraPosition, view, projection, lightDirection, lightColor, ambientColor);
 }
 
 void World::update() const {

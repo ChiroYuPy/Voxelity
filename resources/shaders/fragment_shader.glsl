@@ -11,6 +11,10 @@ uniform sampler2D uAtlas;
 uniform vec3 uLightDirection;
 uniform vec3 uLightColor;
 uniform vec3 uAmbientColor;
+uniform vec3 uFogColor;
+uniform float uFogStart;
+uniform float uFogEnd;
+uniform vec3 uCameraPos;
 
 void main() {
     vec3 normal = normalize(vNormal);
@@ -29,5 +33,11 @@ void main() {
 
     vec3 finalColor = texColor.rgb * lighting;
 
-    FragColor = vec4(finalColor, texColor.a);
+    // --- FOG ---
+    float distance = length(vWorldPos - uCameraPos);
+    float fogFactor = clamp((distance - uFogStart) / (uFogEnd - uFogStart), 0.0, 1.0);
+
+    vec3 colorWithFog = mix(finalColor, uFogColor, fogFactor);
+
+    FragColor = vec4(colorWithFog, texColor.a);
 }
