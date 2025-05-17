@@ -3,7 +3,7 @@
 
 #include <GLT.h>
 
-class Camera {
+class CameraView {
 public:
     glm::vec3 position;
     float yaw, pitch;
@@ -11,7 +11,7 @@ public:
     glm::mat4 viewMatrix;
     bool viewMatrixDirty;
 
-    explicit Camera(glm::vec3 startPos, float yaw, float pitch);
+    explicit CameraView(glm::vec3 startPos, float yaw, float pitch);
 
     void markViewMatrixDirty();
 

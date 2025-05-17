@@ -9,18 +9,18 @@
 
 #include "../events/EventListener.h"
 
-class Camera;
+class CameraView;
 
 class CameraController final : public EventListener {
 public:
-    explicit CameraController(GLFWwindow* window, Camera& camera);
+    explicit CameraController(GLFWwindow* window, CameraView& camera);
 
     void onEvent(Event& e) override;
     void update(float deltaTime) const;
 
 private:
     GLFWwindow* m_window;
-    Camera& m_camera;
+    CameraView& m_camera;
 
     bool m_control = false;
 

@@ -16,7 +16,7 @@ add_executable(Voxelity
 
         # project
         Voxelity/core/Application.cpp
-        Voxelity/rendering/camera/Camera.cpp
+        Voxelity/rendering/camera/CameraView.cpp
         Voxelity/rendering/shader/Shader.cpp
         Voxelity/blocks/BlockRegistry.cpp
         Voxelity/voxelWorld/Voxel.cpp
@@ -38,6 +38,8 @@ add_executable(Voxelity
         Voxelity/voxelWorld/ChunkLoader.cpp
         Voxelity/listeners/ResizeListener.cpp
         Voxelity/listeners/ResizeListener.h
+        Voxelity/rendering/camera/CameraProjection.cpp
+        Voxelity/rendering/camera/CameraProjection.h
 )
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")

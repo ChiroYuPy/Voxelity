@@ -24,10 +24,7 @@ Application& Application::get() {
 }
 
 Application::Application()
-: camera({0, 0, 0}, 0, 0), projection(glm::perspective(glm::radians(Constants::FOV),
-                       static_cast<float>(SCREEN_WIDTH) / static_cast<float>(SCREEN_HEIGHT),
-                       Constants::NearPlane, Constants::FarPlane)),
-    lastTime(0) {
+: cameraView({0, 0, 0}, 0, 0), cameraProjection(Constants::FOV, Constants::NearPlane, Constants::FarPlane, Constants::FOV), lastTime(0) {
     instance = this;
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -48,15 +45,15 @@ Application::Application()
 
     eventDispatcher = std::make_unique<EventDispatcher>();
 
-    cameraController = std::make_unique<CameraController>(window, camera);
+    cameraController = std::make_unique<CameraController>(window, cameraView);
     eventDispatcher->subscribe(cameraController.get());
 
-    resizeListener = std::make_unique<ResizeListener>(window, projection);
+    resizeListener = std::make_unique<ResizeListener>(window, cameraProjection);
     eventDispatcher->subscribe(resizeListener.get());
 
     GLFWEventAdapter(window, *eventDispatcher);
 
-    world->updateFromPlayerPosition(camera.position);
+    world->updateFromPlayerPosition(cameraView.position);
 }
 
 Application::~Application() {
@@ -90,10 +87,10 @@ void Application::render() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    const glm::mat4 view = camera.getViewMatrix();
+    const glm::mat4 view = cameraView.getViewMatrix();
+    const glm::mat4 projection = cameraProjection.getProjectionMatrix();
 
-
-    world->render(camera.position, view, projection,
+    world->render(cameraView.position, view, projection,
                  glm::vec3(0.5f, -1.0f, 0.3f),
                  glm::vec3(1.0f, 0.95f, 0.8f),
                  glm::vec3(0.25f, 0.25f, 0.3f));

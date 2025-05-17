@@ -7,16 +7,18 @@
 #include "events/EventListener.h"
 
 
+class CameraProjection;
+
 class ResizeListener final : public EventListener {
 public:
 
-    ResizeListener(GLFWwindow* window, glm::mat4& projection);
+    ResizeListener(GLFWwindow* window, CameraProjection& projection);
 
     void onEvent(Event& e) override;
 
 private:
     GLFWwindow* m_window;
-    glm::mat4& m_projection;
+    CameraProjection& m_projection;
 };
 
 

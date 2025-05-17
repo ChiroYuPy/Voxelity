@@ -9,7 +9,8 @@
 
 #include <memory>
 
-#include "rendering/camera/Camera.h"
+#include "rendering/camera/CameraView.h"
+#include "rendering/camera/CameraProjection.h"
 
 class World;
 class EventDispatcher;
@@ -32,14 +33,13 @@ public:
 private:
     static Application* instance;
     GLFWwindow* window;
-    Camera camera;
+    CameraView cameraView;
+    CameraProjection cameraProjection;
 
     std::unique_ptr<World> world;
     std::unique_ptr<EventDispatcher> eventDispatcher;
     std::unique_ptr<CameraController> cameraController;
     std::unique_ptr<ResizeListener> resizeListener;
-
-    glm::mat4 projection;
 
     float lastTime;
 };
