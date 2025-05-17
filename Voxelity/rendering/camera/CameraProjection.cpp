@@ -22,16 +22,20 @@ glm::mat4 CameraProjection::getProjectionMatrix() {
 
 void CameraProjection::setAspectRatio(const float aspectRatio_) {
     aspectRatio = aspectRatio_;
+    markProjectionMatrixDirty();
 }
 
 void CameraProjection::setAspectRatio(const float width, const float height) {
     aspectRatio = width / height;
+    markProjectionMatrixDirty();
 }
 
 void CameraProjection::setAspectRatio(const int width, const int height) {
     aspectRatio = static_cast<float>(width) / static_cast<float>(height);
+    markProjectionMatrixDirty();
 }
 
 void CameraProjection::setFov(const float fovDegrees_) {
     fovDegrees = fovDegrees_;
+    markProjectionMatrixDirty();
 }
