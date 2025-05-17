@@ -51,6 +51,14 @@ const ChunkData& Chunk::getData() const {
     return data;
 }
 
+ChunkMesh& Chunk::getMesh() {
+    return mesh;
+}
+
+ChunkData& Chunk::getData() {
+    return data;
+}
+
 void Chunk::setData(const ChunkData& newData) {
     data = newData;
     markDirty();
@@ -77,11 +85,10 @@ void Chunk::setNeighbor(const Direction direction, Chunk* neighbor) {
     neighbors[static_cast<int>(direction)] = neighbor;
 }
 
-void Chunk::setState(const ChunkState s) {
-    std::lock_guard<std::mutex> lock(mutex);
-    state = s;
+void Chunk::setState(const ChunkState newState) {
+    state.store(newState, std::memory_order_release);
 }
 
 ChunkState Chunk::getState() const {
-    return state;
+    return state.load(std::memory_order_acquire);
 }

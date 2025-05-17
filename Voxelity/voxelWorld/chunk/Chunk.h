@@ -5,8 +5,8 @@
 #ifndef CHUNK_H
 #define CHUNK_H
 
+#include <atomic>
 #include <GLT.h>
-#include <mutex>
 
 #include "ChunkData.h"
 #include "math/Direction.h"
@@ -29,8 +29,7 @@ class Chunk {
     bool dirty;
     bool empty;
 
-    ChunkState state;
-    std::mutex mutex;
+    std::atomic<ChunkState> state;
 
     Chunk* neighbors[6] = {nullptr};
 
@@ -46,9 +45,13 @@ public:
     [[nodiscard]] glm::ivec3 getPosition() const;
     [[nodiscard]] glm::ivec3 getWorldPosition() const;
 
-    [[nodiscard]] const ChunkMesh& getMesh() const;
+    const ChunkMesh &getMesh() const;
 
-    [[nodiscard]] const ChunkData& getData() const;
+    const ChunkData &getData() const;
+
+    [[nodiscard]] ChunkMesh& getMesh();
+
+    [[nodiscard]] ChunkData& getData();
 
     void setData(const ChunkData& newData);
 
@@ -57,7 +60,7 @@ public:
     [[nodiscard]] Chunk* getNeighbor(Direction direction) const;
     void setNeighbor(Direction direction, Chunk* neighbor);
 
-    void setState(ChunkState s);
+    void setState(ChunkState newState);
 
     [[nodiscard]] ChunkState getState() const;
 

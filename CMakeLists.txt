@@ -40,6 +40,12 @@ add_executable(Voxelity
         Voxelity/listeners/ResizeListener.h
         Voxelity/rendering/camera/CameraProjection.cpp
         Voxelity/rendering/camera/CameraProjection.h
+        Voxelity/threading/ConcurrentQueue.cpp
+        Voxelity/threading/ConcurrentQueue.h
+        Voxelity/threading/generation/GenerationTask.cpp
+        Voxelity/threading/generation/GenerationTask.h
+        Voxelity/threading/ThreadPool.cpp
+        Voxelity/threading/ThreadPool.h
 )
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")

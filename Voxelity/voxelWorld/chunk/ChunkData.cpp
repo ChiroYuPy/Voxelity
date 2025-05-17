@@ -28,6 +28,16 @@ Voxel& ChunkData::operator()(const unsigned int x, const unsigned int y, const u
     return voxels;
 }
 
+void ChunkData::fill(const BlockType type) {
+    for (auto& voxel : voxels) {
+        voxel.setType(type);
+    }
+}
+
+void ChunkData::clear() {
+    fill(BlockType::Air);
+}
+
 size_t ChunkData::index(const unsigned int x, const unsigned int y, const unsigned int z) {
     return x + (y * Constants::ChunkSize) + (z * Constants::ChunkArea);
 }

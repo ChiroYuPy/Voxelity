@@ -19,6 +19,10 @@ struct ChunkData {
 
     [[nodiscard]] const std::array<Voxel, Constants::ChunkVolume>& getVoxels() const;
 
+    void fill(BlockType type);
+
+    void clear();
+
 private:
     static size_t index(unsigned int x, unsigned int y, unsigned int z);
 

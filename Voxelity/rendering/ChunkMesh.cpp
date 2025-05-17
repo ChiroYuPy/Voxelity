@@ -43,7 +43,7 @@ bool ChunkMesh::isFaceVisible(const int x, const int y, const int z, const Chunk
     const glm::ivec3 offset = DIRECTION_NORMALS[static_cast<int>(direction)];
     glm::ivec3 neighborPos = { x + offset.x, y + offset.y, z + offset.z };
 
-    const Chunk* targetChunk = &chunk;
+    const Chunk *targetChunk = &chunk;
 
     if (neighborPos.x < 0 || neighborPos.x >= Constants::ChunkSize ||
         neighborPos.y < 0 || neighborPos.y >= Constants::ChunkSize ||
