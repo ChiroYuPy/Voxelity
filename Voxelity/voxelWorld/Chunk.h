@@ -6,10 +6,19 @@
 #define CHUNK_H
 
 #include <GLT.h>
+#include <mutex>
 
 #include "ChunkData.h"
 #include "math/Direction.h"
 #include "rendering/ChunkMesh.h"
+
+enum class ChunkState {
+    Unloaded,
+    Generating,
+    Generated,
+    Meshing,
+    Meshed
+};
 
 class Chunk {
     glm::ivec3 position;
@@ -17,6 +26,9 @@ class Chunk {
     ChunkMesh mesh;
     bool dirty;
     bool empty;
+
+    ChunkState state;
+    std::mutex mutex;
 
     Chunk* neighbors[6] = {nullptr};
 
@@ -42,6 +54,10 @@ public:
 
     [[nodiscard]] Chunk* getNeighbor(Direction direction) const;
     void setNeighbor(Direction direction, Chunk* neighbor);
+
+    void setState(ChunkState s);
+
+    ChunkState getState() const;
 
     void markDirty();
 

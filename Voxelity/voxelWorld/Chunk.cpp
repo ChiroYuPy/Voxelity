@@ -7,7 +7,8 @@
 #include "rendering/ChunkMesh.h"
 #include "voxelWorld/World.h"
 
-Chunk::Chunk(const glm::ivec3 position) : position(position), mesh(this), dirty(true), empty(true) {}
+Chunk::Chunk(const glm::ivec3 position)
+: position(position), mesh(this), dirty(true), empty(true), state(ChunkState::Unloaded) {}
 
 void Chunk::markDirty() {
     dirty = true;
@@ -75,4 +76,13 @@ Chunk* Chunk::getNeighbor(const Direction direction) const {
 
 void Chunk::setNeighbor(const Direction direction, Chunk* neighbor) {
     neighbors[static_cast<int>(direction)] = neighbor;
+}
+
+void Chunk::setState(const ChunkState s) {
+    std::lock_guard<std::mutex> lock(mutex);
+    state = s;
+}
+
+ChunkState Chunk::getState() const {
+    return state;
 }
