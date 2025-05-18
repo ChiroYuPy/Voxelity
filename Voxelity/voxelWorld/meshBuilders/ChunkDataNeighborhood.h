@@ -9,6 +9,7 @@
 #include "math/BlockFace.h"
 
 struct ChunkData;
+
 /**
  * @brief Holds a chunk's data and its 6 neighbor chunks' data.
  *
