@@ -12,10 +12,10 @@ struct Voxel {
 private:
     uint32_t data;
 
-    static constexpr uint32_t TYPE_BITS         = 10;                           // jusqu'à 1024 types de blocs
-    static constexpr uint32_t METADATA_BITS     = 6;                            // 64 variantes / états
-    static constexpr uint32_t LIGHT_BITS        = 4;                            // lumière (0-15)
-    static constexpr uint32_t RESERVED_BITS     = 12;                           // réservé pour futur usage
+    static constexpr uint32_t TYPE_BITS         = 10;                           // 1024 types
+    static constexpr uint32_t METADATA_BITS     = 6;                            // 64 variants
+    static constexpr uint32_t LIGHT_BITS        = 4;                            // 16 light states
+    static constexpr uint32_t RESERVED_BITS     = 12;                           // 4096 values reserved for other usages
 
     static constexpr uint32_t TYPE_MASK         = (1u << TYPE_BITS) - 1;        // 0x3FF
     static constexpr uint32_t VARIANT_MASK      = (1u << METADATA_BITS) - 1;    // 0x3F
