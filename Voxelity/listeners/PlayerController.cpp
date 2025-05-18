@@ -4,7 +4,7 @@
 
 #include "PlayerController.h"
 
-#include "voxelWorld/chunk/ChunkManager.h"
+#include "../voxelWorld/WorldChunkData.h"
 #include "voxelWorld/utils/Raycaster.h"
 
 void PlayerController::onEvent(Event& e) {
@@ -13,7 +13,7 @@ void PlayerController::onEvent(Event& e) {
     // }
 }
 
-void PlayerController::tryBreakBlock(const glm::vec3& cameraPos, const glm::vec3& cameraDir, ChunkManager& world) {
+void PlayerController::tryBreakBlock(const glm::vec3& cameraPos, const glm::vec3& cameraDir, WorldChunkData& world) {
     auto hitOpt = Raycaster::castRay(cameraPos, cameraDir, Constants::PlayerReach, world);
     if (!hitOpt) return;
 
@@ -22,7 +22,7 @@ void PlayerController::tryBreakBlock(const glm::vec3& cameraPos, const glm::vec3
     world.removeBlock(blockPos);
 }
 
-void PlayerController::tryPlaceBlock(const glm::vec3& cameraPos, const glm::vec3& cameraDir, ChunkManager& world, const BlockType blockType) {
+void PlayerController::tryPlaceBlock(const glm::vec3& cameraPos, const glm::vec3& cameraDir, WorldChunkData& world, const BlockType blockType) {
     auto hitOpt = Raycaster::castRay(cameraPos, cameraDir, Constants::PlayerReach, world);
     if (!hitOpt) {
         return;

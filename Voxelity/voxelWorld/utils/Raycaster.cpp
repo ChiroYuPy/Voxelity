@@ -4,10 +4,10 @@
 
 #include "Raycaster.h"
 
-#include "voxelWorld/chunk/ChunkManager.h"
+#include "../WorldChunkData.h"
 
 std::optional<RaycastHit> Raycaster::castRay(const glm::vec3& origin, const glm::vec3& direction,
-                                             float maxDistance, const ChunkManager& world) {
+                                             float maxDistance, const WorldChunkData& world) {
     glm::vec3 dir = glm::normalize(direction);
 
     // Position dans la grille voxel (int)

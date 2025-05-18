@@ -7,7 +7,7 @@
 #include <iostream>
 #include <ranges>
 
-#include "Chunk.h"
+#include "chunk/Chunk.h"
 #include "core/Constants.h"
 #include "core/utils/Profiler.h"
 #include "textures/Texture.h"
@@ -22,7 +22,7 @@ ChunkRenderer::ChunkRenderer() {
     textureAtlas->bind(0); // bind once at init
 }
 
-void ChunkRenderer::render(const ChunkManager& chunkManager,
+void ChunkRenderer::render(const WorldChunkData& chunkManager,
                            const glm::vec3& cameraPosition,
                            const glm::mat4& view,
                            const glm::mat4& projection,

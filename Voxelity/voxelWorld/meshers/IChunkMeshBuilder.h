@@ -5,15 +5,15 @@
 #ifndef ICHUNKMESHER_H
 #define ICHUNKMESHER_H
 
-#include "voxelWorld/chunk/components/ChunkMesh.h"
+#include "../chunk/ChunkMesh.h"
 
 class Chunk;
 struct ChunkData;
 class VoxelFace;
 
-class IChunkMesher {
+class IChunkMeshBuilder {
 public:
-    virtual ~IChunkMesher() = default;
+    virtual ~IChunkMeshBuilder() = default;
 
     virtual std::vector<VoxelFace> mesh(Chunk&) = 0;
 };

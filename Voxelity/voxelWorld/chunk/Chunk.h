@@ -8,11 +8,11 @@
 #include <atomic>
 #include <GLT.h>
 
-#include "components/ChunkData.h"
+#include "ChunkData.h"
 #include "math/BlockFace.h"
-#include "components/ChunkMesh.h"
+#include "ChunkMesh.h"
 
-class IChunkMesher;
+class IChunkMeshBuilder;
 
 enum class ChunkState {
     UnGenerated,

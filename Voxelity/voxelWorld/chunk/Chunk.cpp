@@ -3,10 +3,10 @@
 //
 
 #include "core/Constants.h"
-#include "components/ChunkMesh.h"
+#include "ChunkMesh.h"
 #include "voxelWorld/World.h"
 
-class IChunkMesher;
+class IChunkMeshBuilder;
 
 Chunk::Chunk(const glm::ivec3 position)
 : position(position), empty(true), state(ChunkState::UnGenerated) {}

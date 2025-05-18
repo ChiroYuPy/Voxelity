@@ -10,17 +10,17 @@
 #include <optional>
 
 class ChunkGenerationThread;
-class ChunkManager;
+class WorldChunkData;
 class IWorldGenerator;
 
-class ChunkLoader {
+class ChunkRequestManager {
 public:
-    void updateChunksAround(const glm::ivec3& playerChunkPos, ChunkManager& chunkManager, ChunkGenerationThread& generationThread);
+    void updateChunksAround(const glm::ivec3& playerChunkPos, WorldChunkData& chunkManager, ChunkGenerationThread& generationThread);
 
 private:
     std::optional<glm::ivec3> lastChunkPosition;
 
-    static void generateChunkAt(const glm::ivec3 & pos, ChunkGenerationThread &generationThread, ChunkManager &manager);
+    static void generateChunkAt(const glm::ivec3 & pos, ChunkGenerationThread &generationThread, WorldChunkData &manager);
 
     static bool isWithinRenderDistance(const glm::ivec3& center, const glm::ivec3& pos);
 };

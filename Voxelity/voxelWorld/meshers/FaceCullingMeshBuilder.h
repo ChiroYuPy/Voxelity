@@ -7,14 +7,14 @@
 
 #include <vector>
 
-#include "IChunkMesher.h"
+#include "IChunkMeshBuilder.h"
 #include "core/Constants.h"
 #include "math/BlockFace.h"
 #include "rendering/VoxelFace.h"
 #include "voxelWorld/chunk/Chunk.h"
 #include "voxelWorld/chunk/Voxel.h"
 
-class FaceCullingMesher final : public IChunkMesher {
+class FaceCullingMeshBuilder final : public IChunkMeshBuilder {
 public:
     std::vector<VoxelFace> mesh(Chunk& chunk) override {
         const std::vector<VoxelFace> faces = generateFaceInstances(chunk);

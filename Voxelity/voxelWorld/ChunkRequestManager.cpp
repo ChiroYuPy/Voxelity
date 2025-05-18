@@ -2,23 +2,21 @@
 // Created by adrian on 17/05/25.
 //
 
-#include "ChunkLoader.h"
+#include "ChunkRequestManager.h"
 
 #include <ranges>
 #include <iostream>
 #include <vector>
 
-#include "ChunkManager.h"
+#include "WorldChunkData.h"
 #include "core/Constants.h"
 #include "core/utils/Profiler.h"
-#include "Chunk.h"
-#include "core/Application.h"
-#include "core/Application.h"
+#include "chunk/Chunk.h"
 #include "threads/generation/ChunkGenerationThread.h"
 
 class ChunkGenerationThread;
 
-void ChunkLoader::updateChunksAround(const glm::ivec3& playerChunkPos, ChunkManager& chunkManager, ChunkGenerationThread& generationThread) {
+void ChunkRequestManager::updateChunksAround(const glm::ivec3& playerChunkPos, WorldChunkData& chunkManager, ChunkGenerationThread& generationThread) {
     PROFILE_FUNCTION();
 
     if (lastChunkPosition && *lastChunkPosition == playerChunkPos) return;
@@ -56,13 +54,13 @@ void ChunkLoader::updateChunksAround(const glm::ivec3& playerChunkPos, ChunkMana
               << " | Memory usage: " << static_cast<float>(chunkManager.chunks.size()) * 0.015625f << " MB\n";
 }
 
-void ChunkLoader::generateChunkAt(const glm::ivec3& pos, ChunkGenerationThread& generationThread, ChunkManager& manager) {
+void ChunkRequestManager::generateChunkAt(const glm::ivec3& pos, ChunkGenerationThread& generationThread, WorldChunkData& manager) {
     auto chunk = std::make_unique<Chunk>(pos);
     manager.addChunk(std::move(chunk));
     generationThread.enqueuePosition(pos);
 }
 
-bool ChunkLoader::isWithinRenderDistance(const glm::ivec3& center, const glm::ivec3& pos) {
+bool ChunkRequestManager::isWithinRenderDistance(const glm::ivec3& center, const glm::ivec3& pos) {
     const int dx = pos.x - center.x;
     const int dz = pos.z - center.z;
     // Distance euclidienne au carré sur le plan XZ

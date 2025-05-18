@@ -13,7 +13,7 @@
 #include "listeners/ResizeListener.h"
 #include "voxelWorld/World.h"
 #include "voxelWorld/generators/NaturalWorldGenerator.h"
-#include "voxelWorld/meshers/FaceCullingMesher.h"
+#include "voxelWorld/meshers/FaceCullingMeshBuilder.h"
 
 constexpr unsigned int SCREEN_WIDTH = 1280;
 constexpr unsigned int SCREEN_HEIGHT = 720;
@@ -43,7 +43,7 @@ Application::Application()
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_CCW);
 
-    world = std::make_unique<World>(std::make_unique<FaceCullingMesher>(), std::make_unique<NaturalWorldGenerator>());
+    world = std::make_unique<World>(std::make_unique<FaceCullingMeshBuilder>(), std::make_unique<NaturalWorldGenerator>());
 
     eventDispatcher = std::make_unique<EventDispatcher>();
 

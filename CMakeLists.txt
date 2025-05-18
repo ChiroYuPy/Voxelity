@@ -28,23 +28,23 @@ add_executable(Voxelity
         Voxelity/voxelWorld/generators/FlatWorldGenerator.cpp
         Voxelity/voxelWorld/generators/NaturalWorldGenerator.cpp
         Voxelity/voxelWorld/generators/IWorldGenerator.cpp
-        Voxelity/voxelWorld/chunk/components/ChunkMesh.cpp
+        Voxelity/voxelWorld/chunk/ChunkMesh.cpp
         Voxelity/textures/Image.cpp
         Voxelity/textures/Texture.cpp
         Voxelity/core/utils/Profiler.cpp
-        Voxelity/voxelWorld/chunk/components/ChunkData.cpp
-        Voxelity/voxelWorld/chunk/ChunkManager.cpp
-        Voxelity/voxelWorld/chunk/ChunkRenderer.cpp
-        Voxelity/voxelWorld/chunk/ChunkLoader.cpp
+        Voxelity/voxelWorld/chunk/ChunkData.cpp
+        Voxelity/voxelWorld/WorldChunkData.cpp
+        Voxelity/voxelWorld/ChunkRenderer.cpp
+        Voxelity/voxelWorld/ChunkRequestManager.cpp
         Voxelity/listeners/ResizeListener.cpp
         Voxelity/listeners/ResizeListener.h
         Voxelity/rendering/camera/CameraProjection.cpp
         Voxelity/rendering/camera/CameraProjection.h
         Voxelity/threads/generation/ChunkGenerationThread.cpp
         Voxelity/threads/generation/ChunkGenerationThread.h
-        Voxelity/voxelWorld/meshers/IChunkMesher.h
-        Voxelity/voxelWorld/meshers/FaceCullingMesher.cpp
-        Voxelity/voxelWorld/meshers/FaceCullingMesher.h
+        Voxelity/voxelWorld/meshers/IChunkMeshBuilder.h
+        Voxelity/voxelWorld/meshers/FaceCullingMeshBuilder.cpp
+        Voxelity/voxelWorld/meshers/FaceCullingMeshBuilder.h
         Voxelity/voxelWorld/utils/Raycaster.cpp
         Voxelity/voxelWorld/utils/Raycaster.h
         Voxelity/listeners/PlayerController.cpp

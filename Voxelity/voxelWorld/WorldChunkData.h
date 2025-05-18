@@ -9,11 +9,11 @@
 #include <memory>
 #include <unordered_map>
 
-#include "Chunk.h"
+#include "chunk/Chunk.h"
 
 using ChunkKey = unsigned long;
 
-class ChunkManager {
+class WorldChunkData {
 public:
     std::unordered_map<ChunkKey, std::unique_ptr<Chunk>> chunks;
 
