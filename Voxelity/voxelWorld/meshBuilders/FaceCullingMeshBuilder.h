@@ -8,11 +8,8 @@
 #include <vector>
 
 #include "IChunkMeshBuilder.h"
-#include "core/Constants.h"
 #include "math/BlockFace.h"
 #include "../chunk/VoxelFace.h"
-#include "voxelWorld/chunk/Chunk.h"
-#include "voxelWorld/chunk/Voxel.h"
 
 /**
  * @brief Mesh builder that generates visible voxel faces using face culling.
@@ -29,10 +26,7 @@ public:
     * @param neighborhood The chunk data neighborhood containing the center chunk and its neighbors.
     * @return std::vector<VoxelFace> List of visible voxel faces to be rendered.
     */
-    std::vector<VoxelFace> mesh(const ChunkDataNeighborhood& neighborhood) override {
-        const std::vector<VoxelFace> faces = generateFaceInstances(neighborhood);
-        return faces;
-    }
+    std::vector<VoxelFace> mesh(const ChunkDataNeighborhood& neighborhood) override;
 
     /**
      * @brief Determines if a face of a voxel is visible, i.e., not occluded by a solid neighbor.
@@ -48,33 +42,7 @@ public:
      * @return true If the face is visible (neighbor voxel is empty or out of bounds).
      * @return false If the face is occluded by a solid neighbor voxel.
      */
-    static bool isFaceVisible(const int x, const int y, const int z, const ChunkDataNeighborhood& neighborhood, const BlockFace direction) {
-        const glm::ivec3 offset = DIRECTION_NORMALS[static_cast<int>(direction)];
-        glm::ivec3 neighborPos = { x + offset.x, y + offset.y, z + offset.z };
-
-        // Case 1: neighborPos inside center chunk
-        if (neighborPos.x >= 0 && neighborPos.x < Constants::ChunkSize &&
-            neighborPos.y >= 0 && neighborPos.y < Constants::ChunkSize &&
-            neighborPos.z >= 0 && neighborPos.z < Constants::ChunkSize) {
-            const Voxel voxel = neighborhood.getCenter()->get(neighborPos.x, neighborPos.y, neighborPos.z);
-            return !voxel.isSolid();
-            }
-
-        // Case 2: neighborPos outside center chunk, sample neighbor chunk
-        const ChunkData* neighborChunk = neighborhood.getNeighbor(direction);
-        if (!neighborChunk) return true;
-
-        if (neighborPos.x < 0) neighborPos.x += Constants::ChunkSize;
-        if (neighborPos.y < 0) neighborPos.y += Constants::ChunkSize;
-        if (neighborPos.z < 0) neighborPos.z += Constants::ChunkSize;
-
-        neighborPos.x %= Constants::ChunkSize;
-        neighborPos.y %= Constants::ChunkSize;
-        neighborPos.z %= Constants::ChunkSize;
-
-        const Voxel voxel = neighborChunk->get(neighborPos.x, neighborPos.y, neighborPos.z);
-        return !voxel.isSolid();
-    }
+    static bool isFaceVisible(int x, int y, int z, const ChunkDataNeighborhood& neighborhood, BlockFace direction);
 
     /**
      * @brief Generates a list of visible voxel faces for the entire chunk neighborhood.
@@ -85,24 +53,7 @@ public:
      * @param neighborhood The chunk data neighborhood (center + neighbors).
      * @return std::vector<VoxelFace> Vector of visible voxel faces.
      */
-    static std::vector<VoxelFace> generateFaceInstances(const ChunkDataNeighborhood& neighborhood) {
-        std::vector<VoxelFace> faces;
-
-        for (int z = 0; z < Constants::ChunkSize; ++z)
-            for (int y = 0; y < Constants::ChunkSize; ++y)
-                for (int x = 0; x < Constants::ChunkSize; ++x) {
-                    const Voxel* voxel = &neighborhood.getCenter()->get(x, y, z);
-                    if (!voxel->isSolid()) continue;
-
-                    for (const BlockFace direction : DIRECTIONS) {
-                        if (isFaceVisible(x, y, z, neighborhood, direction)) {
-                            faces.emplace_back(glm::ivec3(x, y, z), static_cast<int>(direction), static_cast<int>(voxel->getType()));
-                        }
-                    }
-                }
-
-        return faces;
-    }
+    static std::vector<VoxelFace> generateFaceInstances(const ChunkDataNeighborhood& neighborhood);
 };
 
 #endif //FACECULLINGMESHER_H
