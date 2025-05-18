@@ -8,6 +8,7 @@
 #include <utility>
 
 #include "chunk/Chunk.h"
+#include "chunk/ChunkMeshData.h"
 #include "core/Constants.h"
 #include "core/utils/Profiler.h"
 #include "generators/NaturalWorldGenerator.h"
@@ -26,6 +27,7 @@ inline int floorDiv(const int a, const int b) {
 // TODO         Complete Occlusion Culling
 // TODO         Level Of Details ( 16³, 8³, 4³, 2³, 1 chunk mesh volumes related to the distance )
 // TODO         Greedy Meshing
+
 // TODO         Multi-Threading -> world generation, chunk meshing, rendering
 
 // TODO: DONE   VoxelFace Data Compression
@@ -36,7 +38,7 @@ inline int floorDiv(const int a, const int b) {
 World::World(std::unique_ptr<IChunkMeshBuilder> mesher, std::unique_ptr<IWorldGenerator> generator) {
     meshBuilder = std::move(mesher);
 
-    chunkData = std::make_unique<WorldChunkData>();
+    worldChunkData = std::make_unique<WorldChunkData>();
     chunkRenderer = std::make_unique<WorldChunkRenderer>();
     chunkLoader = std::make_unique<ChunkGenerationRequestManager>(std::move(generator));
 
@@ -50,23 +52,26 @@ void World::render(const glm::vec3& cameraPosition,
                    const glm::vec3& lightDirection,
                    const glm::vec3& lightColor,
                    const glm::vec3& ambientColor) const {
-    chunkRenderer->render(*chunkData, cameraPosition, view, projection, lightDirection, lightColor, ambientColor);
+    chunkRenderer->render(*worldChunkData, cameraPosition, view, projection, lightDirection, lightColor, ambientColor);
 }
 
 void World::updateMeshes() const {
-    for (const auto &chunkPtr: chunkData->chunks | std::views::values) {
+    for (const auto &chunkPtr: worldChunkData->chunks | std::views::values) {
         if (chunkPtr->isDirty() or chunkPtr->getState() == ChunkState::Generated) {
             const std::vector<VoxelFace> voxelFaces = meshBuilder->mesh(*chunkPtr);
+
             ChunkMesh& chunkMesh = chunkPtr->getMesh();
-            chunkMesh.setVoxelFaces(voxelFaces);
-            chunkMesh.build();
+
+            ChunkMeshData chunkMeshData;
+            chunkMeshData.setVoxelFaces(voxelFaces);
+            chunkMesh.upload(chunkMeshData);
             chunkPtr->setState(ChunkState::ReadyToRender);
         }
     }
 }
 
 void World::update() const {
-    chunkLoader->processReadyChunks(*chunkData);
+    chunkLoader->processReadyChunks(*worldChunkData);
     updateMeshes();
 }
 
@@ -77,5 +82,5 @@ void World::updateFromPlayerPosition(const glm::ivec3& playerWorldPos) const {
         floorDiv(playerWorldPos.z, Constants::ChunkSize)
     };
 
-    chunkLoader->updateChunksAround(chunkPos, *chunkData);
+    chunkLoader->updateChunksAround(chunkPos, *worldChunkData);
 }

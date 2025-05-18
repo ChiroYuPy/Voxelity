@@ -32,7 +32,7 @@ public:
 private:
     std::unique_ptr<IChunkMeshBuilder> meshBuilder;
 
-    std::unique_ptr<WorldChunkData> chunkData;
+    std::unique_ptr<WorldChunkData> worldChunkData;
     std::unique_ptr<WorldChunkRenderer> chunkRenderer;
     std::unique_ptr<ChunkGenerationRequestManager> chunkLoader;
 
