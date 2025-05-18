@@ -15,12 +15,12 @@ class IWorldGenerator;
 
 class ChunkLoader {
 public:
-    void updateChunksAround(const glm::ivec3& playerChunkPos, ChunkManager& manager, ChunkGenerationThread& generationThread);
+    void updateChunksAround(const glm::ivec3& playerChunkPos, ChunkManager& chunkManager, ChunkGenerationThread& generationThread);
 
 private:
     std::optional<glm::ivec3> lastChunkPosition;
 
-    static void generateChunkAt(const glm::ivec3& pos, ChunkGenerationThread& generationThread);
+    static void generateChunkAt(const glm::ivec3 & pos, ChunkGenerationThread &generationThread, ChunkManager &manager);
 
     static bool isWithinRenderDistance(const glm::ivec3& center, const glm::ivec3& pos);
 };

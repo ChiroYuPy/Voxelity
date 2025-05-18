@@ -12,50 +12,59 @@
 #include "core/Constants.h"
 #include "core/utils/Profiler.h"
 #include "Chunk.h"
+#include "core/Application.h"
+#include "core/Application.h"
 #include "threads/generation/ChunkGenerationThread.h"
 
 class ChunkGenerationThread;
 
-void ChunkLoader::updateChunksAround(const glm::ivec3& playerChunkPos, ChunkManager& manager, ChunkGenerationThread& generationThread) {
+void ChunkLoader::updateChunksAround(const glm::ivec3& playerChunkPos, ChunkManager& chunkManager, ChunkGenerationThread& generationThread) {
     PROFILE_FUNCTION();
 
     if (lastChunkPosition && *lastChunkPosition == playerChunkPos) return;
     lastChunkPosition = playerChunkPos;
 
+    // Chargement des chunks dans la zone autour du joueur
     for (int x = playerChunkPos.x - Constants::RenderDistance; x <= playerChunkPos.x + Constants::RenderDistance; ++x) {
         for (int y = 0; y < Constants::RenderHeight; ++y) {
             for (int z = playerChunkPos.z - Constants::RenderDistance; z <= playerChunkPos.z + Constants::RenderDistance; ++z) {
                 glm::ivec3 pos{x, y, z};
-                if (!manager.hasChunkAt(pos) && isWithinRenderDistance(playerChunkPos, pos)) {
-                    generateChunkAt(pos, generationThread);
+                if (!chunkManager.hasChunkAt(pos) && isWithinRenderDistance(playerChunkPos, pos)) {
+                    generateChunkAt(pos, generationThread, chunkManager);
                 }
             }
         }
     }
 
+    // Suppression des chunks trop éloignés
     std::vector<glm::ivec3> toRemove;
-    for (const auto& chunkPtr : manager.chunks | std::views::values) {
+    for (const auto& chunkPtr : chunkManager.chunks | std::views::values) {
         const glm::ivec3& pos = chunkPtr->getPosition();
+
+        // Ici, y doit rester dans [0, RenderHeight) (pas négatif)
         if (!isWithinRenderDistance(playerChunkPos, pos) ||
-            pos.y < -Constants::RenderHeight || pos.y >= Constants::RenderHeight) {
+            pos.y < 0 || pos.y >= Constants::RenderHeight) {
             toRemove.push_back(pos);
-        }
+            }
     }
 
     for (const auto& pos : toRemove) {
-        manager.removeChunk(pos);
+        chunkManager.removeChunk(pos);
     }
 
-    std::cout << "Chunks loaded: " << manager.chunks.size()
-              << " | Memory usage: " << static_cast<float>(manager.chunks.size()) * 0.015625f << " MB\n";
+    std::cout << "Chunks loaded: " << chunkManager.chunks.size()
+              << " | Memory usage: " << static_cast<float>(chunkManager.chunks.size()) * 0.015625f << " MB\n";
 }
 
-void ChunkLoader::generateChunkAt(const glm::ivec3& pos, ChunkGenerationThread& generationThread) {
+void ChunkLoader::generateChunkAt(const glm::ivec3& pos, ChunkGenerationThread& generationThread, ChunkManager& manager) {
+    auto chunk = std::make_unique<Chunk>(pos);
+    manager.addChunk(std::move(chunk));
     generationThread.enqueuePosition(pos);
 }
 
 bool ChunkLoader::isWithinRenderDistance(const glm::ivec3& center, const glm::ivec3& pos) {
     const int dx = pos.x - center.x;
     const int dz = pos.z - center.z;
+    // Distance euclidienne au carré sur le plan XZ
     return dx * dx + dz * dz <= Constants::RenderDistance * Constants::RenderDistance;
 }

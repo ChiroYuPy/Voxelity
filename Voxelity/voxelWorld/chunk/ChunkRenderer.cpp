@@ -40,7 +40,6 @@ void ChunkRenderer::render(const ChunkManager& chunkManager,
     for (const auto &chunkPtr: chunkManager.chunks | std::views::values) {
         const auto& chunk = *chunkPtr;
 
-        if (chunk.getState() != ChunkState::ReadyToRender) continue;
         if (!chunk.getMesh().hasVisibleFaces()) continue;
 
         const glm::vec3 chunkWorldMin = chunk.getPosition() * Constants::ChunkSize;

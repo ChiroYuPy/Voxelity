@@ -4,7 +4,6 @@
 
 #include "voxelWorld/World.h"
 
-#include <iostream>
 #include <ranges>
 #include <utility>
 
@@ -65,21 +64,20 @@ void World::update() {
     glm::ivec3 pos;
     ChunkData data;
     while (generationThread.pollReadyChunk(pos, data)) {
-        auto chunk = std::make_unique<Chunk>(pos);
-        chunk->setState(ChunkState::Generated);
+        if (!chunkManager.hasChunkAt(pos)) continue;
+        const auto chunk = chunkManager.getChunkAt(pos);
         chunk->setData(data);
+        chunk->setState(ChunkState::Generated);
 
         for (const auto& dir : DIRECTIONS) {
             const glm::ivec3 neighborPos = pos + getNormal(dir);
             Chunk* neighbor = chunkManager.getChunkAt(neighborPos);
             if (neighbor) {
                 chunk->setNeighbor(dir, neighbor);
-                neighbor->setNeighbor(getOpposite(dir), chunk.get());
+                neighbor->setNeighbor(getOpposite(dir), chunk);
                 neighbor->setState(ChunkState::MeshDirty);
             }
         }
-
-        chunkManager.addChunk(std::move(chunk));
     }
 }
 
