@@ -4,7 +4,6 @@
 
 #include "ChunkRenderer.h"
 
-#include <iostream>
 #include <ranges>
 
 #include "chunk/Chunk.h"
@@ -19,7 +18,6 @@ ChunkRenderer::ChunkRenderer() {
 
     textureAtlas = std::make_unique<Texture>(
         "../resources/textures/atlas.png");
-    textureAtlas->bind(0); // bind once at init
 }
 
 void ChunkRenderer::render(const WorldChunkData& chunkManager,
@@ -36,12 +34,12 @@ void ChunkRenderer::render(const WorldChunkData& chunkManager,
     const glm::mat4 viewProj = projection * view;
     frustum.update(viewProj);
 
-    chunkShader->use();
     for (const auto &chunkPtr: chunkManager.chunks | std::views::values) {
         const auto& chunk = *chunkPtr;
 
         if (!chunk.getMesh().hasVisibleFaces()) continue;
 
+        // frustum culling (do not render chunks outer of the view area)
         const glm::vec3 chunkWorldMin = chunk.getPosition() * Constants::ChunkSize;
         constexpr glm::vec3 halfSize = glm::vec3(Constants::ChunkSize) * 0.5f;
         const glm::vec3 center = chunkWorldMin + halfSize;
@@ -59,18 +57,23 @@ void ChunkRenderer::prepareShader(const glm::vec3& cameraPosition,
                                   const glm::vec3& lightDir,
                                   const glm::vec3& lightCol,
                                   const glm::vec3& ambientCol) const {
+    // using this shader
     chunkShader->use();
 
+    // Camera
+    chunkShader->setUniform("uCameraPos", cameraPosition);
     chunkShader->setUniform("uView", view);
     chunkShader->setUniform("uProjection", projection);
+
+    // Lighting
     chunkShader->setUniform("uLightDirection", glm::normalize(lightDir));
     chunkShader->setUniform("uLightColor", lightCol);
     chunkShader->setUniform("uAmbientColor", ambientCol);
 
+    // Fog
     chunkShader->setUniform("uFogColor", glm::vec3(0.65f, 0.65f, 0.75f));
     chunkShader->setUniform("uFogStart", Constants::ChunkSize * Constants::RenderDistance * 0.4f);
     chunkShader->setUniform("uFogEnd", Constants::ChunkSize * Constants::RenderDistance * 1.6f);
-    chunkShader->setUniform("uCameraPos", cameraPosition);
 }
 
 void ChunkRenderer::prepareTextures() const {
