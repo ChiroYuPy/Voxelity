@@ -20,6 +20,8 @@ class  World {
 public:
     explicit World(std::unique_ptr<IChunkMesher> mesher, std::unique_ptr<IWorldGenerator> generator);
 
+    ~World();
+
     void updateFromPlayerPosition(const glm::ivec3& playerWorldPos);
 
     void render(const glm::vec3& cameraPosition, const glm::mat4 & view, const glm::mat4 & projection, const glm::vec3 & lightDirection, const glm::vec3 & lightColor, const glm::vec3 & ambientColor);

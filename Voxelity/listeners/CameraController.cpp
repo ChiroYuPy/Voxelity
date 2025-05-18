@@ -12,15 +12,15 @@ CameraController::CameraController(GLFWwindow* window, CameraView& camera)
 void CameraController::onEvent(Event& e) {
     switch (e.type) {
         case EventType::KeyPressed: {
-            handleKey(e.key.code, true);
+            handleKey(e.keyEvent.code, true);
             break;
         }
         case EventType::KeyReleased: {
-            handleKey(e.key.code, false);
+            handleKey(e.keyEvent.code, false);
             break;
         }
         case EventType::MouseMoved: {
-            handleMouse(e.mouse.x, e.mouse.y);
+            handleMouse(e.mouseMoveEvent.xpos, e.mouseMoveEvent.ypos);
             break;
         }
         default:

@@ -2,8 +2,6 @@
 // Created by adrian on 14/05/25.
 //
 
-#include <iostream>
-
 #include "core/Constants.h"
 #include "components/ChunkMesh.h"
 #include "voxelWorld/World.h"
@@ -11,9 +9,7 @@
 class IChunkMesher;
 
 Chunk::Chunk(const glm::ivec3 position)
-: position(position), empty(true), state(ChunkState::UnGenerated) {
-    std::cout << toString(state) << std::endl;
-}
+: position(position), empty(true), state(ChunkState::UnGenerated) {}
 
 bool Chunk::isDirty() const {
     return state == ChunkState::MeshDirty;
@@ -63,7 +59,6 @@ void Chunk::setData(const ChunkData& newData) {
 }
 
 void Chunk::setMesh(const ChunkMesh& newMesh) {
-    std::cout << "Chunk " << position.x << ", " << position.y << ", " << position.z << " mesh updated" << std::endl;
     mesh.init();
     mesh.build();
     mesh = newMesh;
@@ -79,7 +74,6 @@ void Chunk::setNeighbor(const BlockFace direction, Chunk* neighbor) {
 
 void Chunk::setState(const ChunkState newState) {
     state.store(newState, std::memory_order_release);
-    std::cout << toString(newState) << std::endl;
 }
 
 ChunkState Chunk::getState() const {

@@ -3,6 +3,8 @@
     <words>
       <w>raycast</w>
       <w>voxelity</w>
+      <w>xoffset</w>
+      <w>yoffset</w>
     </words>
   </dictionary>
 </component>

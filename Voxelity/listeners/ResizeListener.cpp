@@ -11,7 +11,7 @@ ResizeListener::ResizeListener(GLFWwindow* window, CameraProjection& projection)
 
 void ResizeListener::onEvent(Event& e) {
      if (e.type == EventType::WindowResized) {
-          glViewport(0, 0, e.resize.width, e.resize.height);
-          m_projection.setAspectRatio(e.resize.width, e.resize.height);
+          glViewport(0, 0, e.resizeEvent.width, e.resizeEvent.height);
+          m_projection.setAspectRatio(e.resizeEvent.width, e.resizeEvent.height);
      }
 }

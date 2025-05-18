@@ -37,6 +37,10 @@ World::World(std::unique_ptr<IChunkMesher> mesher, std::unique_ptr<IWorldGenerat
     generationThread.start();
 }
 
+World::~World() {
+    generationThread.stop();
+}
+
 void World::render(const glm::vec3& cameraPosition,
                    const glm::mat4& view,
                    const glm::mat4& projection,
