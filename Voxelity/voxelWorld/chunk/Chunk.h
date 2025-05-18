@@ -8,36 +8,45 @@
 #include <atomic>
 #include <GLT.h>
 
-#include "ChunkData.h"
+#include "components/ChunkData.h"
 #include "math/Direction.h"
-#include "rendering/ChunkMesh.h"
+#include "components/ChunkMesh.h"
+
+class IChunkMesher;
 
 enum class ChunkState {
-    Unloaded,   // empty chunk, chunkData fill of air, chunkMesh without any vertices
-    Generating, // chunkData generation
+    UnGenerated,
+    Generating,
     Generated,
-    Meshing,    // chunkMesh calculation
-    Meshed,
-    Loaded      // Ready to render
+    MeshDirty,
+    Meshing,
+    ReadyToRender
 };
+
+inline const char* toString(const ChunkState state) {
+    switch (state) {
+        case ChunkState::UnGenerated:    return "UnGenerated";
+        case ChunkState::Generating:     return "Generating";
+        case ChunkState::Generated:      return "Generated";
+        case ChunkState::MeshDirty:      return "MeshDirty";
+        case ChunkState::Meshing:        return "Meshing";
+        case ChunkState::ReadyToRender:  return "ReadyToRender";
+        default:                         return "Unknown";
+    }
+}
 
 class Chunk {
     glm::ivec3 position;
     ChunkData data;
     ChunkMesh mesh;
 
-    bool dirty;
     bool empty;
 
     std::atomic<ChunkState> state;
 
     Chunk* neighbors[6] = {nullptr};
 
-    void buildMesh();
-
     void updateEmptyFlag();
-
-    void unmarkDirty();
 
 public:
     explicit Chunk(glm::ivec3 position);
@@ -45,9 +54,9 @@ public:
     [[nodiscard]] glm::ivec3 getPosition() const;
     [[nodiscard]] glm::ivec3 getWorldPosition() const;
 
-    const ChunkMesh &getMesh() const;
+    [[nodiscard]] const ChunkMesh &getMesh() const;
 
-    const ChunkData &getData() const;
+    [[nodiscard]] const ChunkData &getData() const;
 
     [[nodiscard]] ChunkMesh& getMesh();
 
@@ -55,7 +64,7 @@ public:
 
     void setData(const ChunkData& newData);
 
-    void updateMesh();
+    void setMesh(const ChunkMesh& newMesh);
 
     [[nodiscard]] Chunk* getNeighbor(Direction direction) const;
     void setNeighbor(Direction direction, Chunk* neighbor);
@@ -64,12 +73,9 @@ public:
 
     [[nodiscard]] ChunkState getState() const;
 
-    void markDirty();
-
     [[nodiscard]] bool isDirty() const;
 
     [[nodiscard]] bool isEmpty() const;
-
 };
 
 #endif //CHUNK_H

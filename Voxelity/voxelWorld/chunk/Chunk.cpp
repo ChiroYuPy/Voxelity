@@ -2,23 +2,21 @@
 // Created by adrian on 14/05/25.
 //
 
+#include <iostream>
+
 #include "core/Constants.h"
-#include "rendering/ChunkMesh.h"
+#include "components/ChunkMesh.h"
 #include "voxelWorld/World.h"
 
+class IChunkMesher;
+
 Chunk::Chunk(const glm::ivec3 position)
-: position(position), mesh(this), dirty(true), empty(true), state(ChunkState::Unloaded) {}
-
-void Chunk::markDirty() {
-    dirty = true;
-}
-
-void Chunk::unmarkDirty() {
-    dirty = false;
+: position(position), empty(true), state(ChunkState::UnGenerated) {
+    std::cout << toString(state) << std::endl;
 }
 
 bool Chunk::isDirty() const {
-    return dirty;
+    return state == ChunkState::MeshDirty;
 }
 
 bool Chunk::isEmpty() const {
@@ -61,20 +59,14 @@ ChunkData& Chunk::getData() {
 
 void Chunk::setData(const ChunkData& newData) {
     data = newData;
-    markDirty();
     updateEmptyFlag();
 }
 
-void Chunk::updateMesh() {
-    if (isDirty()) {
-        buildMesh();
-        updateEmptyFlag();
-        unmarkDirty();
-    }
-}
-
-void Chunk::buildMesh() {
-    mesh.build(this);
+void Chunk::setMesh(const ChunkMesh& newMesh) {
+    std::cout << "Chunk " << position.x << ", " << position.y << ", " << position.z << " mesh updated" << std::endl;
+    mesh.init();
+    mesh.build();
+    mesh = newMesh;
 }
 
 Chunk* Chunk::getNeighbor(const Direction direction) const {
@@ -87,6 +79,7 @@ void Chunk::setNeighbor(const Direction direction, Chunk* neighbor) {
 
 void Chunk::setState(const ChunkState newState) {
     state.store(newState, std::memory_order_release);
+    std::cout << toString(newState) << std::endl;
 }
 
 ChunkState Chunk::getState() const {

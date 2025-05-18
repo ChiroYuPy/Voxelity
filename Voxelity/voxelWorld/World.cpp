@@ -4,6 +4,7 @@
 
 #include "voxelWorld/World.h"
 
+#include <iostream>
 #include <ranges>
 #include <utility>
 
@@ -11,6 +12,7 @@
 #include "core/Constants.h"
 #include "core/utils/Profiler.h"
 #include "math/Frustum.h"
+#include "meshers/IChunkMesher.h"
 
 inline int floorDiv(const int a, const int b) {
     return (a >= 0) ? (a / b) : ((a - b + 1) / b);
@@ -31,8 +33,8 @@ inline int floorDiv(const int a, const int b) {
 // TODO         Minimize Shaders Calculs
 // TODO         Optimize Shaders Uniforms
 
-World::World(std::unique_ptr<IWorldGenerator> generator)
-: generationThread(std::move(generator)) {
+World::World(std::unique_ptr<IChunkMesher> mesher, std::unique_ptr<IWorldGenerator> generator)
+: mesher(std::move(mesher)), generationThread(std::move(generator)) {
     generationThread.start();
 }
 
@@ -45,23 +47,35 @@ void World::render(const glm::vec3& cameraPosition,
     chunkRenderer.render(chunkManager, cameraPosition, view, projection, lightDirection, lightColor, ambientColor);
 }
 
+void World::updateMeshes() {
+    for (const auto &chunkPtr: chunkManager.chunks | std::views::values) {
+        if (chunkPtr->isDirty() or chunkPtr->getState() == ChunkState::Generated) {
+            const std::vector<VoxelFace> voxelFaces = mesher->mesh(*chunkPtr);
+            ChunkMesh& chunkMesh = chunkPtr->getMesh();
+            chunkMesh.setVoxelFaces(voxelFaces);
+            chunkMesh.build();
+            chunkPtr->setState(ChunkState::ReadyToRender);
+        }
+    }
+}
+
 void World::update() {
-    for (const auto &chunkPtr: chunkManager.chunks | std::views::values) chunkPtr->updateMesh();
+    updateMeshes();
 
     glm::ivec3 pos;
     ChunkData data;
     while (generationThread.pollReadyChunk(pos, data)) {
         auto chunk = std::make_unique<Chunk>(pos);
+        chunk->setState(ChunkState::Generated);
         chunk->setData(data);
 
-        // Connexion des voisins
         for (const auto& dir : DIRECTIONS) {
             const glm::ivec3 neighborPos = pos + getNormal(dir);
             Chunk* neighbor = chunkManager.getChunkAt(neighborPos);
             if (neighbor) {
                 chunk->setNeighbor(dir, neighbor);
                 neighbor->setNeighbor(getOpposite(dir), chunk.get());
-                neighbor->markDirty();
+                neighbor->setState(ChunkState::MeshDirty);
             }
         }
 

@@ -13,9 +13,10 @@
 #include "listeners/ResizeListener.h"
 #include "voxelWorld/World.h"
 #include "voxelWorld/generators/NaturalWorldGenerator.h"
+#include "voxelWorld/meshers/FaceCullingMesher.h"
 
-constexpr unsigned int SCREEN_WIDTH = 2560;
-constexpr unsigned int SCREEN_HEIGHT = 1600;
+constexpr unsigned int SCREEN_WIDTH = 1280;
+constexpr unsigned int SCREEN_HEIGHT = 720;
 
 Application* Application::instance = nullptr;
 
@@ -24,7 +25,8 @@ Application& Application::get() {
 }
 
 Application::Application()
-: cameraView({0, 0, 0}, 0, 0), cameraProjection(Constants::FOV, Constants::NearPlane, Constants::FarPlane, Constants::FOV), lastTime(0) {
+: cameraView({0, 0, 0}, 0, 0), cameraProjection(Constants::FOV, Constants::NearPlane, Constants::FarPlane), lastTime(0) {
+    cameraProjection.setAspectRatio(static_cast<float>(SCREEN_WIDTH) / static_cast<float>(SCREEN_HEIGHT));
     instance = this;
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -41,7 +43,7 @@ Application::Application()
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_CCW);
 
-    world = std::make_unique<World>(std::make_unique<NaturalWorldGenerator>());
+    world = std::make_unique<World>(std::make_unique<FaceCullingMesher>(), std::make_unique<NaturalWorldGenerator>());
 
     eventDispatcher = std::make_unique<EventDispatcher>();
 
@@ -89,6 +91,7 @@ void Application::render() {
 
     const glm::mat4 view = cameraView.getViewMatrix();
     const glm::mat4 projection = cameraProjection.getProjectionMatrix();
+
 
     world->render(cameraView.position, view, projection,
                  glm::vec3(0.5f, -1.0f, 0.3f),

@@ -28,11 +28,11 @@ add_executable(Voxelity
         Voxelity/voxelWorld/generators/FlatWorldGenerator.cpp
         Voxelity/voxelWorld/generators/NaturalWorldGenerator.cpp
         Voxelity/voxelWorld/generators/IWorldGenerator.cpp
-        Voxelity/rendering/ChunkMesh.cpp
+        Voxelity/voxelWorld/chunk/components/ChunkMesh.cpp
         Voxelity/textures/Image.cpp
         Voxelity/textures/Texture.cpp
         Voxelity/core/utils/Profiler.cpp
-        Voxelity/voxelWorld/chunk/ChunkData.cpp
+        Voxelity/voxelWorld/chunk/components/ChunkData.cpp
         Voxelity/voxelWorld/chunk/ChunkManager.cpp
         Voxelity/voxelWorld/chunk/ChunkRenderer.cpp
         Voxelity/voxelWorld/chunk/ChunkLoader.cpp
@@ -42,6 +42,9 @@ add_executable(Voxelity
         Voxelity/rendering/camera/CameraProjection.h
         Voxelity/threads/generation/ChunkGenerationThread.cpp
         Voxelity/threads/generation/ChunkGenerationThread.h
+        Voxelity/voxelWorld/meshers/IChunkMesher.h
+        Voxelity/voxelWorld/meshers/FaceCullingMesher.cpp
+        Voxelity/voxelWorld/meshers/FaceCullingMesher.h
 )
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")

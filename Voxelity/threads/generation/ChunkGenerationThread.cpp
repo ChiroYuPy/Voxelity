@@ -5,7 +5,7 @@
 #include "ChunkGenerationThread.h"
 
 #include "core/Constants.h"
-#include "voxelWorld/chunk/ChunkData.h"
+#include "../../voxelWorld/chunk/components/ChunkData.h"
 #include "voxelWorld/generators/IWorldGenerator.h"
 
 ChunkGenerationThread::ChunkGenerationThread(std::unique_ptr<IWorldGenerator> generator)

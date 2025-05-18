@@ -4,8 +4,8 @@
 
 #include "CameraProjection.h"
 
-CameraProjection::CameraProjection(const float fovDegrees, const float nearPlane, const float farPlane, const float aspectRatio)
-: fovDegrees(fovDegrees), nearPlane(nearPlane), farPlane(farPlane), aspectRatio(aspectRatio),
+CameraProjection::CameraProjection(const float fovDegrees, const float nearPlane, const float farPlane)
+: fovDegrees(fovDegrees), nearPlane(nearPlane), farPlane(farPlane), aspectRatio(1.f),
 projectionMatrix(), projectionMatrixDirty(true) {}
 
 void CameraProjection::markProjectionMatrixDirty() {

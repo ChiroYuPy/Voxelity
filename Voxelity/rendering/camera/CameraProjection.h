@@ -17,7 +17,7 @@ public:
     glm::mat4 projectionMatrix;
     bool projectionMatrixDirty;
 
-    explicit CameraProjection(float fovDegrees, float nearPlane, float farPlane, float aspectRatio);
+    explicit CameraProjection(float fovDegrees, float nearPlane, float farPlane);
 
     void markProjectionMatrixDirty();
 

@@ -4,6 +4,7 @@
 
 #include "ChunkRenderer.h"
 
+#include <iostream>
 #include <ranges>
 
 #include "Chunk.h"
@@ -35,14 +36,18 @@ void ChunkRenderer::render(const ChunkManager& chunkManager,
     const glm::mat4 viewProj = projection * view;
     frustum.update(viewProj);
 
+    chunkShader->use();
     for (const auto &chunkPtr: chunkManager.chunks | std::views::values) {
         const auto& chunk = *chunkPtr;
+
+        if (chunk.getState() != ChunkState::ReadyToRender) continue;
+        if (!chunk.getMesh().hasVisibleFaces()) continue;
 
         const glm::vec3 chunkWorldMin = chunk.getPosition() * Constants::ChunkSize;
         constexpr glm::vec3 halfSize = glm::vec3(Constants::ChunkSize) * 0.5f;
         const glm::vec3 center = chunkWorldMin + halfSize;
 
-        if (frustum.intersectsAABB(center, halfSize) && chunk.getMesh().hasVisibleFaces()) {
+        if (frustum.intersectsAABB(center, halfSize)) {
             chunkShader->setUniform("uChunkOffset", chunk.getWorldPosition());
             chunk.getMesh().render();
         }

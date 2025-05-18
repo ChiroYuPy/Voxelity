@@ -6,7 +6,7 @@
 #define MESH_H
 
 #include <vector>
-#include "VoxelFace.h"
+#include "rendering/VoxelFace.h"
 #include "math/Direction.h"
 
 class Chunk;
@@ -15,23 +15,23 @@ struct Voxel;
 
 class ChunkMesh {
 public:
-    explicit ChunkMesh(Chunk* chunk);
+    explicit ChunkMesh();
+
+    void init();
+
     ~ChunkMesh();
+
+    void setVoxelFaces(std::vector<VoxelFace> newFaces);
 
     void render() const;
 
     [[nodiscard]] bool hasVisibleFaces() const;
 
-    static bool isFaceVisible(int x, int y, int z, const Chunk &chunk, Direction direction);
-
-    static std::vector<VoxelFace> generateFaceInstances(const Chunk &chunk) ;
-
-    void build(const Chunk* chunk);
+    void build() const;
 
     void clear();
 
 private:
-    Chunk* chunk;
     GLuint vao{}, staticVBO{}, vbo{};
     std::vector<VoxelFace> voxelFaces;
 };
