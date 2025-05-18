@@ -78,7 +78,7 @@ void Application::update() {
     }
 
     cameraController->update(deltaTime);
-    // world->generateFromPlayerPosition(camera.position);
+    world->updateFromPlayerPosition(cameraView.position);
     world->update();
 }
 

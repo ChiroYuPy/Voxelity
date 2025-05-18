@@ -9,23 +9,20 @@
 
 #include <optional>
 
+class ChunkGenerationThread;
 class ChunkManager;
 class IWorldGenerator;
 
 class ChunkLoader {
 public:
-    void updateChunksAround(const glm::ivec3& playerChunkPos,
-                            ChunkManager& manager,
-                            IWorldGenerator& generator);
+    void updateChunksAround(const glm::ivec3& playerChunkPos, ChunkManager& manager, ChunkGenerationThread& generationThread);
 
 private:
     std::optional<glm::ivec3> lastChunkPosition;
 
-    void generateChunkAt(const glm::ivec3& pos,
-                         ChunkManager& manager,
-                         IWorldGenerator& generator);
+    static void generateChunkAt(const glm::ivec3& pos, ChunkGenerationThread& generationThread);
 
-    bool isWithinRenderDistance(const glm::ivec3& center, const glm::ivec3& pos);
+    static bool isWithinRenderDistance(const glm::ivec3& center, const glm::ivec3& pos);
 };
 
 #endif //CHUNKLOADER_H

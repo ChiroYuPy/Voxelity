@@ -10,6 +10,7 @@
 #include "chunk/ChunkLoader.h"
 #include "chunk/ChunkManager.h"
 #include "chunk/ChunkRenderer.h"
+#include "threading/generation/ChunkGenerationThread.h"
 #include "voxelWorld/generators/IWorldGenerator.h"
 
 class VoxelFace;
@@ -22,14 +23,14 @@ public:
 
     void render(const glm::vec3& cameraPosition, const glm::mat4 & view, const glm::mat4 & projection, const glm::vec3 & lightDirection, const glm::vec3 & lightColor, const glm::vec3 & ambientColor);
 
-    void update() const;
+    void update();
 
 private:
     ChunkManager chunkManager;
     ChunkRenderer chunkRenderer;
     ChunkLoader chunkLoader;
 
-    std::unique_ptr<IWorldGenerator> generator;
+    ChunkGenerationThread generationThread;
 };
 
 #endif //WORLD_H

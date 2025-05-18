@@ -31,7 +31,10 @@ inline int floorDiv(const int a, const int b) {
 // TODO         Minimize Shaders Calculs
 // TODO         Optimize Shaders Uniforms
 
-World::World(std::unique_ptr<IWorldGenerator> generator) : generator(std::move(generator)) {}
+World::World(std::unique_ptr<IWorldGenerator> generator)
+: generationThread(std::move(generator)) {
+    generationThread.start();
+}
 
 void World::render(const glm::vec3& cameraPosition,
                    const glm::mat4& view,
@@ -42,8 +45,28 @@ void World::render(const glm::vec3& cameraPosition,
     chunkRenderer.render(chunkManager, cameraPosition, view, projection, lightDirection, lightColor, ambientColor);
 }
 
-void World::update() const {
+void World::update() {
     for (const auto &chunkPtr: chunkManager.chunks | std::views::values) chunkPtr->updateMesh();
+
+    glm::ivec3 pos;
+    ChunkData data;
+    while (generationThread.pollReadyChunk(pos, data)) {
+        auto chunk = std::make_unique<Chunk>(pos);
+        chunk->setData(data);
+
+        // Connexion des voisins
+        for (const auto& dir : DIRECTIONS) {
+            const glm::ivec3 neighborPos = pos + getNormal(dir);
+            Chunk* neighbor = chunkManager.getChunkAt(neighborPos);
+            if (neighbor) {
+                chunk->setNeighbor(dir, neighbor);
+                neighbor->setNeighbor(getOpposite(dir), chunk.get());
+                neighbor->markDirty();
+            }
+        }
+
+        chunkManager.addChunk(std::move(chunk));
+    }
 }
 
 void World::updateFromPlayerPosition(const glm::ivec3& playerWorldPos) {
@@ -52,5 +75,5 @@ void World::updateFromPlayerPosition(const glm::ivec3& playerWorldPos) {
         floorDiv(playerWorldPos.y, Constants::ChunkSize),
         floorDiv(playerWorldPos.z, Constants::ChunkSize)
     };
-    chunkLoader.updateChunksAround(chunkPos, chunkManager, *generator);
+    chunkLoader.updateChunksAround(chunkPos, chunkManager, generationThread);
 }
