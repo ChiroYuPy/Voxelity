@@ -13,7 +13,7 @@ public:
     static constexpr int ChunkArea = ChunkSize * ChunkSize;
     static constexpr int ChunkVolume = ChunkSize * ChunkSize * ChunkSize;
 
-    static constexpr int RenderDistance = 16;
+    static constexpr int RenderDistance = 24;
     static constexpr int RenderHeight = 4;
     static constexpr int WorldHeight = RenderHeight * ChunkSize;
 

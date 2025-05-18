@@ -37,8 +37,6 @@ void WorldChunkRenderer::render(const WorldChunkData& chunkManager,
     for (const auto &chunkPtr: chunkManager.chunks | std::views::values) {
         const auto& chunk = *chunkPtr;
 
-        if (!chunk.getMesh().hasVisibleFaces()) continue;
-
         // frustum culling (do not render chunks outer of the view area)
         const glm::vec3 chunkWorldMin = chunk.getPosition() * Constants::ChunkSize;
         constexpr glm::vec3 halfSize = glm::vec3(Constants::ChunkSize) * 0.5f;
@@ -46,7 +44,7 @@ void WorldChunkRenderer::render(const WorldChunkData& chunkManager,
 
         if (frustum.intersectsAABB(center, halfSize)) {
             chunkShader->setUniform("uChunkOffset", chunk.getWorldPosition());
-            chunk.getMesh().render();
+            chunk.render();
         }
     }
 }

@@ -6,21 +6,18 @@
 
 #include <iostream>
 
-ChunkMesh::ChunkMesh() {
-    init();
-}
+#include "ChunkMeshData.h"
 
-void ChunkMesh::init() {
+ChunkMesh::ChunkMesh() {
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
 
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
     glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
-    glVertexAttribIPointer(0, 1, GL_UNSIGNED_INT, sizeof(VoxelFace), reinterpret_cast<void *>(offsetof(VoxelFace, data)));
+    glVertexAttribIPointer(0, 1, GL_UNSIGNED_INT, sizeof(VoxelFace), reinterpret_cast<void*>(offsetof(VoxelFace, data)));
     glVertexAttribDivisor(0, 1);
 }
 
@@ -29,29 +26,23 @@ ChunkMesh::~ChunkMesh() {
     glDeleteBuffers(1, &vbo);
 }
 
-void ChunkMesh::setVoxelFaces(std::vector<VoxelFace> newFaces) {
-    voxelFaces = std::move(newFaces);
+void ChunkMesh::upload(const ChunkMeshData& data) {
+    const auto& faces = data.getVoxelFaces();
+    instanceCount = static_cast<GLsizei>(faces.size());
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(instanceCount * sizeof(VoxelFace)), faces.data(), GL_STATIC_DRAW);
 }
 
 void ChunkMesh::render() const {
-    if (voxelFaces.empty()) return;
+    if (instanceCount == 0) return;
 
     glBindVertexArray(vao);
-    glDrawArraysInstanced(GL_TRIANGLES, 0, 6, static_cast<GLsizei>(voxelFaces.size()));
-}
-
-bool ChunkMesh::hasVisibleFaces() const {
-    return !voxelFaces.empty();
-}
-
-void ChunkMesh::build() const {
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(voxelFaces.size() * sizeof(VoxelFace)), voxelFaces.data(), GL_STATIC_DRAW);
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 6, instanceCount);
 }
 
 void ChunkMesh::clear() {
-    voxelFaces.clear();
+    instanceCount = 0;
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_STATIC_DRAW);
-    glBindVertexArray(vao);
 }

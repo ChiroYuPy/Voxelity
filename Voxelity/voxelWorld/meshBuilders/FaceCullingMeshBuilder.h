@@ -10,7 +10,7 @@
 #include "IChunkMeshBuilder.h"
 #include "core/Constants.h"
 #include "math/BlockFace.h"
-#include "rendering/VoxelFace.h"
+#include "../chunk/VoxelFace.h"
 #include "voxelWorld/chunk/Chunk.h"
 #include "voxelWorld/chunk/Voxel.h"
 

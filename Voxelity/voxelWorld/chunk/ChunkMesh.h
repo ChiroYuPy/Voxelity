@@ -6,9 +6,10 @@
 #define MESH_H
 
 #include <vector>
-#include "rendering/VoxelFace.h"
+#include "VoxelFace.h"
 #include "math/BlockFace.h"
 
+class ChunkMeshData;
 class Chunk;
 
 struct Voxel;
@@ -16,24 +17,15 @@ struct Voxel;
 class ChunkMesh {
 public:
     explicit ChunkMesh();
-
-    void init();
-
     ~ChunkMesh();
 
-    void setVoxelFaces(std::vector<VoxelFace> newFaces);
-
+    void upload(const ChunkMeshData& data);
     void render() const;
-
-    [[nodiscard]] bool hasVisibleFaces() const;
-
-    void build() const;
-
     void clear();
 
 private:
-    GLuint vao{}, staticVBO{}, vbo{};
-    std::vector<VoxelFace> voxelFaces;
+    GLuint vao{}, vbo{};
+    GLsizei instanceCount{};
 };
 
 #endif //MESH_H

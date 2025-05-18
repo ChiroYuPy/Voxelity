@@ -19,6 +19,10 @@ bool Chunk::isEmpty() const {
     return empty;
 }
 
+void Chunk::render() const {
+    mesh.render();
+}
+
 void Chunk::updateEmptyFlag() {
     for (const Voxel& voxel : data.getVoxels()) {
         if (voxel.getType() != BlockType::Air) {
@@ -37,8 +41,8 @@ glm::ivec3 Chunk::getWorldPosition() const {
     return position * Constants::ChunkSize;
 }
 
-const ChunkMesh& Chunk::getMesh() const {
-    return mesh;
+ChunkData& Chunk::getData() {
+    return data;
 }
 
 const ChunkData& Chunk::getData() const {
@@ -49,8 +53,8 @@ ChunkMesh& Chunk::getMesh() {
     return mesh;
 }
 
-ChunkData& Chunk::getData() {
-    return data;
+const ChunkMesh& Chunk::getMesh() const {
+    return mesh;
 }
 
 void Chunk::setData(const ChunkData& newData) {
@@ -58,10 +62,8 @@ void Chunk::setData(const ChunkData& newData) {
     updateEmptyFlag();
 }
 
-void Chunk::setMesh(const ChunkMesh& newMesh) {
-    mesh.init();
-    mesh.build();
-    mesh = newMesh;
+void Chunk::setMeshData(const ChunkMeshData& newMeshData) {
+    mesh.upload(newMeshData);
 }
 
 Chunk* Chunk::getNeighbor(const BlockFace direction) const {

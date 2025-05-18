@@ -37,18 +37,12 @@ add_executable(Voxelity
         Voxelity/voxelWorld/WorldChunkRenderer.cpp
         Voxelity/voxelWorld/managers/ChunkGenerationRequestManager.cpp
         Voxelity/listeners/ResizeListener.cpp
-        Voxelity/listeners/ResizeListener.h
         Voxelity/rendering/camera/CameraProjection.cpp
-        Voxelity/rendering/camera/CameraProjection.h
         Voxelity/threads/generation/ChunkGenerationThread.cpp
-        Voxelity/threads/generation/ChunkGenerationThread.h
-        Voxelity/voxelWorld/meshBuilders/IChunkMeshBuilder.h
         Voxelity/voxelWorld/meshBuilders/FaceCullingMeshBuilder.cpp
-        Voxelity/voxelWorld/meshBuilders/FaceCullingMeshBuilder.h
         Voxelity/voxelWorld/utils/Raycaster.cpp
-        Voxelity/voxelWorld/utils/Raycaster.h
         Voxelity/listeners/PlayerController.cpp
-        Voxelity/listeners/PlayerController.h
+        Voxelity/voxelWorld/chunk/ChunkMeshData.cpp
 )
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")

@@ -112,7 +112,7 @@ class OpenSimplex2S
    * Generate overlapping cubic lattices for 3D Re-oriented BCC noise.
    * Lookup table implementation inspired by DigitalShadow.
    * It was actually faster to narrow down the points in the loop itself,
-   * than to build up the index with enough info to isolate 8 points.
+   * than to upload up the index with enough info to isolate 8 points.
    */
   double noise3_BCC(double xr, double yr, double zr);
 

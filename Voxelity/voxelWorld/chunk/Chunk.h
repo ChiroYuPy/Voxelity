@@ -54,17 +54,17 @@ public:
     [[nodiscard]] glm::ivec3 getPosition() const;
     [[nodiscard]] glm::ivec3 getWorldPosition() const;
 
-    [[nodiscard]] const ChunkMesh &getMesh() const;
+    [[nodiscard]] ChunkData& getData();
 
     [[nodiscard]] const ChunkData &getData() const;
 
-    [[nodiscard]] ChunkMesh& getMesh();
+    ChunkMesh &getMesh();
 
-    [[nodiscard]] ChunkData& getData();
+    [[nodiscard]] const ChunkMesh &getMesh() const;
 
     void setData(const ChunkData& newData);
 
-    void setMesh(const ChunkMesh& newMesh);
+    void setMeshData(const ChunkMeshData& newMeshData);
 
     [[nodiscard]] Chunk* getNeighbor(BlockFace direction) const;
     void setNeighbor(BlockFace direction, Chunk* neighbor);
@@ -76,6 +76,8 @@ public:
     [[nodiscard]] bool isDirty() const;
 
     [[nodiscard]] bool isEmpty() const;
+
+    void render() const;
 };
 
 #endif //CHUNK_H
