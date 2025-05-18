@@ -55,7 +55,7 @@ Application::Application()
 
     GLFWEventAdapter(window, *eventDispatcher);
 
-    world->updateFromPlayerPosition(cameraView.position);
+    world->updateFromPlayerPosition(cameraView.getPosition());
 }
 
 Application::~Application() {
@@ -80,7 +80,7 @@ void Application::update() {
     }
 
     cameraController->update(deltaTime);
-    world->updateFromPlayerPosition(cameraView.position);
+    world->updateFromPlayerPosition(cameraView.getPosition());
     world->update();
 }
 
@@ -93,7 +93,7 @@ void Application::render() {
     const glm::mat4 projection = cameraProjection.getProjectionMatrix();
 
 
-    world->render(cameraView.position, view, projection,
+    world->render(cameraView.getPosition(), view, projection,
                  glm::vec3(0.5f, -1.0f, 0.3f),
                  glm::vec3(1.0f, 0.95f, 0.8f),
                  glm::vec3(0.25f, 0.25f, 0.3f));

@@ -16,9 +16,9 @@ class PlayerController final : public EventListener {
 public:
     void onEvent(Event& e) override;
 
-    static void PlayerController::tryBreakBlock(const glm::vec3& cameraPos, const glm::vec3& cameraDir, ChunkManager& world);
+    static void tryBreakBlock(const glm::vec3& cameraPos, const glm::vec3& cameraDir, ChunkManager& world);
 
-    static void PlayerController::tryPlaceBlock(const glm::vec3& cameraPos, const glm::vec3& cameraDir, ChunkManager& world, BlockType blockType0);
+    static void tryPlaceBlock(const glm::vec3& cameraPos, const glm::vec3& cameraDir, ChunkManager& world, BlockType blockType0);
 };
 
 
