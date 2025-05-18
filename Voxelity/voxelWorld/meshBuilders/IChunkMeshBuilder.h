@@ -7,39 +7,26 @@
 
 #include "../chunk/ChunkMesh.h"
 
+struct ChunkDataNeighborhood;
 class Chunk;
 class VoxelFace;
 
-#include <array>
-
-#include "voxelWorld/chunk/ChunkData.h"
-
-#include "math/BlockFace.h"
-
-struct ChunkDataNeighborhood {
-    ChunkDataNeighborhood()
-    : center(nullptr) {}
-
-    ChunkDataNeighborhood(ChunkData* centerChunk, const std::array<ChunkData*, 6>& neighborsArray)
-    : center(centerChunk), neighbors(neighborsArray) {}
-
-    [[nodiscard]] ChunkData* getCenter() const {
-        return center;
-    }
-
-    [[nodiscard]] ChunkData* getNeighbor(const BlockFace direction) const {
-        return neighbors[static_cast<int>(direction)];
-    }
-
-private:
-    ChunkData* center;
-    std::array<ChunkData*, 6> neighbors{};
-};
-
+/**
+ * @brief Abstract interface for chunk mesh builders.
+ *
+ * Implementations must provide a mesh generation function
+ * that produces a list of visible voxel faces for a given chunk neighborhood.
+ */
 class IChunkMeshBuilder {
 public:
     virtual ~IChunkMeshBuilder() = default;
 
+    /**
+    * @brief Generate the mesh (list of visible voxel faces) for the chunk neighborhood.
+    *
+    * @param neighborhood The chunk data neighborhood including center and neighbors.
+    * @return std::vector<VoxelFace> List of voxel faces that compose the mesh.
+    */
     virtual std::vector<VoxelFace> mesh(const ChunkDataNeighborhood& neighborhood) = 0;
 };
 

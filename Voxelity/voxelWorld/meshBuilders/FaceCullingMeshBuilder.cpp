@@ -4,6 +4,11 @@
 
 #include "FaceCullingMeshBuilder.h"
 
+#include "ChunkDataNeighborhood.h"
+#include "core/Constants.h"
+#include "voxelWorld/chunk/ChunkData.h"
+#include "voxelWorld/chunk/Voxel.h"
+
 std::vector<VoxelFace> FaceCullingMeshBuilder::mesh(const ChunkDataNeighborhood& neighborhood) {
     const std::vector<VoxelFace> faces = generateFaceInstances(neighborhood);
     return faces;

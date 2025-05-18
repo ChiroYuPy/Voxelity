@@ -7,6 +7,7 @@
 #include "voxelWorld/chunk/ChunkData.h"
 #include "voxelWorld/chunk/ChunkMeshData.h"
 #include "voxelWorld/meshBuilders/IChunkMeshBuilder.h"
+#include "voxelWorld/meshBuilders/ChunkDataNeighborhood.h"
 
 ChunkMeshingThread::ChunkMeshingThread(std::unique_ptr<IChunkMeshBuilder> meshBuilder)
 : meshBuilder(std::move(meshBuilder)) {}

@@ -13,6 +13,7 @@
 #include "core/utils/Profiler.h"
 #include "generators/NaturalWorldGenerator.h"
 #include "math/Frustum.h"
+#include "meshBuilders/ChunkDataNeighborhood.h"
 #include "meshBuilders/IChunkMeshBuilder.h"
 
 inline int floorDiv(const int a, const int b) {

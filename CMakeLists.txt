@@ -44,6 +44,8 @@ add_executable(Voxelity
         Voxelity/listeners/PlayerController.cpp
         Voxelity/voxelWorld/chunk/ChunkMeshData.cpp
         Voxelity/threads/meshing/ChunkMeshingThread.cpp
+        Voxelity/voxelWorld/meshBuilders/ChunkDataNeighborhood.cpp
+        Voxelity/voxelWorld/meshBuilders/ChunkDataNeighborhood.h
 )
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
