@@ -12,7 +12,7 @@
 #include "events/GLFWEventAdapter.h"
 #include "listeners/ResizeListener.h"
 #include "voxelWorld/World.h"
-#include "voxelWorld/generators/NaturalWorldGenerator.h"
+#include "voxelWorld/generators/NaturaldGenerator.h"
 #include "voxelWorld/meshBuilders/FaceCullingMeshBuilder.h"
 
 constexpr unsigned int SCREEN_WIDTH = 1920;
@@ -43,7 +43,7 @@ Application::Application()
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_CCW);
 
-    world = std::make_unique<World>(std::make_unique<FaceCullingMeshBuilder>(), std::make_unique<NaturalWorldGenerator>());
+    world = std::make_unique<World>(std::make_unique<FaceCullingMeshBuilder>(), std::make_unique<NaturaldGenerator>());
 
     eventDispatcher = std::make_unique<EventDispatcher>();
 

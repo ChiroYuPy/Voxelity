@@ -13,13 +13,13 @@
  * This class provides voxel generation logic for natural world features such as
  * ground, hills, and other terrain types by overriding the generateVoxel method.
  */
-class NaturalWorldGenerator final : public IChunkGenerator {
+class NaturaldGenerator final : public IChunkGenerator {
 public:
 
     /**
     * @brief Default constructor for NaturalWorldGenerator.
     */
-    NaturalWorldGenerator();
+    NaturaldGenerator();
 
     /**
     * @brief Generates the voxel type at the given world position.

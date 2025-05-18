@@ -2,7 +2,7 @@
 // Created by adrian on 14/05/25.
 //
 
-#include "voxelWorld/generators/NaturalWorldGenerator.h"
+#include "voxelWorld/generators/NaturaldGenerator.h"
 #include "OS2.hpp"
 #include <algorithm>
 
@@ -26,9 +26,9 @@ int getHeightAt(const int x, const int z) {
     return std::clamp(height, startHeight, worldHeight);
 }
 
-NaturalWorldGenerator::NaturalWorldGenerator() = default;
+NaturaldGenerator::NaturaldGenerator() = default;
 
-BlockType NaturalWorldGenerator::generateVoxel(const glm::ivec3& position) {
+BlockType NaturaldGenerator::generateVoxel(const glm::ivec3& position) {
     const int height = getHeightAt(position.x, position.z);
 
     if (position.y == 0)

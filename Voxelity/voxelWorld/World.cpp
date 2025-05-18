@@ -11,7 +11,7 @@
 #include "chunk/ChunkMeshData.h"
 #include "core/Constants.h"
 #include "core/utils/Profiler.h"
-#include "generators/NaturalWorldGenerator.h"
+#include "generators/NaturaldGenerator.h"
 #include "math/Frustum.h"
 #include "meshBuilders/ChunkDataNeighborhood.h"
 #include "meshBuilders/IChunkMeshBuilder.h"

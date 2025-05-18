@@ -25,8 +25,8 @@ add_executable(Voxelity
         Voxelity/listeners/CameraController.cpp
         Voxelity/events/GLFWEventAdapter.cpp
         Voxelity/events/EventDispatcher.cpp
-        Voxelity/voxelWorld/generators/FlatWorldGenerator.cpp
-        Voxelity/voxelWorld/generators/NaturalWorldGenerator.cpp
+        Voxelity/voxelWorld/generators/FlatGenerator.cpp
+        Voxelity/voxelWorld/generators/NaturaldGenerator.cpp
         Voxelity/voxelWorld/generators/IWorldGenerator.cpp
         Voxelity/voxelWorld/chunk/ChunkMesh.cpp
         Voxelity/textures/Image.cpp
