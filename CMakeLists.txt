@@ -45,8 +45,10 @@ add_executable(Voxelity
         Voxelity/voxelWorld/meshers/IChunkMesher.h
         Voxelity/voxelWorld/meshers/FaceCullingMesher.cpp
         Voxelity/voxelWorld/meshers/FaceCullingMesher.h
-        Voxelity/voxelWorld/utils/RayCaster.cpp
-        Voxelity/voxelWorld/utils/RayCaster.h
+        Voxelity/voxelWorld/utils/Raycaster.cpp
+        Voxelity/voxelWorld/utils/Raycaster.h
+        Voxelity/listeners/PlayerController.cpp
+        Voxelity/listeners/PlayerController.h
 )
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")

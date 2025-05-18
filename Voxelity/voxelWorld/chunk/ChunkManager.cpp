@@ -5,21 +5,76 @@
 #include "ChunkManager.h"
 
 #include "Chunk.h"
+#include "core/Application.h"
 #include "core/Constants.h"
 
-static int floorDiv(const int a, const int b) {
-    return (a >= 0) ? (a / b) : ((a - b + 1) / b);
+namespace {
+    int floorDiv(const int a, const int b) {
+        return (a >= 0) ? (a / b) : ((a - b + 1) / b);
+    }
+
+    constexpr int OFFSET = 1 << 20;
+
+    unsigned long chunkKey(const int cx, const int cy, const int cz) {
+        const unsigned long ux = static_cast<unsigned long>(cx + OFFSET) & 0x1FFFFF;
+        const unsigned long uy = static_cast<unsigned long>(cy + OFFSET) & 0x1FFFFF;
+        const unsigned long uz = static_cast<unsigned long>(cz + OFFSET) & 0x1FFFFF;
+
+        return (ux << 42) | (uy << 21) | uz;
+    }
+
+    struct ChunkVoxelPos {
+        glm::ivec3 chunkPos;
+        glm::ivec3 localPos;
+    };
+
+    ChunkVoxelPos decomposeWorldPos(const glm::ivec3& worldPos) {
+        constexpr int cs = Constants::ChunkSize;
+
+        const int cx = floorDiv(worldPos.x, cs);
+        const int cy = floorDiv(worldPos.y, cs);
+        const int cz = floorDiv(worldPos.z, cs);
+
+        const int lx = ((worldPos.x % cs) + cs) % cs;
+        const int ly = ((worldPos.y % cs) + cs) % cs;
+        const int lz = ((worldPos.z % cs) + cs) % cs;
+
+        return { {cx, cy, cz}, {lx, ly, lz} };
+    }
 }
 
 Chunk* ChunkManager::getChunkAt(const glm::ivec3& pos) {
     const auto key = chunkKey(pos.x, pos.y, pos.z);
     const auto it = chunks.find(key);
-    return it != chunks.end() ? it->second.get() : nullptr;
+    return (it != chunks.end()) ? it->second.get() : nullptr;
 }
 
 bool ChunkManager::hasChunkAt(const glm::ivec3& pos) const {
     const auto key = chunkKey(pos.x, pos.y, pos.z);
     return chunks.contains(key);
+}
+
+bool ChunkManager::hasBlockAt(const glm::ivec3& pos) const {
+    const Voxel* voxel = getVoxelAt(pos);
+    return voxel && voxel->getType() != BlockType::Air;
+}
+
+BlockType ChunkManager::getBlockAt(const glm::ivec3& pos) const {
+    const Voxel* voxel = getVoxelAt(pos);
+    return voxel ? voxel->getType() : BlockType::Air;
+}
+
+void ChunkManager::setBlockAt(const glm::ivec3& pos, const BlockType type) {
+    const auto [chunkPos, localPos] = decomposeWorldPos(pos);
+    const auto it = chunks.find(chunkKey(chunkPos.x, chunkPos.y, chunkPos.z));
+    if (it == chunks.end()) return;
+
+    Voxel& voxel = it->second->getData().get(localPos.x, localPos.y, localPos.z);
+    voxel.setType(type);
+}
+
+void ChunkManager::removeBlock(const glm::ivec3 pos) {
+    setBlockAt(pos, BlockType::Air);
 }
 
 void ChunkManager::addChunk(std::unique_ptr<Chunk> chunk) {
@@ -34,27 +89,9 @@ void ChunkManager::removeChunk(const glm::ivec3& pos) {
 }
 
 const Voxel* ChunkManager::getVoxelAt(const glm::ivec3& worldPos) const {
-    const int cx = floorDiv(worldPos.x, Constants::ChunkSize);
-    const int cy = floorDiv(worldPos.y, Constants::ChunkSize);
-    const int cz = floorDiv(worldPos.z, Constants::ChunkSize);
-
-    const int xInChunk = ((worldPos.x % Constants::ChunkSize) + Constants::ChunkSize) % Constants::ChunkSize;
-    const int yInChunk = ((worldPos.y % Constants::ChunkSize) + Constants::ChunkSize) % Constants::ChunkSize;
-    const int zInChunk = ((worldPos.z % Constants::ChunkSize) + Constants::ChunkSize) % Constants::ChunkSize;
-
-    const auto key = chunkKey(cx, cy, cz);
-    const auto it = chunks.find(key);
+    const auto [chunkPos, localPos] = decomposeWorldPos(worldPos);
+    const auto it = chunks.find(chunkKey(chunkPos.x, chunkPos.y, chunkPos.z));
     if (it == chunks.end()) return nullptr;
 
-    return &it->second->getData().get(xInChunk, yInChunk, zInChunk);
-}
-
-unsigned long ChunkManager::chunkKey(const int cx, const int cy, const int cz) {
-    constexpr int OFFSET = 1 << 20;
-
-    const unsigned long ux = static_cast<unsigned long>(cx + OFFSET) & 0x1FFFFF;
-    const unsigned long uy = static_cast<unsigned long>(cy + OFFSET) & 0x1FFFFF;
-    const unsigned long uz = static_cast<unsigned long>(cz + OFFSET) & 0x1FFFFF;
-
-    return (ux << 42) | (uy << 21) | uz;
+    return &it->second->getData().get(localPos.x, localPos.y, localPos.z);
 }

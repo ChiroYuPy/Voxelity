@@ -26,6 +26,7 @@ public:
     static constexpr float FOV = 70.f;
     static constexpr float MinPitch = -89.f;
     static constexpr float MaxPitch = 89.f;
+    static constexpr float PlayerReach = 8.f;
 };
 
 #endif //CONSTANTS_H

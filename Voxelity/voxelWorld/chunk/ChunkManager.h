@@ -24,8 +24,11 @@ public:
     void removeChunk(const glm::ivec3& pos);
     bool hasChunkAt(const glm::ivec3& pos) const;
 
-private:
-    static ChunkKey chunkKey(int cx, int cy, int cz);
+    bool hasBlockAt(const glm::ivec3& pos) const;
+    BlockType getBlockAt(const glm::ivec3 & pos) const;
+    void setBlockAt(const glm::ivec3& pos, BlockType type);
+
+    void removeBlock(glm::ivec3 pos);
 };
 
 #endif //CHUNKMANAGER_H
