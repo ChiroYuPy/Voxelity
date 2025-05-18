@@ -38,16 +38,11 @@ World::World(std::unique_ptr<IChunkMeshBuilder> mesher, std::unique_ptr<IWorldGe
 
     chunkData = std::make_unique<WorldChunkData>();
     chunkRenderer = std::make_unique<WorldChunkRenderer>();
-    chunkLoader = std::make_unique<ChunkRequestManager>();
+    chunkLoader = std::make_unique<ChunkGenerationRequestManager>(std::move(generator));
 
-    generationThread = std::make_unique<ChunkGenerationThread>(std::move(generator));
-
-    generationThread->start();
 }
 
-World::~World() {
-    generationThread->stop();
-}
+World::~World() = default;
 
 void World::render(const glm::vec3& cameraPosition,
                    const glm::mat4& view,
@@ -71,26 +66,8 @@ void World::updateMeshes() const {
 }
 
 void World::update() const {
+    chunkLoader->processReadyChunks(*chunkData);
     updateMeshes();
-
-    glm::ivec3 pos;
-    ChunkData data;
-    while (generationThread->pollReadyChunk(pos, data)) {
-        if (!chunkData->hasChunkAt(pos)) continue;
-        const auto chunk = chunkData->getChunkAt(pos);
-        chunk->setData(data);
-        chunk->setState(ChunkState::Generated);
-
-        for (const auto& dir : DIRECTIONS) {
-            const glm::ivec3 neighborPos = pos + getNormal(dir);
-            Chunk* neighbor = chunkData->getChunkAt(neighborPos);
-            if (neighbor) {
-                chunk->setNeighbor(dir, neighbor);
-                neighbor->setNeighbor(getOpposite(dir), chunk);
-                neighbor->setState(ChunkState::MeshDirty);
-            }
-        }
-    }
 }
 
 void World::updateFromPlayerPosition(const glm::ivec3& playerWorldPos) const {
@@ -99,5 +76,6 @@ void World::updateFromPlayerPosition(const glm::ivec3& playerWorldPos) const {
         floorDiv(playerWorldPos.y, Constants::ChunkSize),
         floorDiv(playerWorldPos.z, Constants::ChunkSize)
     };
-    chunkLoader->updateChunksAround(chunkPos, *chunkData, *generationThread);
+
+    chunkLoader->updateChunksAround(chunkPos, *chunkData);
 }

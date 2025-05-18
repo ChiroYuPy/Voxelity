@@ -7,7 +7,7 @@
 
 #include <memory>
 
-#include "managers/ChunkRequestManager.h"
+#include "managers/ChunkGenerationRequestManager.h"
 #include "WorldChunkRenderer.h"
 #include "meshBuilders/IChunkMeshBuilder.h"
 #include "generators/IWorldGenerator.h"
@@ -34,9 +34,8 @@ private:
 
     std::unique_ptr<WorldChunkData> chunkData;
     std::unique_ptr<WorldChunkRenderer> chunkRenderer;
-    std::unique_ptr<ChunkRequestManager> chunkLoader;
+    std::unique_ptr<ChunkGenerationRequestManager> chunkLoader;
 
-    std::unique_ptr<ChunkGenerationThread> generationThread;
     //TODO meshingThread
 };
 
