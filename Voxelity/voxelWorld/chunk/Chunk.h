@@ -9,7 +9,7 @@
 #include <GLT.h>
 
 #include "components/ChunkData.h"
-#include "math/Direction.h"
+#include "math/BlockFace.h"
 #include "components/ChunkMesh.h"
 
 class IChunkMesher;
@@ -66,8 +66,8 @@ public:
 
     void setMesh(const ChunkMesh& newMesh);
 
-    [[nodiscard]] Chunk* getNeighbor(Direction direction) const;
-    void setNeighbor(Direction direction, Chunk* neighbor);
+    [[nodiscard]] Chunk* getNeighbor(BlockFace direction) const;
+    void setNeighbor(BlockFace direction, Chunk* neighbor);
 
     void setState(ChunkState newState);
 

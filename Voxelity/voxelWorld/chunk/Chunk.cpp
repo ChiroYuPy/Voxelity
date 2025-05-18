@@ -69,11 +69,11 @@ void Chunk::setMesh(const ChunkMesh& newMesh) {
     mesh = newMesh;
 }
 
-Chunk* Chunk::getNeighbor(const Direction direction) const {
+Chunk* Chunk::getNeighbor(const BlockFace direction) const {
     return neighbors[static_cast<int>(direction)];
 }
 
-void Chunk::setNeighbor(const Direction direction, Chunk* neighbor) {
+void Chunk::setNeighbor(const BlockFace direction, Chunk* neighbor) {
     neighbors[static_cast<int>(direction)] = neighbor;
 }
 

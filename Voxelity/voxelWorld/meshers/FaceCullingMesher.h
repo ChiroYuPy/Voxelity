@@ -9,7 +9,7 @@
 
 #include "IChunkMesher.h"
 #include "core/Constants.h"
-#include "math/Direction.h"
+#include "math/BlockFace.h"
 #include "rendering/VoxelFace.h"
 #include "voxelWorld/chunk/Chunk.h"
 #include "voxelWorld/chunk/Voxel.h"
@@ -21,7 +21,7 @@ public:
         return faces;
     }
 
-    static bool isFaceVisible(const int x, const int y, const int z, const Chunk& chunk, const Direction direction) {
+    static bool isFaceVisible(const int x, const int y, const int z, const Chunk& chunk, const BlockFace direction) {
         const glm::ivec3 offset = DIRECTION_NORMALS[static_cast<int>(direction)];
         glm::ivec3 neighborPos = { x + offset.x, y + offset.y, z + offset.z };
 
@@ -52,7 +52,7 @@ public:
                     const Voxel* voxel = &chunk.getData().get(x, y, z);
                     if (!voxel->isSolid()) continue;
 
-                    for (const Direction direction : DIRECTIONS) {
+                    for (const BlockFace direction : DIRECTIONS) {
                         if (isFaceVisible(x, y, z, chunk, direction)) {
                             faces.emplace_back(glm::ivec3(x, y, z), static_cast<int>(direction), static_cast<int>(voxel->getType()));
                         }

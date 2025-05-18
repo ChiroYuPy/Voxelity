@@ -7,7 +7,7 @@
 
 #include <vector>
 #include "rendering/VoxelFace.h"
-#include "math/Direction.h"
+#include "math/BlockFace.h"
 
 class Chunk;
 
