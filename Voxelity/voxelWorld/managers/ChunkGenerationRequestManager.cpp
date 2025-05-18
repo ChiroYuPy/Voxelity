@@ -98,6 +98,5 @@ void ChunkGenerationRequestManager::generateChunkAt(const glm::ivec3& pos, World
 bool ChunkGenerationRequestManager::isWithinRenderDistance(const glm::ivec3& center, const glm::ivec3& pos) {
     const int dx = pos.x - center.x;
     const int dz = pos.z - center.z;
-    // Distance euclidienne au carré sur le plan XZ
     return dx * dx + dz * dz <= Constants::RenderDistance * Constants::RenderDistance;
 }
