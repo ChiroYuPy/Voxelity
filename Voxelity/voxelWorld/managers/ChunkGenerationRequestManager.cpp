@@ -15,7 +15,7 @@
 #include "voxelWorld/chunk/Chunk.h"
 #include "threads/generation/ChunkGenerationThread.h"
 
-ChunkGenerationRequestManager::ChunkGenerationRequestManager(std::unique_ptr<IWorldGenerator> generator) {
+ChunkGenerationRequestManager::ChunkGenerationRequestManager(std::unique_ptr<IChunkGenerator> generator) {
     generationThread = std::make_unique<ChunkGenerationThread>(std::move(generator));
 
     generationThread->start();
@@ -31,7 +31,7 @@ void ChunkGenerationRequestManager::updateChunksAround(const glm::ivec3& playerC
 
     // load missing chunks in the area
     for (int x = playerChunkPos.x - Constants::RenderDistance; x <= playerChunkPos.x + Constants::RenderDistance; ++x) {
-        for (int y = 0; y < Constants::RenderHeight; ++y) {
+        for (int y = 0; y < Constants::WorldChunkHeight; ++y) {
             for (int z = playerChunkPos.z - Constants::RenderDistance; z <= playerChunkPos.z + Constants::RenderDistance; ++z) {
                 glm::ivec3 pos{x, y, z};
                 if (!chunkManager.hasChunkAt(pos) && isWithinRenderDistance(playerChunkPos, pos)) {
@@ -62,7 +62,7 @@ void ChunkGenerationRequestManager::updateChunksAround(const glm::ivec3& playerC
 void ChunkGenerationRequestManager::processReadyChunks(WorldChunkData& worldChunkData) const {
     glm::ivec3 pos;
     ChunkData data;
-    while (generationThread->pollReadyChunk(pos, data)) {
+    while (generationThread->pollReadyElements(pos, data)) {
         if (!worldChunkData.hasChunkAt(pos)) continue;
 
         applyChunkData(pos, data, worldChunkData);
@@ -92,7 +92,7 @@ void ChunkGenerationRequestManager::updateNeighbors(const glm::ivec3& pos, World
 void ChunkGenerationRequestManager::generateChunkAt(const glm::ivec3& pos, WorldChunkData& manager) const {
     auto chunk = std::make_unique<Chunk>(pos);
     manager.addChunk(std::move(chunk));
-    generationThread->enqueuePosition(pos);
+    generationThread->enqueueElement(pos);
 }
 
 bool ChunkGenerationRequestManager::isWithinRenderDistance(const glm::ivec3& center, const glm::ivec3& pos) {

@@ -15,8 +15,8 @@
 #include "voxelWorld/generators/NaturalWorldGenerator.h"
 #include "voxelWorld/meshBuilders/FaceCullingMeshBuilder.h"
 
-constexpr unsigned int SCREEN_WIDTH = 1280;
-constexpr unsigned int SCREEN_HEIGHT = 720;
+constexpr unsigned int SCREEN_WIDTH = 1920;
+constexpr unsigned int SCREEN_HEIGHT = 1080;
 
 Application* Application::instance = nullptr;
 
@@ -25,7 +25,7 @@ Application& Application::get() {
 }
 
 Application::Application()
-: cameraView({0, 0, 0}, 0, 0), cameraProjection(Constants::FOV, Constants::NearPlane, Constants::FarPlane), lastTime(0) {
+: cameraView({0, Constants::WorldHeight, 0}, 0, 0), cameraProjection(Constants::FOV, Constants::NearPlane, Constants::FarPlane), lastTime(0) {
     cameraProjection.setAspectRatio(static_cast<float>(SCREEN_WIDTH) / static_cast<float>(SCREEN_HEIGHT));
     instance = this;
     glfwInit();

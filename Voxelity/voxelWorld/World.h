@@ -17,7 +17,7 @@ class VoxelFace;
 
 class  World {
 public:
-    explicit World(std::unique_ptr<IChunkMeshBuilder> mesher, std::unique_ptr<IWorldGenerator> generator);
+    explicit World(std::unique_ptr<IChunkMeshBuilder> mesher, std::unique_ptr<IChunkGenerator> generator);
 
     ~World();
 

@@ -6,7 +6,7 @@
 
 #include "../chunk/Chunk.h"
 
-ChunkData IWorldGenerator::generate(const glm::ivec3 globalChunkPos) {
+ChunkData IChunkGenerator::generate(const glm::ivec3 globalChunkPos) {
     auto data = ChunkData();
     for (int x = 0; x < Constants::ChunkSize; x++) {
         for (int y = 0; y < Constants::ChunkSize; y++) {

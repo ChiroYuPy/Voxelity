@@ -10,34 +10,34 @@
 #include <queue>
 #include <GLT.h>
 
-class IWorldGenerator;
+class IChunkGenerator;
 struct ChunkData;
 
 class ChunkGenerationThread {
 public:
-    explicit ChunkGenerationThread(std::unique_ptr<IWorldGenerator> generator);
+    explicit ChunkGenerationThread(std::unique_ptr<IChunkGenerator> chunkGenerator);
     ~ChunkGenerationThread();
 
     void start();
     void stop();
 
-    void enqueuePosition(const glm::ivec3& pos);
+    void enqueueElement(const glm::ivec3& pos);
 
-    bool pollReadyChunk(glm::ivec3& posOut, ChunkData& dataOut);
+    bool pollReadyElements(glm::ivec3& posOut, ChunkData& dataOut);
 private:
     void run();
 
     std::thread workerThread;
     std::atomic<bool> running = false;
 
-    std::queue<glm::ivec3> positionsToGenerate;
+    std::queue<glm::ivec3> queueElements;
     std::mutex queueMutex;
     std::condition_variable cv;
 
-    std::queue<std::pair<glm::ivec3, ChunkData>> readyChunks;
+    std::queue<std::pair<glm::ivec3, ChunkData>> readyElements;
     std::mutex readyMutex;
 
-    std::unique_ptr<IWorldGenerator> generator;
+    std::unique_ptr<IChunkGenerator> chunkGenerator;
 };
 
 #endif //CHUNKGENERATIONTHREAD_H

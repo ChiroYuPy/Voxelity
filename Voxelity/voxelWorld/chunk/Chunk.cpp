@@ -9,7 +9,7 @@
 class IChunkMeshBuilder;
 
 Chunk::Chunk(const glm::ivec3 position)
-: position(position), empty(true), state(ChunkState::UnGenerated) {}
+: position(position), empty(true), state(ChunkState::UnGenerated), neighbors() {}
 
 bool Chunk::isDirty() const {
     return state == ChunkState::MeshDirty;
@@ -72,6 +72,10 @@ Chunk* Chunk::getNeighbor(const BlockFace direction) const {
 
 void Chunk::setNeighbor(const BlockFace direction, Chunk* neighbor) {
     neighbors[static_cast<int>(direction)] = neighbor;
+}
+
+std::array<Chunk*, 6> Chunk::getNeighbors() const {
+    return neighbors;
 }
 
 void Chunk::setState(const ChunkState newState) {

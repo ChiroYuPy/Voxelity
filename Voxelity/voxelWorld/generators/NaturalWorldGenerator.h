@@ -7,7 +7,7 @@
 
 #include "IWorldGenerator.h"
 
-class NaturalWorldGenerator final : public IWorldGenerator {
+class NaturalWorldGenerator final : public IChunkGenerator {
 public:
     NaturalWorldGenerator();
 

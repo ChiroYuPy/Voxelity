@@ -44,7 +44,7 @@ class Chunk {
 
     std::atomic<ChunkState> state;
 
-    Chunk* neighbors[6] = {nullptr};
+    std::array<Chunk*, 6> neighbors = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 
     void updateEmptyFlag();
 
@@ -68,6 +68,8 @@ public:
 
     [[nodiscard]] Chunk* getNeighbor(BlockFace direction) const;
     void setNeighbor(BlockFace direction, Chunk* neighbor);
+
+    [[nodiscard]] std::array<Chunk*, 6> getNeighbors() const;
 
     void setState(ChunkState newState);
 

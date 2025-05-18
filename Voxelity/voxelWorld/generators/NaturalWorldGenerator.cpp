@@ -20,7 +20,7 @@ int getHeightAt(const int x, const int z) {
     constexpr float exponent = 2.f;
     const float shaped = std::pow(noiseValue, exponent);
 
-    constexpr int worldHeight = Constants::RenderHeight * Constants::ChunkSize - 1;
+    constexpr int worldHeight = Constants::WorldChunkHeight * Constants::ChunkSize - 1;
     static constexpr int startHeight = worldHeight / 2;
     const int height = startHeight + static_cast<int>(shaped * (worldHeight - startHeight)); // max height
     return std::clamp(height, startHeight, worldHeight);

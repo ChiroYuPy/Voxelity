@@ -35,7 +35,7 @@ inline int floorDiv(const int a, const int b) {
 // TODO         Minimize Shaders Calculs
 // TODO         Optimize Shaders Uniforms
 
-World::World(std::unique_ptr<IChunkMeshBuilder> mesher, std::unique_ptr<IWorldGenerator> generator) {
+World::World(std::unique_ptr<IChunkMeshBuilder> mesher, std::unique_ptr<IChunkGenerator> generator) {
     meshBuilder = std::move(mesher);
 
     worldChunkData = std::make_unique<WorldChunkData>();
@@ -56,17 +56,24 @@ void World::render(const glm::vec3& cameraPosition,
 }
 
 void World::updateMeshes() const {
-    for (const auto &chunkPtr: worldChunkData->chunks | std::views::values) {
-        if (chunkPtr->isDirty() or chunkPtr->getState() == ChunkState::Generated) {
-            const std::vector<VoxelFace> voxelFaces = meshBuilder->mesh(*chunkPtr);
+    for (const auto& chunkPtr : worldChunkData->chunks | std::views::values) {
+        if (!chunkPtr || (!chunkPtr->isDirty() && chunkPtr->getState() != ChunkState::Generated)) continue;
 
-            ChunkMesh& chunkMesh = chunkPtr->getMesh();
+        std::array<Chunk*, 6> chunkNeighbors = chunkPtr->getNeighbors();
 
-            ChunkMeshData chunkMeshData;
-            chunkMeshData.setVoxelFaces(voxelFaces);
-            chunkMesh.upload(chunkMeshData);
-            chunkPtr->setState(ChunkState::ReadyToRender);
+        std::array<ChunkData*, 6> chunkDataNeighbors{};
+        for (int i = 0; i < 6; ++i) {
+            chunkDataNeighbors[i] = chunkNeighbors[i] ? &chunkNeighbors[i]->getData() : nullptr;
         }
+
+        ChunkDataNeighborhood chunkDataNeighborhood = {&chunkPtr->getData(), chunkDataNeighbors};
+        const std::vector<VoxelFace> voxelFaces = meshBuilder->mesh(chunkDataNeighborhood);
+
+        ChunkMesh& chunkMesh = chunkPtr->getMesh();
+        ChunkMeshData chunkMeshData;
+        chunkMeshData.setVoxelFaces(voxelFaces);
+        chunkMesh.upload(chunkMeshData);
+        chunkPtr->setState(ChunkState::ReadyToRender);
     }
 }
 

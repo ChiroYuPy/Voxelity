@@ -8,8 +8,8 @@
 #include "../../voxelWorld/chunk/ChunkData.h"
 #include "voxelWorld/generators/IWorldGenerator.h"
 
-ChunkGenerationThread::ChunkGenerationThread(std::unique_ptr<IWorldGenerator> generator)
-    : generator(std::move(generator)) {}
+ChunkGenerationThread::ChunkGenerationThread(std::unique_ptr<IChunkGenerator> generator)
+: chunkGenerator(std::move(generator)) {}
 
 ChunkGenerationThread::~ChunkGenerationThread() {
     stop();
@@ -31,20 +31,20 @@ void ChunkGenerationThread::stop() {
     }
 }
 
-void ChunkGenerationThread::enqueuePosition(const glm::ivec3& pos) {
+void ChunkGenerationThread::enqueueElement(const glm::ivec3& pos) {
     {
         std::lock_guard lock(queueMutex);
-        positionsToGenerate.push(pos);
+        queueElements.push(pos);
     }
     cv.notify_one();
 }
 
-bool ChunkGenerationThread::pollReadyChunk(glm::ivec3& posOut, ChunkData& dataOut) {
+bool ChunkGenerationThread::pollReadyElements(glm::ivec3& posOut, ChunkData& dataOut) {
     std::lock_guard lock(readyMutex);
-    if (readyChunks.empty()) return false;
+    if (readyElements.empty()) return false;
 
-    auto [pos, data] = std::move(readyChunks.front());
-    readyChunks.pop();
+    auto [pos, data] = std::move(readyElements.front());
+    readyElements.pop();
 
     posOut = pos;
     dataOut = data;
@@ -57,19 +57,19 @@ void ChunkGenerationThread::run() {
 
         {
             std::unique_lock lock(queueMutex);
-            cv.wait(lock, [&] { return !positionsToGenerate.empty() || !running; });
+            cv.wait(lock, [&] { return !queueElements.empty() || !running; });
             if (!running) break;
 
-            pos = positionsToGenerate.front();
-            positionsToGenerate.pop();
+            pos = queueElements.front();
+            queueElements.pop();
         }
 
         // Génération
 
         {
-            ChunkData data = generator->generate(pos * Constants::ChunkSize);
+            ChunkData data = chunkGenerator->generate(pos * Constants::ChunkSize);
             std::lock_guard readyLock(readyMutex);
-            readyChunks.emplace(pos, data);
+            readyElements.emplace(pos, data);
         }
     }
 }

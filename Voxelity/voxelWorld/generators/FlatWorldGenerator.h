@@ -7,7 +7,7 @@
 
 #include "IWorldGenerator.h"
 
-class FlatWorldGenerator final : public IWorldGenerator {
+class FlatWorldGenerator final : public IChunkGenerator {
 public:
     BlockType generateVoxel(const glm::ivec3& position) override;
 };

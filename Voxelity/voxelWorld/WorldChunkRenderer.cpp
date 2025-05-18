@@ -69,9 +69,9 @@ void WorldChunkRenderer::prepareShader(const glm::vec3& cameraPosition,
     chunkShader->setUniform("uAmbientColor", ambientCol);
 
     // Fog
-    chunkShader->setUniform("uFogColor", glm::vec3(0.65f, 0.65f, 0.75f));
-    chunkShader->setUniform("uFogStart", Constants::ChunkSize * Constants::RenderDistance * 0.4f);
-    chunkShader->setUniform("uFogEnd", Constants::ChunkSize * Constants::RenderDistance * 1.6f);
+    chunkShader->setUniform("uFogColor", glm::vec3(0.55f, 0.55f, 0.65f));
+    chunkShader->setUniform("uFogStart", Constants::ChunkSize * Constants::RenderDistance * 0.6f);
+    chunkShader->setUniform("uFogEnd", Constants::ChunkSize * Constants::RenderDistance * 1.0f);
 }
 
 void WorldChunkRenderer::prepareTextures() const {

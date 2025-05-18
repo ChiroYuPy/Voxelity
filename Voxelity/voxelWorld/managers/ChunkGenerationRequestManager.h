@@ -13,11 +13,11 @@
 struct ChunkData;
 class ChunkGenerationThread;
 class WorldChunkData;
-class IWorldGenerator;
+class IChunkGenerator;
 
 class ChunkGenerationRequestManager {
 public:
-    explicit ChunkGenerationRequestManager(std::unique_ptr<IWorldGenerator> generator);
+    explicit ChunkGenerationRequestManager(std::unique_ptr<IChunkGenerator> generator);
     ~ChunkGenerationRequestManager();
 
     void updateChunksAround(const glm::ivec3 & playerChunkPos, WorldChunkData &worldChunkData);

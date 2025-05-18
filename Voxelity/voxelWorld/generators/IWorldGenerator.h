@@ -10,9 +10,9 @@
 struct ChunkData;
 class Chunk;
 
-class IWorldGenerator {
+class IChunkGenerator {
 public:
-    virtual ~IWorldGenerator() = default;
+    virtual ~IChunkGenerator() = default;
 
     virtual BlockType generateVoxel(const glm::ivec3& globalPos) = 0;
 
