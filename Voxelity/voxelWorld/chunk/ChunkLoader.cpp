@@ -12,7 +12,7 @@
 #include "core/Constants.h"
 #include "core/utils/Profiler.h"
 #include "Chunk.h"
-#include "threading/generation/ChunkGenerationThread.h"
+#include "threads/generation/ChunkGenerationThread.h"
 
 class ChunkGenerationThread;
 

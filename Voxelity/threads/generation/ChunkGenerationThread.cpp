@@ -4,8 +4,6 @@
 
 #include "ChunkGenerationThread.h"
 
-#include <iostream>
-
 #include "core/Constants.h"
 #include "voxelWorld/chunk/ChunkData.h"
 #include "voxelWorld/generators/IWorldGenerator.h"
