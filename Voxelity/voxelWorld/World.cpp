@@ -37,7 +37,7 @@ World::World(std::unique_ptr<IChunkMeshBuilder> mesher, std::unique_ptr<IWorldGe
     meshBuilder = std::move(mesher);
 
     chunkData = std::make_unique<WorldChunkData>();
-    chunkRenderer = std::make_unique<ChunkRenderer>();
+    chunkRenderer = std::make_unique<WorldChunkRenderer>();
     chunkLoader = std::make_unique<ChunkRequestManager>();
 
     generationThread = std::make_unique<ChunkGenerationThread>(std::move(generator));

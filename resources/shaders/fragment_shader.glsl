@@ -34,7 +34,9 @@ void main() {
     vec3 finalColor = texColor.rgb * lighting;
 
     // --- FOG ---
-    float distance = length(vWorldPos - uCameraPos);
+    vec2 camXZ = uCameraPos.xz;
+    vec2 fragXZ = vWorldPos.xz;
+    float distance = length(fragXZ - camXZ);
     float fogFactor = clamp((distance - uFogStart) / (uFogEnd - uFogStart), 0.0, 1.0);
 
     vec3 colorWithFog = mix(finalColor, uFogColor, fogFactor);

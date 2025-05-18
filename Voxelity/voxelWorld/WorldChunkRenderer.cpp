@@ -2,7 +2,7 @@
 // Created by adrian on 17/05/25.
 //
 
-#include "ChunkRenderer.h"
+#include "WorldChunkRenderer.h"
 
 #include <ranges>
 
@@ -11,7 +11,7 @@
 #include "core/utils/Profiler.h"
 #include "textures/Texture.h"
 
-ChunkRenderer::ChunkRenderer() {
+WorldChunkRenderer::WorldChunkRenderer() {
     chunkShader = std::make_unique<Shader>(
         "../resources/shaders/vertex_shader.glsl",
         "../resources/shaders/fragment_shader.glsl");
@@ -20,7 +20,7 @@ ChunkRenderer::ChunkRenderer() {
         "../resources/textures/atlas.png");
 }
 
-void ChunkRenderer::render(const WorldChunkData& chunkManager,
+void WorldChunkRenderer::render(const WorldChunkData& chunkManager,
                            const glm::vec3& cameraPosition,
                            const glm::mat4& view,
                            const glm::mat4& projection,
@@ -51,7 +51,7 @@ void ChunkRenderer::render(const WorldChunkData& chunkManager,
     }
 }
 
-void ChunkRenderer::prepareShader(const glm::vec3& cameraPosition,
+void WorldChunkRenderer::prepareShader(const glm::vec3& cameraPosition,
                                   const glm::mat4& view,
                                   const glm::mat4& projection,
                                   const glm::vec3& lightDir,
@@ -76,7 +76,7 @@ void ChunkRenderer::prepareShader(const glm::vec3& cameraPosition,
     chunkShader->setUniform("uFogEnd", Constants::ChunkSize * Constants::RenderDistance * 1.6f);
 }
 
-void ChunkRenderer::prepareTextures() const {
+void WorldChunkRenderer::prepareTextures() const {
     glActiveTexture(GL_TEXTURE0);
     textureAtlas->bind(0);
     chunkShader->setUniform("uAtlas", 0);

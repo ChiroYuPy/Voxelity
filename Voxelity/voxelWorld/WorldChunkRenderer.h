@@ -13,9 +13,9 @@
 #include "textures/Texture.h"
 #include "WorldChunkData.h"
 
-class ChunkRenderer {
+class WorldChunkRenderer {
 public:
-    ChunkRenderer();
+    WorldChunkRenderer();
 
     void render(const WorldChunkData& chunkManager,
                 const glm::vec3& cameraPosition,

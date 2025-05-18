@@ -34,16 +34,14 @@ void ChunkRequestManager::updateChunksAround(const glm::ivec3& playerChunkPos, W
         }
     }
 
-    // Suppression des chunks trop éloignés
+    // supress too far chunks
     std::vector<glm::ivec3> toRemove;
     for (const auto& chunkPtr : chunkManager.chunks | std::views::values) {
         const glm::ivec3& pos = chunkPtr->getPosition();
 
-        // Ici, y doit rester dans [0, RenderHeight) (pas négatif)
-        if (!isWithinRenderDistance(playerChunkPos, pos) ||
-            pos.y < 0 || pos.y >= Constants::RenderHeight) {
+        if (!isWithinRenderDistance(playerChunkPos, pos)) {
             toRemove.push_back(pos);
-            }
+        }
     }
 
     for (const auto& pos : toRemove) {
