@@ -8,10 +8,10 @@
 #include <iostream>
 #include <vector>
 
-#include "WorldChunkData.h"
+#include "../WorldChunkData.h"
 #include "core/Constants.h"
 #include "core/utils/Profiler.h"
-#include "chunk/Chunk.h"
+#include "../chunk/Chunk.h"
 #include "threads/generation/ChunkGenerationThread.h"
 
 class ChunkGenerationThread;

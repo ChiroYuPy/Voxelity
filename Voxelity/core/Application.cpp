@@ -13,7 +13,7 @@
 #include "listeners/ResizeListener.h"
 #include "voxelWorld/World.h"
 #include "voxelWorld/generators/NaturalWorldGenerator.h"
-#include "voxelWorld/meshers/FaceCullingMeshBuilder.h"
+#include "voxelWorld/meshBuilders/FaceCullingMeshBuilder.h"
 
 constexpr unsigned int SCREEN_WIDTH = 1280;
 constexpr unsigned int SCREEN_HEIGHT = 720;

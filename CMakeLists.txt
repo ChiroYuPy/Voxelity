@@ -35,16 +35,16 @@ add_executable(Voxelity
         Voxelity/voxelWorld/chunk/ChunkData.cpp
         Voxelity/voxelWorld/WorldChunkData.cpp
         Voxelity/voxelWorld/ChunkRenderer.cpp
-        Voxelity/voxelWorld/ChunkRequestManager.cpp
+        Voxelity/voxelWorld/managers/ChunkRequestManager.cpp
         Voxelity/listeners/ResizeListener.cpp
         Voxelity/listeners/ResizeListener.h
         Voxelity/rendering/camera/CameraProjection.cpp
         Voxelity/rendering/camera/CameraProjection.h
         Voxelity/threads/generation/ChunkGenerationThread.cpp
         Voxelity/threads/generation/ChunkGenerationThread.h
-        Voxelity/voxelWorld/meshers/IChunkMeshBuilder.h
-        Voxelity/voxelWorld/meshers/FaceCullingMeshBuilder.cpp
-        Voxelity/voxelWorld/meshers/FaceCullingMeshBuilder.h
+        Voxelity/voxelWorld/meshBuilders/IChunkMeshBuilder.h
+        Voxelity/voxelWorld/meshBuilders/FaceCullingMeshBuilder.cpp
+        Voxelity/voxelWorld/meshBuilders/FaceCullingMeshBuilder.h
         Voxelity/voxelWorld/utils/Raycaster.cpp
         Voxelity/voxelWorld/utils/Raycaster.h
         Voxelity/listeners/PlayerController.cpp

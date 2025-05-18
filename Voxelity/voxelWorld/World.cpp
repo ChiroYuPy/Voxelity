@@ -12,7 +12,7 @@
 #include "core/utils/Profiler.h"
 #include "generators/NaturalWorldGenerator.h"
 #include "math/Frustum.h"
-#include "meshers/IChunkMeshBuilder.h"
+#include "meshBuilders/IChunkMeshBuilder.h"
 
 inline int floorDiv(const int a, const int b) {
     return (a >= 0) ? (a / b) : ((a - b + 1) / b);
