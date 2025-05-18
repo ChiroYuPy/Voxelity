@@ -16,6 +16,7 @@ class IChunkMeshBuilder;
 
 enum class ChunkState {
     UnGenerated,
+    QueuedForGeneration,
     Generating,
     Generated,
     MeshDirty,

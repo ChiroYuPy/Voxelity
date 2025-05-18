@@ -91,8 +91,10 @@ void ChunkGenerationRequestManager::updateNeighbors(const glm::ivec3& pos, World
 
 void ChunkGenerationRequestManager::generateChunkAt(const glm::ivec3& pos, WorldChunkData& manager) const {
     auto chunk = std::make_unique<Chunk>(pos);
+    chunk->setState(ChunkState::QueuedForGeneration);
     manager.addChunk(std::move(chunk));
     generationThread->enqueueElement(pos);
+
 }
 
 bool ChunkGenerationRequestManager::isWithinRenderDistance(const glm::ivec3& center, const glm::ivec3& pos) {

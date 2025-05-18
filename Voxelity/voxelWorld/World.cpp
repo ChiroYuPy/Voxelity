@@ -4,6 +4,7 @@
 
 #include "voxelWorld/World.h"
 
+#include <iostream>
 #include <ranges>
 #include <utility>
 
@@ -15,6 +16,7 @@
 #include "math/Frustum.h"
 #include "meshBuilders/ChunkDataNeighborhood.h"
 #include "meshBuilders/IChunkMeshBuilder.h"
+#include "threads/meshing/ChunkMeshingThread.h"
 
 inline int floorDiv(const int a, const int b) {
     return (a >= 0) ? (a / b) : ((a - b + 1) / b);
@@ -36,16 +38,20 @@ inline int floorDiv(const int a, const int b) {
 // TODO         Minimize Shaders Calculs
 // TODO         Optimize Shaders Uniforms
 
-World::World(std::unique_ptr<IChunkMeshBuilder> mesher, std::unique_ptr<IChunkGenerator> generator) {
-    meshBuilder = std::move(mesher);
+World::World(std::unique_ptr<IChunkMeshBuilder> meshBuilder_, std::unique_ptr<IChunkGenerator> generator) {
+    meshBuilder = std::move(meshBuilder_);
 
     worldChunkData = std::make_unique<WorldChunkData>();
     chunkRenderer = std::make_unique<WorldChunkRenderer>();
-    chunkLoader = std::make_unique<ChunkGenerationRequestManager>(std::move(generator));
+    chunkGenerationRequestManager = std::make_unique<ChunkGenerationRequestManager>(std::move(generator));
 
+    // chunkMeshingThread = std::make_unique<ChunkMeshingThread>(std::move(meshBuilder_));
+    // chunkMeshingThread->start();
 }
 
-World::~World() = default;
+World::~World() {
+    // chunkMeshingThread->stop();
+}
 
 void World::render(const glm::vec3& cameraPosition,
                    const glm::mat4& view,
@@ -79,9 +85,48 @@ void World::updateMeshes() const {
 }
 
 void World::update() const {
-    chunkLoader->processReadyChunks(*worldChunkData);
+    chunkGenerationRequestManager->processReadyChunks(*worldChunkData);
     updateMeshes();
+    // enqueueDirtyChunks();
+    // processReadyMeshes();
 }
+
+/*
+void World::enqueueDirtyChunks() const {
+    for (const auto &chunkPtr: worldChunkData->chunks | std::views::values) {
+        if (!chunkPtr) continue;
+        if (!chunkPtr->isDirty() && chunkPtr->getState() != ChunkState::Generated) continue;
+
+        // Prepare neighborhood
+        std::array<Chunk*,6> neighbors = chunkPtr->getNeighbors();
+        std::array<ChunkData*,6> dataNbrs{};
+        for (int i = 0; i < 6; ++i)
+            dataNbrs[i] = neighbors[i] ? &neighbors[i]->getData() : nullptr;
+
+        ChunkDataNeighborhood neighborhood{&chunkPtr->getData(), dataNbrs};
+        chunkMeshingThread->enqueueElement(chunkPtr->getPosition(), neighborhood);
+        // mark as meshing
+        std::cout << "enqueueing" << std::endl;
+        chunkPtr->setState(ChunkState::Meshing);
+    }
+}
+
+void World::processReadyMeshes() const {
+    glm::ivec3 pos;
+    ChunkMeshData meshData;
+
+    while (chunkMeshingThread->pollReadyElements(pos, meshData)) {
+        if (!worldChunkData->hasChunkAt(pos)) continue;
+        Chunk* chunkPtr = worldChunkData->getChunkAt(pos);
+        if (!chunkPtr) continue;
+
+        if (chunkPtr->getState() != ChunkState::Meshing) continue;
+
+        chunkPtr->getMesh().upload(meshData);
+        chunkPtr->setState(ChunkState::ReadyToRender);
+    }
+}
+*/
 
 void World::updateFromPlayerPosition(const glm::ivec3& playerWorldPos) const {
     const glm::ivec3 chunkPos = {
@@ -90,5 +135,5 @@ void World::updateFromPlayerPosition(const glm::ivec3& playerWorldPos) const {
         floorDiv(playerWorldPos.z, Constants::ChunkSize)
     };
 
-    chunkLoader->updateChunksAround(chunkPos, *worldChunkData);
+    chunkGenerationRequestManager->updateChunksAround(chunkPos, *worldChunkData);
 }

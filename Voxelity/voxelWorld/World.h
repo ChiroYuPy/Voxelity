@@ -13,11 +13,12 @@
 #include "generators/IWorldGenerator.h"
 #include "threads/generation/ChunkGenerationThread.h"
 
+class ChunkMeshingThread;
 class VoxelFace;
 
 class  World {
 public:
-    explicit World(std::unique_ptr<IChunkMeshBuilder> mesher, std::unique_ptr<IChunkGenerator> generator);
+    explicit World(std::unique_ptr<IChunkMeshBuilder> meshBuilder_, std::unique_ptr<IChunkGenerator> generator);
 
     ~World();
 
@@ -30,13 +31,18 @@ public:
     void update() const;
 
 private:
+    /*
+    void enqueueDirtyChunks() const;
+    void processReadyMeshes() const;
+    */
+
     std::unique_ptr<IChunkMeshBuilder> meshBuilder;
 
     std::unique_ptr<WorldChunkData> worldChunkData;
     std::unique_ptr<WorldChunkRenderer> chunkRenderer;
-    std::unique_ptr<ChunkGenerationRequestManager> chunkLoader;
+    std::unique_ptr<ChunkGenerationRequestManager> chunkGenerationRequestManager;
 
-    //TODO meshingThread
+    // std::unique_ptr<ChunkMeshingThread> chunkMeshingThread;
 };
 
 #endif //WORLD_H
