@@ -18,7 +18,6 @@ enum class ChunkState {
     UnGenerated,
     QueuedForGeneration,
     Generating,
-    Generated,
     MeshDirty,
     Meshing,
     ReadyToRender
@@ -28,7 +27,6 @@ inline const char* toString(const ChunkState state) {
     switch (state) {
         case ChunkState::UnGenerated:    return "UnGenerated";
         case ChunkState::Generating:     return "Generating";
-        case ChunkState::Generated:      return "Generated";
         case ChunkState::MeshDirty:      return "MeshDirty";
         case ChunkState::Meshing:        return "Meshing";
         case ChunkState::ReadyToRender:  return "ReadyToRender";
@@ -40,10 +38,11 @@ class Chunk {
     glm::ivec3 position;
     ChunkData data;
     ChunkMesh mesh;
+    mutable std::mutex dataMutex;
+    mutable std::mutex meshMutex;
+    std::atomic<ChunkState> state;
 
     bool empty;
-
-    std::atomic<ChunkState> state;
 
     std::array<Chunk*, 6> neighbors = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 

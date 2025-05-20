@@ -48,6 +48,8 @@ add_executable(Voxelity
         Voxelity/voxelWorld/meshBuilders/ChunkDataNeighborhood.h
         Voxelity/voxelWorld/managers/ChunkMeshingRequestManager.cpp
         Voxelity/voxelWorld/managers/ChunkMeshingRequestManager.h
+        Voxelity/rendering/graphics/Pointer.cpp
+        Voxelity/rendering/graphics/Pointer.h
 )
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")

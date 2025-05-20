@@ -72,7 +72,7 @@ void ChunkGenerationRequestManager::processReadyChunks(WorldChunkData& worldChun
 void ChunkGenerationRequestManager::applyChunkData(const glm::ivec3& pos, const ChunkData& data, WorldChunkData& worldChunkData) {
     const auto chunk = worldChunkData.getChunkAt(pos);
     chunk->setData(data);
-    chunk->setState(ChunkState::Generated);
+    chunk->setState(ChunkState::MeshDirty);
 }
 
 void ChunkGenerationRequestManager::updateNeighbors(const glm::ivec3& pos, WorldChunkData& worldChunkData) {
@@ -82,15 +82,15 @@ void ChunkGenerationRequestManager::updateNeighbors(const glm::ivec3& pos, World
         if (Chunk* neighbor = worldChunkData.getChunkAt(neighborPos)) {
             chunk->setNeighbor(dir, neighbor);
             neighbor->setNeighbor(getOpposite(dir), chunk);
-            neighbor->setState(ChunkState::MeshDirty);
+            if (neighbor->getState() == ChunkState::ReadyToRender) neighbor->setState(ChunkState::MeshDirty);
         }
     }
 }
 
-void ChunkGenerationRequestManager::generateChunkAt(const glm::ivec3& pos, WorldChunkData& manager) const {
+void ChunkGenerationRequestManager::generateChunkAt(const glm::ivec3& pos, WorldChunkData& worldChunkData) const {
     auto chunk = std::make_unique<Chunk>(pos);
     chunk->setState(ChunkState::QueuedForGeneration);
-    manager.addChunk(std::move(chunk));
+    worldChunkData.addChunk(std::move(chunk));
     generationThread->enqueueElement(pos);
 
 }

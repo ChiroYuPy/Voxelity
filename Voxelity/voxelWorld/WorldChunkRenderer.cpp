@@ -18,6 +18,8 @@ WorldChunkRenderer::WorldChunkRenderer() {
 
     textureAtlas = std::make_unique<Texture>(
         "../resources/textures/atlas.png");
+
+    pointer = std::make_unique<Pointer>();
 }
 
 void WorldChunkRenderer::render(const WorldChunkData& chunkManager,
@@ -40,13 +42,14 @@ void WorldChunkRenderer::render(const WorldChunkData& chunkManager,
         // frustum culling (do not render chunks outer of the view area)
         const glm::vec3 chunkWorldMin = chunk.getPosition() * Constants::ChunkSize;
         constexpr glm::vec3 halfSize = glm::vec3(Constants::ChunkSize) * 0.5f;
-        const glm::vec3 center = chunkWorldMin + halfSize;
 
-        if (frustum.intersectsAABB(center, halfSize)) {
+        if (const glm::vec3 center = chunkWorldMin + halfSize; frustum.intersectsAABB(center, halfSize)) {
             chunkShader->setUniform("uChunkOffset", chunk.getWorldPosition());
             chunk.render();
         }
     }
+
+    pointer->render(view, projection);
 }
 
 void WorldChunkRenderer::prepareShader(const glm::vec3& cameraPosition,

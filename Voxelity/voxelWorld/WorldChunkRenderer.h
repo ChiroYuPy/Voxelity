@@ -12,6 +12,7 @@
 #include "math/Frustum.h"
 #include "textures/Texture.h"
 #include "WorldChunkData.h"
+#include "rendering/graphics/Pointer.h"
 
 class WorldChunkRenderer {
 public:
@@ -27,8 +28,11 @@ public:
 
 private:
     std::unique_ptr<Shader> chunkShader;
+    std::unique_ptr<Shader> pointerGlowShader;
     std::unique_ptr<Texture> textureAtlas;
     Frustum frustum;
+
+    std::unique_ptr<Pointer> pointer;
 
     void prepareShader(const glm::vec3& cameraPosition,
                        const glm::mat4& view,
