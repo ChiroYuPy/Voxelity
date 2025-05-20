@@ -10,6 +10,7 @@
 #include "listeners/CameraController.h"
 #include "events/EventDispatcher.h"
 #include "events/GLFWEventAdapter.h"
+#include "listeners/PlayerController.h"
 #include "listeners/ResizeListener.h"
 #include "voxelWorld/World.h"
 #include "voxelWorld/generators/NaturaldGenerator.h"
@@ -52,6 +53,9 @@ Application::Application()
 
     resizeListener = std::make_unique<ResizeListener>(window, cameraProjection);
     eventDispatcher->subscribe(resizeListener.get());
+
+    playerController = std::make_unique<PlayerController>(cameraView, world->getWorldChunkData());
+    eventDispatcher->subscribe(playerController.get());
 
     GLFWEventAdapter(window, *eventDispatcher);
 

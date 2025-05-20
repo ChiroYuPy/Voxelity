@@ -58,6 +58,10 @@ void World::update() const {
     chunkMeshingRequestManager->processReadyMeshes(*worldChunkData);
 }
 
+WorldChunkData& World::getWorldChunkData() const {
+    return *worldChunkData;
+}
+
 void World::updateFromPlayerPosition(const glm::ivec3& playerWorldPos) const {
     const glm::ivec3 chunkPos = {
         floorDiv(playerWorldPos.x, Constants::ChunkSize),

@@ -69,8 +69,9 @@ void WorldChunkData::setBlockAt(const glm::ivec3& pos, const BlockType type) {
     const auto it = chunks.find(chunkKey(chunkPos.x, chunkPos.y, chunkPos.z));
     if (it == chunks.end()) return;
 
-    Voxel& voxel = it->second->getData().get(localPos.x, localPos.y, localPos.z);
-    voxel.setType(type);
+    const Voxel voxel(type);
+    it->second->setState(ChunkState::MeshDirty);
+    it->second->getData().set(localPos.x, localPos.y, localPos.z, voxel);
 }
 
 void WorldChunkData::removeBlock(const glm::ivec3 pos) {

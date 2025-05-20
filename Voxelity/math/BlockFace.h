@@ -9,7 +9,7 @@
 
 #include <GLT.h>
 
-enum BlockFace : uint8_t { XP, XM, YP, YM, ZP, ZM }; // directions
+enum BlockFace : uint8_t { XP, XM, YP, YM, ZP, ZM, Unknown }; // directions
 
 constexpr BlockFace DIRECTIONS[6] = { XP, XM, YP, YM, ZP, ZM };
 constexpr BlockFace OPPOSITE_DIRECTIONS[6] = { XM, XP, YM, YP, ZM, ZP };

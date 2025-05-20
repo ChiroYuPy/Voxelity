@@ -6,71 +6,60 @@
 
 #include "../WorldChunkData.h"
 
+#include "Raycaster.h"
+#include "../WorldChunkData.h"
+
 std::optional<RaycastHit> Raycaster::castRay(const glm::vec3& origin, const glm::vec3& direction,
                                              float maxDistance, const WorldChunkData& world) {
+    glm::vec3 dir = glm::normalize(direction);
+    glm::ivec3 pos = glm::floor(origin);
 
-    glm::ivec3 originPos = glm::floor(origin);
-    glm::vec3 directionPos = glm::normalize(direction);
+    glm::ivec3 step{
+        (dir.x < 0) ? -1 : 1,
+        (dir.y < 0) ? -1 : 1,
+        (dir.z < 0) ? -1 : 1
+    };
 
-    glm::vec3 deltaDist;
-    deltaDist.x = (directionPos.x == 0.0f) ? 1e30f : std::abs(1.0f / directionPos.x);
-    deltaDist.y = (directionPos.y == 0.0f) ? 1e30f : std::abs(1.0f / directionPos.y);
-    deltaDist.z = (directionPos.z == 0.0f) ? 1e30f : std::abs(1.0f / directionPos.z);
-
-    glm::ivec3 step;
-    step.x = (directionPos.x < 0) ? -1 : 1;
-    step.y = (directionPos.y < 0) ? -1 : 1;
-    step.z = (directionPos.z < 0) ? -1 : 1;
+    glm::vec3 delta{
+        (dir.x != 0.0f) ? std::abs(1.0f / dir.x) : 1e30f,
+        (dir.y != 0.0f) ? std::abs(1.0f / dir.y) : 1e30f,
+        (dir.z != 0.0f) ? std::abs(1.0f / dir.z) : 1e30f
+    };
 
     glm::vec3 sideDist;
+    sideDist.x = (step.x > 0) ? (glm::floor(origin.x + 1.0f) - origin.x) * delta.x
+                              : (origin.x - glm::floor(origin.x)) * delta.x;
+    sideDist.y = (step.y > 0) ? (glm::floor(origin.y + 1.0f) - origin.y) * delta.y
+                              : (origin.y - glm::floor(origin.y)) * delta.y;
+    sideDist.z = (step.z > 0) ? (glm::floor(origin.z + 1.0f) - origin.z) * delta.z
+                              : (origin.z - glm::floor(origin.z)) * delta.z;
 
-    if (directionPos.x < 0) sideDist.x = (origin.x - static_cast<float>(originPos.x)) * deltaDist.x;
-    else sideDist.x = (static_cast<float>(originPos.x) + 1.0f - origin.x) * deltaDist.x;
+    float dist = 0.0f;
 
-    if (directionPos.y < 0) sideDist.y = (origin.y - static_cast<float>(originPos.y)) * deltaDist.y;
-    else sideDist.y = (static_cast<float>(originPos.y) + 1.0f - origin.y) * deltaDist.y;
-
-    if (directionPos.z < 0) sideDist.z = (origin.z - static_cast<float>(originPos.z)) * deltaDist.z;
-    else sideDist.z = (static_cast<float>(originPos.z) + 1.0f - origin.z) * deltaDist.z;
-
-    float distTravelled = 0.0f;
-
-    while (distTravelled <= maxDistance) {
-        if (world.hasBlockAt(originPos)) {
-            BlockFace face;
-
-            if (sideDist.x - deltaDist.x < sideDist.y - deltaDist.y &&
-                sideDist.x - deltaDist.x < sideDist.z - deltaDist.z) {
-                face = (step.x > 0) ? XM : XP;
-            } else if (sideDist.y - deltaDist.y < sideDist.z - deltaDist.z) {
-                face = (step.y > 0) ? YM : YP;
-            } else {
-                face = (step.z > 0) ? ZM : ZP;
-            }
-
-            return RaycastHit{originPos, face};
+    while (dist <= maxDistance) {
+        if (world.hasBlockAt(pos)) {
+            return RaycastHit{pos, BlockFace::Unknown}; // dev fallback
         }
 
-        if (sideDist.x < sideDist.y) {
-            if (sideDist.x < sideDist.z) {
-                originPos.x += step.x;
-                distTravelled = sideDist.x;
-                sideDist.x += deltaDist.x;
-            } else {
-                originPos.z += step.z;
-                distTravelled = sideDist.z;
-                sideDist.z += deltaDist.z;
-            }
+        // Détermination de l'axe minimum = face touchée
+        if (sideDist.x < sideDist.y && sideDist.x < sideDist.z) {
+            pos.x += step.x;
+            dist = sideDist.x;
+            sideDist.x += delta.x;
+            if (world.hasBlockAt(pos))
+                return RaycastHit{pos, (step.x > 0) ? BlockFace::XM : BlockFace::XP};
+        } else if (sideDist.y < sideDist.z) {
+            pos.y += step.y;
+            dist = sideDist.y;
+            sideDist.y += delta.y;
+            if (world.hasBlockAt(pos))
+                return RaycastHit{pos, (step.y > 0) ? BlockFace::YM : BlockFace::YP};
         } else {
-            if (sideDist.y < sideDist.z) {
-                originPos.y += step.y;
-                distTravelled = sideDist.y;
-                sideDist.y += deltaDist.y;
-            } else {
-                originPos.z += step.z;
-                distTravelled = sideDist.z;
-                sideDist.z += deltaDist.z;
-            }
+            pos.z += step.z;
+            dist = sideDist.z;
+            sideDist.z += delta.z;
+            if (world.hasBlockAt(pos))
+                return RaycastHit{pos, (step.z > 0) ? BlockFace::ZM : BlockFace::ZP};
         }
     }
 

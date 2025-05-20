@@ -29,6 +29,8 @@ public:
 
     void update() const;
 
+    WorldChunkData& getWorldChunkData() const;
+
 private:
     std::unique_ptr<IChunkMeshBuilder> meshBuilder;
 

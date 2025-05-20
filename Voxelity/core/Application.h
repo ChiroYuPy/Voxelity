@@ -9,6 +9,7 @@
 
 #include <memory>
 
+#include "listeners/PlayerController.h"
 #include "rendering/camera/CameraView.h"
 #include "rendering/camera/CameraProjection.h"
 
@@ -39,6 +40,7 @@ private:
     std::unique_ptr<World> world;
     std::unique_ptr<EventDispatcher> eventDispatcher;
     std::unique_ptr<CameraController> cameraController;
+    std::unique_ptr<PlayerController> playerController;
     std::unique_ptr<ResizeListener> resizeListener;
 
     float lastTime;
