@@ -11,7 +11,7 @@
 #include "voxelWorld/chunk/Chunk.h"
 #include "voxelWorld/chunk/ChunkMeshData.h"
 #include "voxelWorld/meshBuilders/ChunkDataNeighborhood.h"
-#include "voxelWorld/meshBuilders/IChunkMeshBuilder.h""
+#include "voxelWorld/meshBuilders/IChunkMeshBuilder.h"
 
 struct ChunkData;
 class Chunk;

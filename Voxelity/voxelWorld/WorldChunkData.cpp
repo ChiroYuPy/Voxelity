@@ -78,6 +78,14 @@ void WorldChunkData::removeBlock(const glm::ivec3 pos) {
     setBlockAt(pos, BlockType::Air);
 }
 
+std::vector<glm::ivec3> WorldChunkData::getAllChunkPositions() const {
+    std::vector<glm::ivec3> result;
+    for (const auto &chunk: chunks | std::views::values) {
+        result.push_back(chunk->getPosition());
+    }
+    return result;
+}
+
 void WorldChunkData::addChunk(std::unique_ptr<Chunk> chunk) {
     const glm::ivec3 pos = chunk->getPosition();
     const auto key = chunkKey(pos.x, pos.y, pos.z);

@@ -34,6 +34,7 @@ inline int floorDiv(const int a, const int b) {
 // TODO         Optimize Shaders Uniforms
 
 World::World(std::unique_ptr<IChunkMeshBuilder> meshBuilder_, std::unique_ptr<IChunkGenerator> generator) {
+
     worldChunkData = std::make_unique<WorldChunkData>();
     chunkRenderer = std::make_unique<WorldChunkRenderer>();
     chunkGenerationRequestManager = std::make_unique<ChunkGenerationRequestManager>(std::move(generator));

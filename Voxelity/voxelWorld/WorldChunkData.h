@@ -2,11 +2,12 @@
 // Created by adrian on 16/05/25.
 //
 
-#ifndef CHUNKMANAGER_H
-#define CHUNKMANAGER_H
+#ifndef WORLDCHUNKDATA_H
+#define WORLDCHUNKDATA_H
 
 #include <GLT.h>
 #include <memory>
+#include <ranges>
 #include <unordered_map>
 
 #include "chunk/Chunk.h"
@@ -29,6 +30,8 @@ public:
     void setBlockAt(const glm::ivec3& pos, BlockType type);
 
     void removeBlock(glm::ivec3 pos);
+
+    std::vector<glm::ivec3> getAllChunkPositions() const;
 };
 
-#endif //CHUNKMANAGER_H
+#endif //WORLDCHUNKDATA_H

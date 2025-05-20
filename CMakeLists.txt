@@ -50,6 +50,13 @@ add_executable(Voxelity
         Voxelity/voxelWorld/managers/ChunkMeshingRequestManager.h
         Voxelity/rendering/graphics/Pointer.cpp
         Voxelity/rendering/graphics/Pointer.h
+        Voxelity/threads/ChunkGeneratorWorker.cpp
+        Voxelity/threads/ChunkGeneratorWorker.h
+        Voxelity/threads/ThreadSafeQueue.h
+        Voxelity/threads/ChunkMesherWorker.cpp
+        Voxelity/threads/ChunkMesherWorker.h
+        Voxelity/voxelWorld/ChunkManager.cpp
+        Voxelity/voxelWorld/ChunkManager.h
 )
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
