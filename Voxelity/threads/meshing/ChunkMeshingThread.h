@@ -29,7 +29,7 @@ private:
     void run();
 
     std::thread workerThread;
-    std::atomic<bool> running = false;
+    std::atomic<bool> running{false};
 
     std::queue<std::pair<glm::ivec3, ChunkDataNeighborhood>> queueElements;
     std::mutex queueMutex;

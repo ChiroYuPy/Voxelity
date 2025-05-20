@@ -26,15 +26,11 @@ public:
 
     void render(const glm::vec3& cameraPosition, const glm::mat4 & view, const glm::mat4 & projection, const glm::vec3 & lightDirection, const glm::vec3 & lightColor, const glm::vec3 & ambientColor) const;
 
-    void updateMeshes() const;
-
     void update() const;
 
 private:
-    /*
     void enqueueDirtyChunks() const;
     void processReadyMeshes() const;
-    */
 
     std::unique_ptr<IChunkMeshBuilder> meshBuilder;
 
@@ -42,7 +38,7 @@ private:
     std::unique_ptr<WorldChunkRenderer> chunkRenderer;
     std::unique_ptr<ChunkGenerationRequestManager> chunkGenerationRequestManager;
 
-    // std::unique_ptr<ChunkMeshingThread> chunkMeshingThread;
+    std::unique_ptr<ChunkMeshingThread> chunkMeshingThread;
 };
 
 #endif //WORLD_H

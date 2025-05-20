@@ -13,8 +13,8 @@ public:
     static constexpr int ChunkArea = ChunkSize * ChunkSize;
     static constexpr int ChunkVolume = ChunkSize * ChunkSize * ChunkSize;
 
-    static constexpr int RenderDistance = 16;
-    static constexpr int WorldChunkHeight = 16;
+    static constexpr int RenderDistance = 24;
+    static constexpr int WorldChunkHeight = 1;
     static constexpr int WorldHeight = WorldChunkHeight * ChunkSize;
 
     static constexpr int VOXELS_PER_CHUNK = ChunkVolume;

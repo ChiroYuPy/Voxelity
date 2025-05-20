@@ -41,5 +41,5 @@ void main() {
 
     vec3 colorWithFog = mix(finalColor, uFogColor, fogFactor);
 
-    FragColor = vec4(colorWithFog, texColor.a);
+    FragColor = vec4(finalColor, texColor.a);
 }
