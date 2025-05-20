@@ -33,8 +33,7 @@ void ChunkGenerationRequestManager::updateChunksAround(const glm::ivec3& playerC
     for (int x = playerChunkPos.x - Constants::RenderDistance; x <= playerChunkPos.x + Constants::RenderDistance; ++x) {
         for (int y = 0; y < Constants::WorldChunkHeight; ++y) {
             for (int z = playerChunkPos.z - Constants::RenderDistance; z <= playerChunkPos.z + Constants::RenderDistance; ++z) {
-                glm::ivec3 pos{x, y, z};
-                if (!chunkManager.hasChunkAt(pos) && isWithinRenderDistance(playerChunkPos, pos)) {
+                if (glm::ivec3 pos{x, y, z}; !chunkManager.hasChunkAt(pos) && isWithinRenderDistance(playerChunkPos, pos)) {
                     generateChunkAt(pos, chunkManager);
                 }
             }
@@ -80,8 +79,7 @@ void ChunkGenerationRequestManager::updateNeighbors(const glm::ivec3& pos, World
     Chunk* chunk = worldChunkData.getChunkAt(pos);
     for (const auto& dir : DIRECTIONS) {
         const glm::ivec3 neighborPos = pos + getNormal(dir);
-        Chunk* neighbor = worldChunkData.getChunkAt(neighborPos);
-        if (neighbor) {
+        if (Chunk* neighbor = worldChunkData.getChunkAt(neighborPos)) {
             chunk->setNeighbor(dir, neighbor);
             neighbor->setNeighbor(getOpposite(dir), chunk);
             neighbor->setState(ChunkState::MeshDirty);

@@ -13,6 +13,7 @@
 #include "generators/IWorldGenerator.h"
 #include "threads/generation/ChunkGenerationThread.h"
 
+class ChunkMeshingRequestManager;
 class ChunkMeshingThread;
 class VoxelFace;
 
@@ -29,14 +30,13 @@ public:
     void update() const;
 
 private:
-    void enqueueDirtyChunks() const;
-    void processReadyMeshes() const;
-
     std::unique_ptr<IChunkMeshBuilder> meshBuilder;
 
     std::unique_ptr<WorldChunkData> worldChunkData;
     std::unique_ptr<WorldChunkRenderer> chunkRenderer;
+
     std::unique_ptr<ChunkGenerationRequestManager> chunkGenerationRequestManager;
+    std::unique_ptr<ChunkMeshingRequestManager> chunkMeshingRequestManager;
 
     std::unique_ptr<ChunkMeshingThread> chunkMeshingThread;
 };

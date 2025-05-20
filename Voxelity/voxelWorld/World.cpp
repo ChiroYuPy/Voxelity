@@ -4,19 +4,14 @@
 
 #include "voxelWorld/World.h"
 
-#include <iostream>
-#include <ranges>
 #include <utility>
 
-#include "chunk/Chunk.h"
-#include "chunk/ChunkMeshData.h"
 #include "core/Constants.h"
 #include "core/utils/Profiler.h"
 #include "generators/NaturaldGenerator.h"
+#include "managers/ChunkMeshingRequestManager.h"
 #include "math/Frustum.h"
-#include "meshBuilders/ChunkDataNeighborhood.h"
 #include "meshBuilders/IChunkMeshBuilder.h"
-#include "threads/meshing/ChunkMeshingThread.h"
 
 inline int floorDiv(const int a, const int b) {
     return (a >= 0) ? (a / b) : ((a - b + 1) / b);
@@ -43,14 +38,10 @@ World::World(std::unique_ptr<IChunkMeshBuilder> meshBuilder_, std::unique_ptr<IC
     worldChunkData = std::make_unique<WorldChunkData>();
     chunkRenderer = std::make_unique<WorldChunkRenderer>();
     chunkGenerationRequestManager = std::make_unique<ChunkGenerationRequestManager>(std::move(generator));
-
-    chunkMeshingThread = std::make_unique<ChunkMeshingThread>(std::move(meshBuilder_));
-    chunkMeshingThread->start();
+    chunkMeshingRequestManager = std::make_unique<ChunkMeshingRequestManager>(std::move(meshBuilder_));
 }
 
-World::~World() {
-    chunkMeshingThread->stop();
-}
+World::~World() = default;
 
 void World::render(const glm::vec3& cameraPosition,
                    const glm::mat4& view,
@@ -63,44 +54,9 @@ void World::render(const glm::vec3& cameraPosition,
 
 void World::update() const {
     chunkGenerationRequestManager->processReadyChunks(*worldChunkData);
-    enqueueDirtyChunks();
-    processReadyMeshes();
-}
 
-void World::enqueueDirtyChunks() const {
-    for (const auto &chunkPtr: worldChunkData->chunks | std::views::values) {
-        if (!chunkPtr) continue;
-        if (chunkPtr->getState() == ChunkState::Generated || chunkPtr->isDirty()) {
-
-            // Prepare neighborhood
-            std::array<Chunk*,6> neighbors = chunkPtr->getNeighbors();
-            std::array<ChunkData*,6> dataNbrs{};
-            for (int i = 0; i < 6; ++i)
-                dataNbrs[i] = neighbors[i] ? &neighbors[i]->getData() : nullptr;
-
-            ChunkDataNeighborhood neighborhood{&chunkPtr->getData(), dataNbrs};
-            chunkMeshingThread->enqueueElement(chunkPtr->getPosition(), neighborhood);
-            // mark as meshing
-            std::cout << "enqueueing" << std::endl;
-            chunkPtr->setState(ChunkState::Meshing);
-        }
-    }
-}
-
-void World::processReadyMeshes() const {
-    glm::ivec3 pos;
-    ChunkMeshData meshData;
-
-    while (chunkMeshingThread->pollReadyElements(pos, meshData)) {
-        if (!worldChunkData->hasChunkAt(pos)) continue;
-        Chunk* chunkPtr = worldChunkData->getChunkAt(pos);
-        if (!chunkPtr) continue;
-
-        if (chunkPtr->getState() != ChunkState::Meshing) continue;
-
-        chunkPtr->getMesh().upload(meshData);
-        chunkPtr->setState(ChunkState::ReadyToRender);
-    }
+    chunkMeshingRequestManager->enqueueDirtyChunks(*worldChunkData);
+    chunkMeshingRequestManager->processReadyMeshes(*worldChunkData);
 }
 
 void World::updateFromPlayerPosition(const glm::ivec3& playerWorldPos) const {
