@@ -28,16 +28,16 @@ ChunkMeshingRequestManager::~ChunkMeshingRequestManager() {
 void ChunkMeshingRequestManager::enqueueDirtyChunks(WorldChunkData& worldChunkData) const {
     for (const auto& chunkPtr : worldChunkData.chunks | std::views::values) {
         if (!chunkPtr) continue;
-        if (chunkPtr->getState() == ChunkState::Generated || chunkPtr->isDirty()) {
-            std::array<Chunk*, 6> neighbors = chunkPtr->getNeighbors();
-            std::array<ChunkData*, 6> dataNbrs{};
-            for (int i = 0; i < 6; ++i)
-                dataNbrs[i] = neighbors[i] ? &neighbors[i]->getData() : nullptr;
+        if (!chunkPtr->isDirty()) continue;
 
-            ChunkDataNeighborhood neighborhood{&chunkPtr->getData(), dataNbrs};
-            chunkMeshingThread->enqueueElement(chunkPtr->getPosition(), neighborhood);
-            chunkPtr->setState(ChunkState::Meshing);
-        }
+        std::array<Chunk*, 6> neighbors = chunkPtr->getNeighbors();
+        std::array<ChunkData*, 6> dataNbrs{};
+        for (int i = 0; i < 6; ++i)
+            dataNbrs[i] = neighbors[i] ? &neighbors[i]->getData() : nullptr;
+
+        ChunkDataNeighborhood neighborhood{&chunkPtr->getData(), dataNbrs};
+        chunkMeshingThread->enqueueElement(chunkPtr->getPosition(), neighborhood);
+        chunkPtr->setState(ChunkState::Meshing);
     }
 }
 
