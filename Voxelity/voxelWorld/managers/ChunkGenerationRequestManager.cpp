@@ -92,7 +92,6 @@ void ChunkGenerationRequestManager::generateChunkAt(const glm::ivec3& pos, World
     chunk->setState(ChunkState::QueuedForGeneration);
     worldChunkData.addChunk(std::move(chunk));
     generationThread->enqueueElement(pos);
-
 }
 
 bool ChunkGenerationRequestManager::isWithinRenderDistance(const glm::ivec3& center, const glm::ivec3& pos) {

@@ -53,7 +53,9 @@ std::vector<VoxelFace> FaceCullingMeshBuilder::generateFaceInstances(const Chunk
 
                 for (const BlockFace direction : DIRECTIONS) {
                     if (isFaceVisible(x, y, z, neighborhood, direction)) {
-                        faces.emplace_back(glm::ivec3(x, y, z), static_cast<int>(direction), static_cast<int>(voxel->getType()));
+                        faces.emplace_back(glm::ivec3(x, y, z),
+                            static_cast<int>(direction),
+                            static_cast<int>(voxel->getType()));
                     }
                 }
             }

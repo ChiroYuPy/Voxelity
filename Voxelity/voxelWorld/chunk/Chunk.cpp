@@ -9,7 +9,7 @@
 class IChunkMeshBuilder;
 
 Chunk::Chunk(const glm::ivec3 position)
-: position(position), empty(true), state(ChunkState::UnGenerated), neighbors() {}
+: position(position), state(ChunkState::UnGenerated), empty(true), neighbors() {}
 
 bool Chunk::isDirty() const {
     return state == ChunkState::MeshDirty;

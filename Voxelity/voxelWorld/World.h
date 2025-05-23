@@ -7,7 +7,6 @@
 
 #include <memory>
 
-#include "ChunkManager.h"
 #include "managers/ChunkGenerationRequestManager.h"
 #include "WorldChunkRenderer.h"
 #include "meshBuilders/IChunkMeshBuilder.h"

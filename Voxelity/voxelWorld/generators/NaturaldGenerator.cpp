@@ -12,7 +12,7 @@
 OS2 noise;
 
 int getHeightAt(const int x, const int z) {
-    constexpr double size = 1.0 / 64.0;
+    constexpr double size = 1.0 / 128.0;
     auto noiseValue = static_cast<float>(noise.noise2(x * size, z * size));
 
     noiseValue = (noiseValue + 1.0f) * 0.5f;
