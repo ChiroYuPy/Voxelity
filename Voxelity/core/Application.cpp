@@ -15,7 +15,6 @@
 #include "voxelWorld/World.h"
 #include "voxelWorld/generators/NaturaldGenerator.h"
 #include "voxelWorld/meshBuilders/FaceCullingMeshBuilder.h"
-#include "voxelWorld/managers/ChunkMeshingRequestManager.h"
 
 constexpr unsigned int SCREEN_WIDTH = 1920;
 constexpr unsigned int SCREEN_HEIGHT = 1080;

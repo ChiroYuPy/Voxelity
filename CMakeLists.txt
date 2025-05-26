@@ -51,6 +51,8 @@ add_executable(Voxelity
         Voxelity/rendering/graphics/Pointer.cpp
         Voxelity/rendering/graphics/Pointer.h
         Voxelity/threads/ITask.h
+        Voxelity/core/utils/Logger.cpp
+        Voxelity/core/utils/Logger.h
 )
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
