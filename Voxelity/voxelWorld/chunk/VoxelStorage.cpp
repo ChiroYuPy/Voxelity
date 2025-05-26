@@ -24,7 +24,7 @@ Voxel& VoxelStorage::operator()(const unsigned int x, const unsigned int y, cons
     return get(x, y, z);
 }
 
-[[nodiscard]] const std::array<Voxel, Constants::ChunkVolume>& VoxelStorage::getVoxels() const {
+[[nodiscard]] const std::array<Voxel, Constants::CHUNK_VOLUME>& VoxelStorage::getVoxels() const {
     return voxels;
 }
 
@@ -39,5 +39,5 @@ void VoxelStorage::clear() {
 }
 
 size_t VoxelStorage::index(const unsigned int x, const unsigned int y, const unsigned int z) {
-    return x + (y * Constants::ChunkSize) + (z * Constants::ChunkArea);
+    return x + (y * Constants::CHUNK_SIZE) + (z * Constants::CHUNK_AREA);
 }

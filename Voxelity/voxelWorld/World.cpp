@@ -65,9 +65,9 @@ ChunkStorage& World::getWorldChunkData() const {
 
 void World::updateFromPlayerPosition(const glm::ivec3& playerWorldPos) const {
     const glm::ivec3 chunkPos = {
-        floorDiv(playerWorldPos.x, Constants::ChunkSize),
-        floorDiv(playerWorldPos.y, Constants::ChunkSize),
-        floorDiv(playerWorldPos.z, Constants::ChunkSize)
+        floorDiv(playerWorldPos.x, Constants::CHUNK_SIZE),
+        floorDiv(playerWorldPos.y, Constants::CHUNK_SIZE),
+        floorDiv(playerWorldPos.z, Constants::CHUNK_SIZE)
     };
 
     chunkGenerationRequestManager->updateChunksAround(chunkPos, *worldChunkData);

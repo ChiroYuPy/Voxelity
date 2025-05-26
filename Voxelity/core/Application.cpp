@@ -12,12 +12,10 @@
 #include "events/GLFWEventAdapter.h"
 #include "listeners/PlayerController.h"
 #include "listeners/ResizeListener.h"
+#include "utils/Logger.h"
 #include "voxelWorld/World.h"
 #include "voxelWorld/generators/NaturaldGenerator.h"
 #include "voxelWorld/meshBuilders/FaceCullingMeshBuilder.h"
-
-constexpr unsigned int SCREEN_WIDTH = 1920;
-constexpr unsigned int SCREEN_HEIGHT = 1080;
 
 Application* Application::instance = nullptr;
 
@@ -26,43 +24,71 @@ Application& Application::get() {
 }
 
 Application::Application()
-: cameraView({0, Constants::WorldHeight, 0}, 0, 0), cameraProjection(Constants::FOV, Constants::NearPlane, Constants::FarPlane), lastTime(0) {
-    cameraProjection.setAspectRatio(static_cast<float>(SCREEN_WIDTH) / static_cast<float>(SCREEN_HEIGHT));
+: cameraView({0, Constants::WINDOW_HEIGHT, 0}, 0, 0), cameraProjection(Constants::FOV, Constants::NearPlane, Constants::FarPlane), lastTime(0), running(false) {
+    Logger::info("Initialisation de l'application");
+
+    cameraProjection.setAspectRatio(static_cast<float>(Constants::WINDOW_WIDTH) / static_cast<float>(Constants::WINDOW_HEIGHT));
+    Logger::debug("Aspect ratio fixé");
+
     instance = this;
-    glfwInit();
+
+    if (!glfwInit()) {
+        Logger::fatal("Impossible d'initialiser GLFW");
+    }
+    Logger::info("GLFW initialisé");
+
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Voxel Renderer", nullptr, nullptr);
+    window = glfwCreateWindow(Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT, "Voxel Renderer", nullptr, nullptr);
+    if (!window) {
+        Logger::fatal("Échec de la création de la fenêtre GLFW");
+    }
+    Logger::info("Fenêtre GLFW créée");
+
     glfwMakeContextCurrent(window);
     glfwSwapInterval(0);
-    gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
+    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
+        Logger::fatal("Échec de l'initialisation de GLAD");
+    }
+    Logger::info("GLAD initialisé");
 
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_CCW);
 
+    Logger::info("OpenGL configuré (clear color, depth test, cull face)");
+
     world = std::make_unique<World>(std::make_unique<FaceCullingMeshBuilder>(), std::make_unique<NaturaldGenerator>());
+    Logger::info("Monde voxel initialisé");
 
     eventDispatcher = std::make_unique<EventDispatcher>();
+    Logger::info("Event dispatcher créé");
 
     cameraController = std::make_unique<CameraController>(window, cameraView);
     eventDispatcher->subscribe(cameraController.get());
+    Logger::info("CameraController abonné aux événements");
 
     resizeListener = std::make_unique<ResizeListener>(window, cameraProjection);
     eventDispatcher->subscribe(resizeListener.get());
+    Logger::info("ResizeListener abonné aux événements");
 
     playerController = std::make_unique<PlayerController>(cameraView, world->getWorldChunkData());
     eventDispatcher->subscribe(playerController.get());
+    Logger::info("PlayerController abonné aux événements");
 
     GLFWEventAdapter(window, *eventDispatcher);
+    Logger::info("Adaptateur d'événements GLFW configuré");
 
     world->updateFromPlayerPosition(cameraView.getPosition());
+    Logger::info("Mise à jour initiale du monde depuis la position du joueur");
 }
 
 Application::~Application() {
+    Logger::info("Destruction de l'application");
+
     world.reset();
     eventDispatcher.reset();
     cameraController.reset();
@@ -70,10 +96,13 @@ Application::~Application() {
 
     glfwDestroyWindow(window);
     glfwTerminate();
+
+    Logger::info("Ressources GLFW libérées");
 }
 
 void Application::update() {
     PROFILE_FUNCTION();
+
     const auto currentTime = static_cast<float>(glfwGetTime());
     const float deltaTime = currentTime - lastTime;
     lastTime = currentTime;
@@ -83,13 +112,15 @@ void Application::update() {
 
     frames++;
     if (currentTime - lastPrint >= 1.0f) {
-        std::cout << "FPS: " << frames << std::endl;
+        Logger::info("FPS: " + std::to_string(frames));
         frames = 0;
         lastPrint = currentTime;
     }
 
     cameraController->update(deltaTime);
+
     world->updateFromPlayerPosition(cameraView.getPosition());
+
     world->update();
 }
 
@@ -110,11 +141,16 @@ void Application::render() {
 }
 
 void Application::run() {
-    while (!glfwWindowShouldClose(window)) {
+    Logger::separator("Game Loop");
+    Logger::info("Démarrage de la boucle principale");
+    running = true;
+    while (running) {
         PROFILE_SCOPE("MainLoop");
         glfwPollEvents();
-
         update();
         render();
+
+        running = !glfwWindowShouldClose(window);
     }
+    Logger::info("Exited game loop.");
 }

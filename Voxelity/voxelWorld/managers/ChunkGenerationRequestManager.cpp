@@ -25,16 +25,16 @@ ChunkGenerationRequestManager::~ChunkGenerationRequestManager() {
     generationThread->stop();
 }
 
-void ChunkGenerationRequestManager::updateChunksAround(const glm::ivec3& playerChunkPos, ChunkStorage& chunkManager) {
+void ChunkGenerationRequestManager::updateChunksAround(const glm::ivec3& playerChunkPos, ChunkStorage& worldChunkData) {
     if (lastChunkPosition && *lastChunkPosition == playerChunkPos) return;
     lastChunkPosition = playerChunkPos;
 
     // load missing chunks in the area
-    for (int x = playerChunkPos.x - Constants::RenderDistance; x <= playerChunkPos.x + Constants::RenderDistance; ++x) {
-        for (int y = 0; y < Constants::WorldChunkHeight; ++y) {
-            for (int z = playerChunkPos.z - Constants::RenderDistance; z <= playerChunkPos.z + Constants::RenderDistance; ++z) {
-                if (glm::ivec3 pos{x, y, z}; !chunkManager.hasChunkAt(pos) && isWithinRenderDistance(playerChunkPos, pos)) {
-                    generateChunkAt(pos, chunkManager);
+    for (int x = playerChunkPos.x - Constants::RENDER_DISTANCE; x <= playerChunkPos.x + Constants::RENDER_DISTANCE; ++x) {
+        for (int y = 0; y < Constants::WORLD_HEIGHT; ++y) {
+            for (int z = playerChunkPos.z - Constants::RENDER_DISTANCE; z <= playerChunkPos.z + Constants::RENDER_DISTANCE; ++z) {
+                if (glm::ivec3 pos{x, y, z}; !worldChunkData.hasChunkAt(pos) && isWithinRenderDistance(playerChunkPos, pos)) {
+                    generateChunkAt(pos, worldChunkData);
                 }
             }
         }
@@ -42,7 +42,7 @@ void ChunkGenerationRequestManager::updateChunksAround(const glm::ivec3& playerC
 
     // supress too far chunks from the area
     std::vector<glm::ivec3> toRemove;
-    for (const auto& chunkPtr : chunkManager.chunks | std::views::values) {
+    for (const auto& chunkPtr : worldChunkData.chunks | std::views::values) {
         const glm::ivec3& pos = chunkPtr->getPosition();
 
         if (!isWithinRenderDistance(playerChunkPos, pos)) {
@@ -51,11 +51,11 @@ void ChunkGenerationRequestManager::updateChunksAround(const glm::ivec3& playerC
     }
 
     for (const auto& pos : toRemove) {
-        chunkManager.removeChunk(pos);
+        worldChunkData.removeChunk(pos);
     }
 
-    std::cout << "Chunks loaded: " << chunkManager.chunks.size()
-              << " | Memory usage: " << static_cast<float>(chunkManager.chunks.size()) * 0.015625f << " MB\n";
+    std::cout << "Chunks loaded: " << worldChunkData.chunks.size()
+              << " | Memory usage: " << static_cast<float>(worldChunkData.chunks.size()) * 0.015625f << " MB\n";
 }
 
 void ChunkGenerationRequestManager::processReadyChunks(ChunkStorage& worldChunkData) const {
@@ -97,5 +97,5 @@ void ChunkGenerationRequestManager::generateChunkAt(const glm::ivec3& pos, Chunk
 bool ChunkGenerationRequestManager::isWithinRenderDistance(const glm::ivec3& center, const glm::ivec3& pos) {
     const int dx = pos.x - center.x;
     const int dz = pos.z - center.z;
-    return dx * dx + dz * dz <= Constants::RenderDistance * Constants::RenderDistance;
+    return dx * dx + dz * dz <= Constants::RENDER_DISTANCE * Constants::RENDER_DISTANCE;
 }

@@ -38,7 +38,7 @@ glm::ivec3 Chunk::getPosition() const {
 }
 
 glm::ivec3 Chunk::getWorldPosition() const {
-    return position * Constants::ChunkSize;
+    return position * Constants::CHUNK_SIZE;
 }
 
 VoxelStorage& Chunk::getData() {

@@ -17,7 +17,7 @@ struct VoxelStorage {
     const Voxel& operator()(unsigned int x, unsigned int y, unsigned int z) const;
     Voxel& operator()(unsigned int x, unsigned int y, unsigned int z);
 
-    [[nodiscard]] const std::array<Voxel, Constants::ChunkVolume>& getVoxels() const;
+    [[nodiscard]] const std::array<Voxel, Constants::CHUNK_VOLUME>& getVoxels() const;
 
     void fill(BlockType type);
 
@@ -26,7 +26,7 @@ struct VoxelStorage {
 private:
     static size_t index(unsigned int x, unsigned int y, unsigned int z);
 
-    std::array<Voxel, Constants::ChunkVolume> voxels;
+    std::array<Voxel, Constants::CHUNK_VOLUME> voxels;
 };
 
 #endif //CHUNKDATA_H

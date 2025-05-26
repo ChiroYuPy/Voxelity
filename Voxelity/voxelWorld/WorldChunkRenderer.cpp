@@ -40,8 +40,8 @@ void WorldChunkRenderer::render(const ChunkStorage& chunkManager,
         const auto& chunk = *chunkPtr;
 
         // frustum culling (do not render chunks outer of the view area)
-        const glm::vec3 chunkWorldMin = chunk.getPosition() * Constants::ChunkSize;
-        constexpr glm::vec3 halfSize = glm::vec3(Constants::ChunkSize) * 0.5f;
+        const glm::vec3 chunkWorldMin = chunk.getPosition() * Constants::CHUNK_SIZE;
+        constexpr glm::vec3 halfSize = glm::vec3(Constants::CHUNK_SIZE) * 0.5f;
 
         if (const glm::vec3 center = chunkWorldMin + halfSize; frustum.intersectsAABB(center, halfSize)) {
             chunkShader->setUniform("uChunkOffset", chunk.getWorldPosition());
@@ -73,8 +73,8 @@ void WorldChunkRenderer::prepareShader(const glm::vec3& cameraPosition,
 
     // Fog
     chunkShader->setUniform("uFogColor", glm::vec3(0.55f, 0.55f, 0.65f));
-    chunkShader->setUniform("uFogStart", Constants::ChunkSize * Constants::RenderDistance * 0.6f);
-    chunkShader->setUniform("uFogEnd", Constants::ChunkSize * Constants::RenderDistance * 1.f);
+    chunkShader->setUniform("uFogStart", Constants::CHUNK_SIZE * Constants::RENDER_DISTANCE * 0.6f);
+    chunkShader->setUniform("uFogEnd", Constants::CHUNK_SIZE * Constants::RENDER_DISTANCE * 1.f);
 }
 
 void WorldChunkRenderer::prepareTextures() const {

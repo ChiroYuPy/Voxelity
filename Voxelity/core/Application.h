@@ -44,6 +44,8 @@ private:
     std::unique_ptr<ResizeListener> resizeListener;
 
     float lastTime;
+
+    bool running;
 };
 
 #endif //APPLICATION_H

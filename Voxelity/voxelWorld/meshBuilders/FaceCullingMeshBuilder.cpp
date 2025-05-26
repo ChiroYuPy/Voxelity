@@ -19,9 +19,9 @@ bool FaceCullingMeshBuilder::isFaceVisible(const int x, const int y, const int z
     glm::ivec3 neighborPos = { x + offset.x, y + offset.y, z + offset.z };
 
     // Case 1: neighborPos inside center chunk
-    if (neighborPos.x >= 0 && neighborPos.x < Constants::ChunkSize &&
-        neighborPos.y >= 0 && neighborPos.y < Constants::ChunkSize &&
-        neighborPos.z >= 0 && neighborPos.z < Constants::ChunkSize) {
+    if (neighborPos.x >= 0 && neighborPos.x < Constants::CHUNK_SIZE &&
+        neighborPos.y >= 0 && neighborPos.y < Constants::CHUNK_SIZE &&
+        neighborPos.z >= 0 && neighborPos.z < Constants::CHUNK_SIZE) {
         const Voxel voxel = neighborhood.getCenter()->get(neighborPos.x, neighborPos.y, neighborPos.z);
         return !voxel.isSolid();
         }
@@ -30,13 +30,13 @@ bool FaceCullingMeshBuilder::isFaceVisible(const int x, const int y, const int z
     const VoxelStorage* neighborChunk = neighborhood.getNeighbor(direction);
     if (!neighborChunk) return true;
 
-    if (neighborPos.x < 0) neighborPos.x += Constants::ChunkSize;
-    if (neighborPos.y < 0) neighborPos.y += Constants::ChunkSize;
-    if (neighborPos.z < 0) neighborPos.z += Constants::ChunkSize;
+    if (neighborPos.x < 0) neighborPos.x += Constants::CHUNK_SIZE;
+    if (neighborPos.y < 0) neighborPos.y += Constants::CHUNK_SIZE;
+    if (neighborPos.z < 0) neighborPos.z += Constants::CHUNK_SIZE;
 
-    neighborPos.x %= Constants::ChunkSize;
-    neighborPos.y %= Constants::ChunkSize;
-    neighborPos.z %= Constants::ChunkSize;
+    neighborPos.x %= Constants::CHUNK_SIZE;
+    neighborPos.y %= Constants::CHUNK_SIZE;
+    neighborPos.z %= Constants::CHUNK_SIZE;
 
     const Voxel voxel = neighborChunk->get(neighborPos.x, neighborPos.y, neighborPos.z);
     return !voxel.isSolid();
@@ -45,9 +45,9 @@ bool FaceCullingMeshBuilder::isFaceVisible(const int x, const int y, const int z
 std::vector<VoxelFace> FaceCullingMeshBuilder::generateFaceInstances(const ChunkDataNeighborhood& neighborhood) {
     std::vector<VoxelFace> faces;
 
-    for (int z = 0; z < Constants::ChunkSize; ++z)
-        for (int y = 0; y < Constants::ChunkSize; ++y)
-            for (int x = 0; x < Constants::ChunkSize; ++x) {
+    for (int z = 0; z < Constants::CHUNK_SIZE; ++z)
+        for (int y = 0; y < Constants::CHUNK_SIZE; ++y)
+            for (int x = 0; x < Constants::CHUNK_SIZE; ++x) {
                 const Voxel* voxel = &neighborhood.getCenter()->get(x, y, z);
                 if (!voxel->isSolid()) continue;
 

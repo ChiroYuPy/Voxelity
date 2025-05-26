@@ -29,7 +29,7 @@ namespace {
     };
 
     ChunkVoxelPos decomposeWorldPos(const glm::ivec3& worldPos) {
-        constexpr int cs = Constants::ChunkSize;
+        constexpr int cs = Constants::CHUNK_SIZE;
 
         const int cx = floorDiv(worldPos.x, cs);
         const int cy = floorDiv(worldPos.y, cs);

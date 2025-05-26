@@ -67,7 +67,7 @@ void ChunkGenerationThread::run() {
         // Génération
 
         {
-            VoxelStorage data = chunkGenerator->generate(pos * Constants::ChunkSize);
+            VoxelStorage data = chunkGenerator->generate(pos * Constants::CHUNK_SIZE);
             std::lock_guard readyLock(readyMutex);
             readyElements.emplace(pos, data);
         }
