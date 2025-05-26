@@ -35,7 +35,7 @@ inline int floorDiv(const int a, const int b) {
 
 World::World(std::unique_ptr<IChunkMeshBuilder> meshBuilder_, std::unique_ptr<IChunkGenerator> generator) {
 
-    worldChunkData = std::make_unique<WorldChunkData>();
+    worldChunkData = std::make_unique<ChunkStorage>();
     chunkRenderer = std::make_unique<WorldChunkRenderer>();
     chunkGenerationRequestManager = std::make_unique<ChunkGenerationRequestManager>(std::move(generator));
     chunkMeshingRequestManager = std::make_unique<ChunkMeshingRequestManager>(std::move(meshBuilder_));
@@ -59,7 +59,7 @@ void World::update() const {
     chunkMeshingRequestManager->processReadyMeshes(*worldChunkData);
 }
 
-WorldChunkData& World::getWorldChunkData() const {
+ChunkStorage& World::getWorldChunkData() const {
     return *worldChunkData;
 }
 

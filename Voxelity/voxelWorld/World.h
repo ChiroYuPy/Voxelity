@@ -29,13 +29,13 @@ public:
 
     void update() const;
 
-    WorldChunkData& getWorldChunkData() const;
+    ChunkStorage& getWorldChunkData() const;
 
 private:
 
     std::unique_ptr<IChunkMeshBuilder> meshBuilder;
 
-    std::unique_ptr<WorldChunkData> worldChunkData;
+    std::unique_ptr<ChunkStorage> worldChunkData;
     std::unique_ptr<WorldChunkRenderer> chunkRenderer;
 
     std::unique_ptr<ChunkGenerationRequestManager> chunkGenerationRequestManager;

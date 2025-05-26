@@ -2,7 +2,7 @@
 // Created by adrian on 16/05/25.
 //
 
-#include "WorldChunkData.h"
+#include "ChunkStorage.h"
 
 #include "chunk/Chunk.h"
 #include "core/Application.h"
@@ -43,28 +43,28 @@ namespace {
     }
 }
 
-Chunk* WorldChunkData::getChunkAt(const glm::ivec3& pos) {
+Chunk* ChunkStorage::getChunkAt(const glm::ivec3& pos) {
     const auto key = chunkKey(pos.x, pos.y, pos.z);
     const auto it = chunks.find(key);
     return (it != chunks.end()) ? it->second.get() : nullptr;
 }
 
-bool WorldChunkData::hasChunkAt(const glm::ivec3& pos) const {
+bool ChunkStorage::hasChunkAt(const glm::ivec3& pos) const {
     const auto key = chunkKey(pos.x, pos.y, pos.z);
     return chunks.contains(key);
 }
 
-bool WorldChunkData::hasBlockAt(const glm::ivec3& pos) const {
+bool ChunkStorage::hasBlockAt(const glm::ivec3& pos) const {
     const Voxel* voxel = getVoxelAt(pos);
     return voxel && voxel->getType() != BlockType::Air;
 }
 
-BlockType WorldChunkData::getBlockAt(const glm::ivec3& pos) const {
+BlockType ChunkStorage::getBlockAt(const glm::ivec3& pos) const {
     const Voxel* voxel = getVoxelAt(pos);
     return voxel ? voxel->getType() : BlockType::Air;
 }
 
-void WorldChunkData::setBlockAt(const glm::ivec3& pos, const BlockType type) {
+void ChunkStorage::setBlockAt(const glm::ivec3& pos, const BlockType type) {
     const auto [chunkPos, localPos] = decomposeWorldPos(pos);
     const auto it = chunks.find(chunkKey(chunkPos.x, chunkPos.y, chunkPos.z));
     if (it == chunks.end()) return;
@@ -74,11 +74,11 @@ void WorldChunkData::setBlockAt(const glm::ivec3& pos, const BlockType type) {
     it->second->getData().set(localPos.x, localPos.y, localPos.z, voxel);
 }
 
-void WorldChunkData::removeBlock(const glm::ivec3 pos) {
+void ChunkStorage::removeBlock(const glm::ivec3 pos) {
     setBlockAt(pos, BlockType::Air);
 }
 
-std::vector<glm::ivec3> WorldChunkData::getAllChunkPositions() const {
+std::vector<glm::ivec3> ChunkStorage::getAllChunkPositions() const {
     std::vector<glm::ivec3> result;
     for (const auto &chunk: chunks | std::views::values) {
         result.push_back(chunk->getPosition());
@@ -86,18 +86,18 @@ std::vector<glm::ivec3> WorldChunkData::getAllChunkPositions() const {
     return result;
 }
 
-void WorldChunkData::addChunk(std::unique_ptr<Chunk> chunk) {
+void ChunkStorage::addChunk(std::unique_ptr<Chunk> chunk) {
     const glm::ivec3 pos = chunk->getPosition();
     const auto key = chunkKey(pos.x, pos.y, pos.z);
     chunks[key] = std::move(chunk);
 }
 
-void WorldChunkData::removeChunk(const glm::ivec3& pos) {
+void ChunkStorage::removeChunk(const glm::ivec3& pos) {
     const auto key = chunkKey(pos.x, pos.y, pos.z);
     chunks.erase(key);
 }
 
-const Voxel* WorldChunkData::getVoxelAt(const glm::ivec3& worldPos) const {
+const Voxel* ChunkStorage::getVoxelAt(const glm::ivec3& worldPos) const {
     const auto [chunkPos, localPos] = decomposeWorldPos(worldPos);
     const auto it = chunks.find(chunkKey(chunkPos.x, chunkPos.y, chunkPos.z));
     if (it == chunks.end()) return nullptr;

@@ -8,7 +8,7 @@
 
 #include "math/BlockFace.h"
 
-struct ChunkData;
+struct VoxelStorage;
 
 /**
  * @brief Holds a chunk's data and its 6 neighbor chunks' data.
@@ -29,13 +29,13 @@ struct ChunkDataNeighborhood {
      * @param centerChunk Pointer to the center chunk's data.
      * @param neighborsArray Array of pointers to the 6 neighbor chunks' data.
      */
-    ChunkDataNeighborhood(ChunkData* centerChunk, const std::array<ChunkData*, 6>& neighborsArray);
+    ChunkDataNeighborhood(VoxelStorage* centerChunk, const std::array<VoxelStorage*, 6>& neighborsArray);
 
     /**
      * @brief Get the pointer to the center chunk data.
      * @return ChunkData* Pointer to center chunk.
      */
-    [[nodiscard]] ChunkData* getCenter() const {
+    [[nodiscard]] VoxelStorage* getCenter() const {
         return center;
     }
 
@@ -44,11 +44,11 @@ struct ChunkDataNeighborhood {
      * @param direction The face direction of the neighbor chunk.
      * @return ChunkData* Pointer to the neighbor chunk or nullptr if not available.
      */
-    [[nodiscard]] ChunkData* getNeighbor(BlockFace direction) const;
+    [[nodiscard]] VoxelStorage* getNeighbor(BlockFace direction) const;
 
 private:
-    ChunkData* center;                       ///< Pointer to center chunk data
-    std::array<ChunkData*, 6> neighbors{};  ///< Array of pointers to neighbor chunks in 6 directions
+    VoxelStorage* center;                       ///< Pointer to center chunk data
+    std::array<VoxelStorage*, 6> neighbors{};  ///< Array of pointers to neighbor chunks in 6 directions
 };
 
 #endif //CHUNKDATANEIGHBORHOOD_H

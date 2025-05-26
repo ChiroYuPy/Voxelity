@@ -6,8 +6,8 @@
 
 #include "../chunk/Chunk.h"
 
-ChunkData IChunkGenerator::generate(const glm::ivec3 globalChunkPos) {
-    auto data = ChunkData();
+VoxelStorage IChunkGenerator::generate(const glm::ivec3 globalChunkPos) {
+    auto data = VoxelStorage();
     for (int x = 0; x < Constants::ChunkSize; x++) {
         for (int y = 0; y < Constants::ChunkSize; y++) {
             for (int z = 0; z < Constants::ChunkSize; z++) {

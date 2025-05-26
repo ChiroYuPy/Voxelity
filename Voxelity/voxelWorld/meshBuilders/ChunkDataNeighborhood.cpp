@@ -7,9 +7,9 @@
 ChunkDataNeighborhood::ChunkDataNeighborhood()
 : center(nullptr) {}
 
-ChunkDataNeighborhood::ChunkDataNeighborhood(ChunkData* centerChunk, const std::array<ChunkData*, 6>& neighborsArray)
+ChunkDataNeighborhood::ChunkDataNeighborhood(VoxelStorage* centerChunk, const std::array<VoxelStorage*, 6>& neighborsArray)
 : center(centerChunk), neighbors(neighborsArray) {}
 
-ChunkData* ChunkDataNeighborhood::getNeighbor(const BlockFace direction) const {
+VoxelStorage* ChunkDataNeighborhood::getNeighbor(const BlockFace direction) const {
     return neighbors[static_cast<int>(direction)];
 }

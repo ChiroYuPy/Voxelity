@@ -8,15 +8,15 @@
 #include <memory>
 #include "threads/meshing/ChunkMeshingThread.h"
 
-class WorldChunkData;
+class ChunkStorage;
 
 class ChunkMeshingRequestManager {
 public:
     explicit ChunkMeshingRequestManager(std::unique_ptr<IChunkMeshBuilder> meshBuilder);
     ~ChunkMeshingRequestManager();
 
-    void enqueueDirtyChunks(WorldChunkData& worldChunkData) const;
-    void processReadyMeshes(WorldChunkData& worldChunkData) const;
+    void enqueueDirtyChunks(ChunkStorage& worldChunkData) const;
+    void processReadyMeshes(ChunkStorage& worldChunkData) const;
 
 private:
     std::unique_ptr<ChunkMeshingThread> chunkMeshingThread;

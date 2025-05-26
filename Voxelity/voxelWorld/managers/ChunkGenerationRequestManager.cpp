@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "voxelWorld/generators/IWorldGenerator.h"
-#include "voxelWorld/WorldChunkData.h"
+#include "voxelWorld/ChunkStorage.h"
 #include "core/Constants.h"
 #include "core/utils/Profiler.h"
 #include "voxelWorld/chunk/Chunk.h"
@@ -25,7 +25,7 @@ ChunkGenerationRequestManager::~ChunkGenerationRequestManager() {
     generationThread->stop();
 }
 
-void ChunkGenerationRequestManager::updateChunksAround(const glm::ivec3& playerChunkPos, WorldChunkData& chunkManager) {
+void ChunkGenerationRequestManager::updateChunksAround(const glm::ivec3& playerChunkPos, ChunkStorage& chunkManager) {
     if (lastChunkPosition && *lastChunkPosition == playerChunkPos) return;
     lastChunkPosition = playerChunkPos;
 
@@ -58,9 +58,9 @@ void ChunkGenerationRequestManager::updateChunksAround(const glm::ivec3& playerC
               << " | Memory usage: " << static_cast<float>(chunkManager.chunks.size()) * 0.015625f << " MB\n";
 }
 
-void ChunkGenerationRequestManager::processReadyChunks(WorldChunkData& worldChunkData) const {
+void ChunkGenerationRequestManager::processReadyChunks(ChunkStorage& worldChunkData) const {
     glm::ivec3 pos;
-    ChunkData data;
+    VoxelStorage data;
     while (generationThread->pollReadyElements(pos, data)) {
         if (!worldChunkData.hasChunkAt(pos)) continue;
 
@@ -69,13 +69,13 @@ void ChunkGenerationRequestManager::processReadyChunks(WorldChunkData& worldChun
     }
 }
 
-void ChunkGenerationRequestManager::applyChunkData(const glm::ivec3& pos, const ChunkData& data, WorldChunkData& worldChunkData) {
+void ChunkGenerationRequestManager::applyChunkData(const glm::ivec3& pos, const VoxelStorage& data, ChunkStorage& worldChunkData) {
     const auto chunk = worldChunkData.getChunkAt(pos);
     chunk->setData(data);
     chunk->setState(ChunkState::MeshDirty);
 }
 
-void ChunkGenerationRequestManager::updateNeighbors(const glm::ivec3& pos, WorldChunkData& worldChunkData) {
+void ChunkGenerationRequestManager::updateNeighbors(const glm::ivec3& pos, ChunkStorage& worldChunkData) {
     Chunk* chunk = worldChunkData.getChunkAt(pos);
     for (const auto& dir : DIRECTIONS) {
         const glm::ivec3 neighborPos = pos + getNormal(dir);
@@ -87,7 +87,7 @@ void ChunkGenerationRequestManager::updateNeighbors(const glm::ivec3& pos, World
     }
 }
 
-void ChunkGenerationRequestManager::generateChunkAt(const glm::ivec3& pos, WorldChunkData& worldChunkData) const {
+void ChunkGenerationRequestManager::generateChunkAt(const glm::ivec3& pos, ChunkStorage& worldChunkData) const {
     auto chunk = std::make_unique<Chunk>(pos);
     chunk->setState(ChunkState::QueuedForGeneration);
     worldChunkData.addChunk(std::move(chunk));

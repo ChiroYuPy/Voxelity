@@ -8,7 +8,7 @@
 #include <atomic>
 #include <GLT.h>
 
-#include "ChunkData.h"
+#include "VoxelStorage.h"
 #include "math/BlockFace.h"
 #include "ChunkMesh.h"
 
@@ -36,7 +36,7 @@ inline const char* toString(const ChunkState state) {
 
 class Chunk {
     glm::ivec3 position;
-    ChunkData data;
+    VoxelStorage data;
     ChunkMesh mesh;
     mutable std::mutex dataMutex;
     mutable std::mutex meshMutex;
@@ -54,15 +54,15 @@ public:
     [[nodiscard]] glm::ivec3 getPosition() const;
     [[nodiscard]] glm::ivec3 getWorldPosition() const;
 
-    [[nodiscard]] ChunkData& getData();
+    [[nodiscard]] VoxelStorage& getData();
 
-    [[nodiscard]] const ChunkData &getData() const;
+    [[nodiscard]] const VoxelStorage &getData() const;
 
     ChunkMesh &getMesh();
 
     [[nodiscard]] const ChunkMesh &getMesh() const;
 
-    void setData(const ChunkData& newData);
+    void setData(const VoxelStorage& newData);
 
     void setMeshData(const ChunkMeshData& newMeshData);
 

@@ -6,7 +6,7 @@
 
 #include "ChunkDataNeighborhood.h"
 #include "core/Constants.h"
-#include "voxelWorld/chunk/ChunkData.h"
+#include "voxelWorld/chunk/VoxelStorage.h"
 #include "voxelWorld/chunk/Voxel.h"
 
 std::vector<VoxelFace> FaceCullingMeshBuilder::mesh(const ChunkDataNeighborhood& neighborhood) {
@@ -27,7 +27,7 @@ bool FaceCullingMeshBuilder::isFaceVisible(const int x, const int y, const int z
         }
 
     // Case 2: neighborPos outside center chunk, sample neighbor chunk
-    const ChunkData* neighborChunk = neighborhood.getNeighbor(direction);
+    const VoxelStorage* neighborChunk = neighborhood.getNeighbor(direction);
     if (!neighborChunk) return true;
 
     if (neighborPos.x < 0) neighborPos.x += Constants::ChunkSize;

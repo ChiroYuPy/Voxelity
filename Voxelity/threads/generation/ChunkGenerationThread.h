@@ -11,7 +11,7 @@
 #include <GLT.h>
 
 class IChunkGenerator;
-struct ChunkData;
+struct VoxelStorage;
 
 class ChunkGenerationThread {
 public:
@@ -23,7 +23,7 @@ public:
 
     void enqueueElement(const glm::ivec3& pos);
 
-    bool pollReadyElements(glm::ivec3& posOut, ChunkData& dataOut);
+    bool pollReadyElements(glm::ivec3& posOut, VoxelStorage& dataOut);
 private:
     void run();
 
@@ -34,7 +34,7 @@ private:
     std::mutex queueMutex;
     std::condition_variable cv;
 
-    std::queue<std::pair<glm::ivec3, ChunkData>> readyElements;
+    std::queue<std::pair<glm::ivec3, VoxelStorage>> readyElements;
     std::mutex readyMutex;
 
     std::unique_ptr<IChunkGenerator> chunkGenerator;

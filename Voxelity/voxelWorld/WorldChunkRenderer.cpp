@@ -22,7 +22,7 @@ WorldChunkRenderer::WorldChunkRenderer() {
     pointer = std::make_unique<Pointer>();
 }
 
-void WorldChunkRenderer::render(const WorldChunkData& chunkManager,
+void WorldChunkRenderer::render(const ChunkStorage& chunkManager,
                            const glm::vec3& cameraPosition,
                            const glm::mat4& view,
                            const glm::mat4& projection,

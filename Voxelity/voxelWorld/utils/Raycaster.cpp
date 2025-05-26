@@ -4,13 +4,13 @@
 
 #include "Raycaster.h"
 
-#include "../WorldChunkData.h"
+#include "../ChunkStorage.h"
 
 #include "Raycaster.h"
-#include "../WorldChunkData.h"
+#include "../ChunkStorage.h"
 
 std::optional<RaycastHit> Raycaster::castRay(const glm::vec3& origin, const glm::vec3& direction,
-                                             float maxDistance, const WorldChunkData& world) {
+                                             float maxDistance, const ChunkStorage& world) {
     glm::vec3 dir = glm::normalize(direction);
     glm::ivec3 pos = glm::floor(origin);
 

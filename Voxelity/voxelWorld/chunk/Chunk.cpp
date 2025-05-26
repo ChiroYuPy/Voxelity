@@ -41,11 +41,11 @@ glm::ivec3 Chunk::getWorldPosition() const {
     return position * Constants::ChunkSize;
 }
 
-ChunkData& Chunk::getData() {
+VoxelStorage& Chunk::getData() {
     return data;
 }
 
-const ChunkData& Chunk::getData() const {
+const VoxelStorage& Chunk::getData() const {
     return data;
 }
 
@@ -57,7 +57,7 @@ const ChunkMesh& Chunk::getMesh() const {
     return mesh;
 }
 
-void Chunk::setData(const ChunkData& newData) {
+void Chunk::setData(const VoxelStorage& newData) {
     data = newData;
     updateEmptyFlag();
 }

@@ -4,7 +4,7 @@
 
 #include "ChunkMeshingThread.h"
 
-#include "voxelWorld/chunk/ChunkData.h"
+#include "voxelWorld/chunk/VoxelStorage.h"
 #include "voxelWorld/chunk/ChunkMeshData.h"
 #include "voxelWorld/meshBuilders/IChunkMeshBuilder.h"
 #include "voxelWorld/meshBuilders/ChunkDataNeighborhood.h"

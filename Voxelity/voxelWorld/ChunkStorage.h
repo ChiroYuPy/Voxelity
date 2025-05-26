@@ -14,7 +14,7 @@
 
 using ChunkKey = unsigned long;
 
-class WorldChunkData {
+class ChunkStorage {
 public:
     std::unordered_map<ChunkKey, std::unique_ptr<Chunk>> chunks;
 

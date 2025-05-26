@@ -11,14 +11,14 @@
 #include "rendering/shader/Shader.h"
 #include "math/Frustum.h"
 #include "textures/Texture.h"
-#include "WorldChunkData.h"
+#include "ChunkStorage.h"
 #include "rendering/graphics/Pointer.h"
 
 class WorldChunkRenderer {
 public:
     WorldChunkRenderer();
 
-    void render(const WorldChunkData& chunkManager,
+    void render(const ChunkStorage& chunkManager,
                 const glm::vec3& cameraPosition,
                 const glm::mat4& view,
                 const glm::mat4& projection,

@@ -32,8 +32,8 @@ add_executable(Voxelity
         Voxelity/textures/Image.cpp
         Voxelity/textures/Texture.cpp
         Voxelity/core/utils/Profiler.cpp
-        Voxelity/voxelWorld/chunk/ChunkData.cpp
-        Voxelity/voxelWorld/WorldChunkData.cpp
+        Voxelity/voxelWorld/chunk/VoxelStorage.cpp
+        Voxelity/voxelWorld/ChunkStorage.cpp
         Voxelity/voxelWorld/WorldChunkRenderer.cpp
         Voxelity/voxelWorld/managers/ChunkGenerationRequestManager.cpp
         Voxelity/listeners/ResizeListener.cpp

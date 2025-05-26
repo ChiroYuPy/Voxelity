@@ -8,7 +8,7 @@
 #include "Voxel.h"
 #include "core/Constants.h"
 
-struct ChunkData {
+struct VoxelStorage {
     [[nodiscard]] const Voxel& get(unsigned int x, unsigned int y, unsigned int z) const;
     Voxel& get(unsigned int x, unsigned int y, unsigned int z);
 

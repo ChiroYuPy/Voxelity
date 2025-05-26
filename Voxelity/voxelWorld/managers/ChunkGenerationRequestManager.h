@@ -10,9 +10,9 @@
 
 #include <optional>
 
-struct ChunkData;
+struct VoxelStorage;
 class ChunkGenerationThread;
-class WorldChunkData;
+class ChunkStorage;
 class IChunkGenerator;
 
 /**
@@ -45,7 +45,7 @@ public:
      * @param playerChunkPos Current chunk coordinate of the player.
      * @param worldChunkData Reference to the world chunk data storage.
      */
-    void updateChunksAround(const glm::ivec3 & playerChunkPos, WorldChunkData &worldChunkData);
+    void updateChunksAround(const glm::ivec3 & playerChunkPos, ChunkStorage &worldChunkData);
 
     /**
      * @brief Processes chunks that are ready after generation.
@@ -54,7 +54,7 @@ public:
      *
      * @param worldChunkData Reference to the world chunk data storage.
      */
-    void processReadyChunks(WorldChunkData& worldChunkData) const;
+    void processReadyChunks(ChunkStorage& worldChunkData) const;
 
     /**
      * @brief Applies generated chunk data to the world at a specified position.
@@ -63,7 +63,7 @@ public:
      * @param data The chunk data to apply.
      * @param worldChunkData Reference to the world chunk data storage.
      */
-    static void applyChunkData(const glm::ivec3& pos, const ChunkData& data, WorldChunkData& worldChunkData);
+    static void applyChunkData(const glm::ivec3& pos, const VoxelStorage& data, ChunkStorage& worldChunkData);
 
     /**
     * @brief Updates neighbor chunks of the chunk at the given position.
@@ -73,7 +73,7 @@ public:
     * @param pos Position of the chunk whose neighbors are to be updated.
     * @param worldChunkData Reference to the world chunk data storage.
     */
-    static void updateNeighbors(const glm::ivec3& pos, WorldChunkData& worldChunkData);
+    static void updateNeighbors(const glm::ivec3& pos, ChunkStorage& worldChunkData);
 
 private:
     std::unique_ptr<ChunkGenerationThread> generationThread; ///< Thread managing chunk generation tasks.
@@ -88,7 +88,7 @@ private:
     * @param pos Position of the chunk to generate.
     * @param worldChunkData Reference to the world chunk data storage.
     */
-    void generateChunkAt(const glm::ivec3 & pos, WorldChunkData &worldChunkData) const;
+    void generateChunkAt(const glm::ivec3 & pos, ChunkStorage &worldChunkData) const;
 
     /**
     * @brief Checks if a given chunk position is within the render distance from the center position.

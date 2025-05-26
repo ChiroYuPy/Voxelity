@@ -7,7 +7,7 @@
 
 #include "blocks/BlockType.h"
 
-struct ChunkData;
+struct VoxelStorage;
 class Chunk;
 
 /**
@@ -40,7 +40,7 @@ public:
     * @param globalChunkPos The global chunk coordinates identifying which chunk to generate.
     * @return A ChunkData instance containing all voxel data for the chunk.
     */
-    ChunkData generate(glm::ivec3 globalChunkPos);
+    VoxelStorage generate(glm::ivec3 globalChunkPos);
 };
 
 #endif //IWORLDGENERATOR_H

@@ -5,7 +5,7 @@
 #include "ChunkGenerationThread.h"
 
 #include "core/Constants.h"
-#include "../../voxelWorld/chunk/ChunkData.h"
+#include "../../voxelWorld/chunk/VoxelStorage.h"
 #include "voxelWorld/generators/IWorldGenerator.h"
 
 ChunkGenerationThread::ChunkGenerationThread(std::unique_ptr<IChunkGenerator> generator)
@@ -39,7 +39,7 @@ void ChunkGenerationThread::enqueueElement(const glm::ivec3& pos) {
     cv.notify_one();
 }
 
-bool ChunkGenerationThread::pollReadyElements(glm::ivec3& posOut, ChunkData& dataOut) {
+bool ChunkGenerationThread::pollReadyElements(glm::ivec3& posOut, VoxelStorage& dataOut) {
     std::lock_guard lock(readyMutex);
     if (readyElements.empty()) return false;
 
@@ -67,7 +67,7 @@ void ChunkGenerationThread::run() {
         // Génération
 
         {
-            ChunkData data = chunkGenerator->generate(pos * Constants::ChunkSize);
+            VoxelStorage data = chunkGenerator->generate(pos * Constants::ChunkSize);
             std::lock_guard readyLock(readyMutex);
             readyElements.emplace(pos, data);
         }

@@ -6,11 +6,11 @@
 
 #include <iostream>
 
-#include "../voxelWorld/WorldChunkData.h"
+#include "../voxelWorld/ChunkStorage.h"
 #include "rendering/camera/CameraView.h"
 #include "voxelWorld/utils/Raycaster.h"
 
-PlayerController::PlayerController(CameraView& camera, WorldChunkData& world) : m_camera(camera), m_world(world) {}
+PlayerController::PlayerController(CameraView& camera, ChunkStorage& world) : m_camera(camera), m_world(world) {}
 
 void PlayerController::onEvent(Event& e) {
     if (e.type == EventType::MouseButtonPressed) {
@@ -22,7 +22,7 @@ void PlayerController::onEvent(Event& e) {
     }
 }
 
-void PlayerController::tryBreakBlock(const glm::vec3& cameraPos, const glm::vec3& cameraDir, WorldChunkData& world) {
+void PlayerController::tryBreakBlock(const glm::vec3& cameraPos, const glm::vec3& cameraDir, ChunkStorage& world) {
     auto hitOpt = Raycaster::castRay(cameraPos, cameraDir, Constants::PlayerReach, world);
     if (!hitOpt) return;
 
@@ -32,7 +32,7 @@ void PlayerController::tryBreakBlock(const glm::vec3& cameraPos, const glm::vec3
     std::cout << "Break" << std::endl;
 }
 
-void PlayerController::tryPlaceBlock(const glm::vec3& cameraPos, const glm::vec3& cameraDir, WorldChunkData& world, const BlockType blockType) {
+void PlayerController::tryPlaceBlock(const glm::vec3& cameraPos, const glm::vec3& cameraDir, ChunkStorage& world, const BlockType blockType) {
     auto hitOpt = Raycaster::castRay(cameraPos, cameraDir, Constants::PlayerReach, world);
     if (!hitOpt) {
         return;

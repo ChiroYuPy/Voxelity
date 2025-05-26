@@ -15,11 +15,11 @@ struct RaycastHit {
     BlockFace face;
 };
 
-class WorldChunkData;
+class ChunkStorage;
 
 class Raycaster {
 public:
-    static std::optional<RaycastHit> castRay(const glm::vec3& origin, const glm::vec3& direction, float maxDistance, const WorldChunkData& world);
+    static std::optional<RaycastHit> castRay(const glm::vec3& origin, const glm::vec3& direction, float maxDistance, const ChunkStorage& world);
 };
 
 #endif //RAYCASTER_H
